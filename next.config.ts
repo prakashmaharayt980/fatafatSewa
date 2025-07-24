@@ -1,8 +1,14 @@
-import type { NextConfig } from "next";
+// next.config.ts
+import type { NextConfig } from 'next';
 
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
-   images: {
+  images: {
     domains: ['fatafatsewa.com'],
+  },
+  reactStrictMode: true,
+  experimental: {
+    serverActions: true, // if you're using Server Actions (optional)
   },
 };
 
