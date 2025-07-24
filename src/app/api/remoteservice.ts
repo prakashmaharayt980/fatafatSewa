@@ -10,7 +10,7 @@ const requestHeaders = (isFormData = false) => {
     'API-Key': remote.ApiKey,
     'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
     Accept: 'application/json',
-  };
+  } as Record<string, string>;
 };
 
 const axiosInstance = axios.create();
@@ -18,9 +18,10 @@ const axiosInstance = axios.create();
 // Always inject API key header
 axiosInstance.interceptors.request.use(
   config => {
-    if (config.headers) {
-      config.headers['API-Key'] = remote.ApiKey;
-    } 
+    config.headers = {
+      ...config.headers,
+      'API-Key': remote.ApiKey,
+    }as Record<string, string>;
     return config;
   },
   error => Promise.reject(error)
