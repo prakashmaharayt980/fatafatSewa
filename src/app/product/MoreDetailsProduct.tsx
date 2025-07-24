@@ -155,7 +155,7 @@ export default function BrowserStyleTabs({ productDesciption, keyFeatures, Revie
     }, [productDesciption]);
 
 
-    const handleSubmit = (e ) => {
+    const handleSubmit = (e : React.FormEvent<HTMLFormElement> ) => {
         e.preventDefault();
         if (!Rating.newReview.trim() || Rating.newRating === 0) {
             return;
@@ -237,7 +237,7 @@ export default function BrowserStyleTabs({ productDesciption, keyFeatures, Revie
                             {/* Review Submission Form */}
                             {
                                 Rating.commentOpen && (
-                                    <form onSubmit={handleSubmit} className="space-y-4">
+                                    <form onSubmit={(e)=>handleSubmit(e)} className="space-y-4">
                                         <div className="flex items-center space-x-2">
                                             {[1, 2, 3, 4, 5].map((star) => (
                                                 <button
