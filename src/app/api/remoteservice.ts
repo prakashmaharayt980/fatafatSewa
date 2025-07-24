@@ -18,10 +18,9 @@ const axiosInstance = axios.create();
 // Always inject API key header
 axiosInstance.interceptors.request.use(
   config => {
-    config.headers = {
-      ...config.headers,
-      'API-Key': remote.ApiKey,
-    };
+    if (config.headers) {
+      config.headers['API-Key'] = remote.ApiKey;
+    } 
     return config;
   },
   error => Promise.reject(error)
