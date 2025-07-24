@@ -1,4 +1,6 @@
-import axios from 'axios';
+// src/app/api/remoteservice.ts
+
+import axios, { AxiosHeaders } from 'axios';
 
 const remote = {
   address: "https://fatafatsewa.com/api/v1",
@@ -10,34 +12,41 @@ const requestHeaders = (isFormData = false) => {
     'API-Key': remote.ApiKey,
     'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
     Accept: 'application/json',
-  } as Record<string, string>;
+  };
 };
 
 const axiosInstance = axios.create();
 
-// Always inject API key header
+// Fix: Safely inject API-Key using .set()
 axiosInstance.interceptors.request.use(
   config => {
-    config.headers = {
-      ...config.headers,
-      'API-Key': remote.ApiKey,
-    }as Record<string, string>;
+    if (config.headers instanceof AxiosHeaders) {
+      config.headers.set('API-Key', remote.ApiKey);
+    } else if (config.headers) {
+      // fallback for plain object headers
+      (config.headers as any)['API-Key'] = remote.ApiKey;
+    } else {
+      config.headers = new AxiosHeaders({ 'API-Key': remote.ApiKey });
+    }
     return config;
   },
   error => Promise.reject(error)
 );
 
-// Generic wrappers
 const getRequest = async (api: string) =>
-  axiosInstance.get(`${remote.address}${api}`, { headers: requestHeaders() });
+  axiosInstance.get(`${remote.address}${api}`, {
+    headers: requestHeaders(),
+  });
 
-
-
-// RemoteServices
 const RemoteServices = {
-   SerachProducts:(data:string)=> getRequest(`/products?name=${data}&limit=10`).then(response =>  response.data),
-   Categories:()=> getRequest(`/categories`).then(response => response.data),
-   ProductId:(id:string)=> getRequest(`/products/${id}`).then(response => response.data.data),
+  SerachProducts: (data: string) =>
+    getRequest(`/products?name=${data}&limit=10`).then(res => res.data),
+
+  Categories: () =>
+    getRequest(`/categories`).then(res => res.data),
+
+  ProductId: (id: string) =>
+    getRequest(`/products/${id}`).then(res => res.data.data),
 };
 
 export default RemoteServices;
