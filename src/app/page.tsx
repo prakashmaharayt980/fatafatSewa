@@ -1,23 +1,11 @@
-import React from "react";
-import HeaderBody from "./layout/headerbody";
 
+import React from 'react';
 
-const Footer: React.FC = () => (
-    <footer className="w-full bg-gray-800 text-gray-200 p-4 text-center mt-auto">
-        &copy; {new Date().getFullYear()} Fatafat Sewa. All rights reserved.
-    </footer>
-);
-
- export interface LayoutProps {
-    children: React.ReactNode;
+export default function HomePage() {
+  return (
+    <section className="py-10">
+      <h1 className="text-3xl font-bold">Welcome to Fatafat Sewa</h1>
+      <p className="text-gray-600 mt-2">Your trusted instant delivery platform.</p>
+    </section>
+  );
 }
-
-const Layout: React.FC<LayoutProps> = ({ children }) => (
-    <div className="flex flex-col min-h-screen">
-        <HeaderBody />
-        <main className="flex-1 w-full max-w-5xl mx-auto p-4">{children}</main>
-        <Footer />
-    </div>
-);
-
-export default Layout;

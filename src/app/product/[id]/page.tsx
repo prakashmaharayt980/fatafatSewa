@@ -3,7 +3,7 @@
 import React, { useState, useEffect, use } from 'react';
 import { Star, ShoppingCart,  ShoppingBag, CreditCard } from 'lucide-react';
 import RemoteServices from '@/app/api/remoteservice';
-import Layout from '@/app/page';
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Shippinginfo from '../Shippinginfo';
@@ -57,7 +57,7 @@ export interface ProductDetails {
     disk: string;
     conversions_disk: string;
     size: number;
-    manipulations: any[];
+
     custom_properties: {
       color?: string;
       is_default?: boolean;
@@ -66,14 +66,14 @@ export interface ProductDetails {
       preview: boolean;
       thumbnail?: boolean;
     };
-    responsive_images: any[];
+
     order_column: number;
     created_at: string;
     updated_at: string;
     original_url: string;
     preview_url: string;
   }>;
-  reviews: any[];
+  reviews: string[];
   discountcampaign: {
     id: number;
     product_id: number;
@@ -121,11 +121,7 @@ export default function ProductDetailsPage({ params }: Props) {
   const [quantity, setQuantity] = useState<number>(1);
   const { id } = use(params);
 
-  const stripHtml = (html: string): string => {
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
-  };
+
 
   useEffect(() => {
     setLoading(true);
@@ -153,7 +149,6 @@ export default function ProductDetailsPage({ params }: Props) {
 
   if (loading) {
     return (
-      <Layout>
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
@@ -166,20 +161,17 @@ export default function ProductDetailsPage({ params }: Props) {
             </div>
           </div>
         </div>
-      </Layout>
     );
   }
 
   if (error) {
     return (
-      <Layout>
-        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center py-12">
             <h2 className="text-xl text-red-600 mb-4">Error Loading Product</h2>
             <p className="text-gray-600">{error}</p>
           </div>
         </div>
-      </Layout>
     );
   }
 
@@ -252,7 +244,6 @@ export default function ProductDetailsPage({ params }: Props) {
 
 
   return (
-    <Layout>
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Main Product Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
@@ -463,6 +454,5 @@ export default function ProductDetailsPage({ params }: Props) {
 
        
       </div>
-    </Layout>
   );
 }
