@@ -1,19 +1,13 @@
 "use client"
 
-import React, { useState, useEffect, use, useCallback } from 'react';
-import { Star, ShoppingCart, Heart, Eye, Truck, ChevronLeft, ChevronRight, ShoppingBag, CreditCard, Minus, Plus, Clock, User, ThumbsUp } from 'lucide-react';
+import React, { useState, useEffect, use } from 'react';
+import { Star, ShoppingCart,  ShoppingBag, CreditCard } from 'lucide-react';
 import RemoteServices from '@/app/api/remoteservice';
 import Layout from '@/app/page';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Shippinginfo from '../Shippinginfo';
 
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Tabs } from '@radix-ui/react-tabs';
-import { TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-
-import { Badge } from '@/components/ui/badge';
 import BrowserStyleTabs from '../MoreDetailsProduct';
 
 // ProductDetails interface based on your provided structure

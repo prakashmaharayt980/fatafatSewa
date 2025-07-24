@@ -238,7 +238,7 @@ const HeaderBody = () => {
                                             </>
                                         ) : (
                                             <div className="p-4 text-center text-gray-500">
-                                                <p>No products found for "{`${search}`}"</p>
+                                                <p>No products found for &quot;{search}&quot;</p>
                                             </div>
                                         )}
                                     </div>
@@ -399,7 +399,7 @@ const HeaderBody = () => {
                                         </>
                                     ) : (
                                         <div className="p-4 text-center text-gray-500">
-                                            <p>No products found for "{search}"</p>
+                                               <p>No products found for &quot;{search}&quot;</p>
                                         </div>
                                     )}
                                 </div>

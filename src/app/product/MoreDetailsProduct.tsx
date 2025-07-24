@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { FileText, Star, Truck, MessageCircle, Send, SendIcon, Trash, Trash2 } from 'lucide-react';
+import React, {  useMemo, useRef, useState } from 'react';
+import { FileText, Star, Truck, MessageCircle, SendIcon, Trash2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProductDetails } from './[id]/page';
 import parse, { domToReact, HTMLReactParserOptions, Element, DOMNode } from 'html-react-parser';
@@ -155,7 +155,7 @@ export default function BrowserStyleTabs({ productDesciption, keyFeatures, Revie
     }, [productDesciption]);
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e ) => {
         e.preventDefault();
         if (!Rating.newReview.trim() || Rating.newRating === 0) {
             return;
