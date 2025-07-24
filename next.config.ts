@@ -7,9 +7,7 @@ const nextConfig: NextConfig = {
     domains: ['fatafatsewa.com'],
   },
   reactStrictMode: true,
-  experimental: {
-    serverActions: true, // if you're using Server Actions (optional)
-  },
+
 };
 
 export default nextConfig;
