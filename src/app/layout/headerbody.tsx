@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import RemoteServices from '@/app/api/remoteservice';
 import HeaderSkeleton from './headerSkelton';
-
+import imglogo from '../asscets/logoimg.png'; // Adjust the path as necessary
 interface CategoryImage {
     id: number;
     name: string;
@@ -168,7 +168,7 @@ const HeaderBody = () => {
                         <Link href="/" className="flex items-center space-x-2">
                             <div className="relative">
                                 <Image
-                                    src="https://fatafatsewa.com/storage/uploads/images/settings/core/1737971940-881.png"
+                                    src={imglogo}
                                     alt="Fatafatsewa Logo"
                                     width={130}
                                     height={130}
