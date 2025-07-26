@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import RemoteServices from './remoteservice';
 
 // Define interfaces
-export interface Image {
+export interface imagesArray {
   name: string;
   default: string;
   original: string;
@@ -20,7 +20,7 @@ export interface DefaultProductInterface {
   parent_id: number | null;
   parent_tree: string | null;
   children: DefaultProductInterface[] | null;
-  image: Image;
+  image: imagesArray;
   created_at?: string;
   updated_at?: string;
 }
@@ -93,7 +93,7 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           waterPumpRes,
           trendingRes,
           blogsRes,
-          
+
         ] = await Promise.all([
           RemoteServices.Categories(),
           RemoteServices.CategoriesSlug('laptop-price-in-nepal'),
