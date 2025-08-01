@@ -1,8 +1,31 @@
 @import "tailwindcss";
 
 :root{
-    --logobluecolur1:#1f67b7
+    --logobluecolur1:#1f67b7;
+    --btnbg:#CDECFF;
+    --btntext:#0474BA;
+    --colour-yellow:#FF9107;
 }
+
+@theme{
+    --colour-bg1:#1f67b7;
+    --colour-bg2:#035B91;
+    --colour-bg3:#0F6600;
+    --colour-bg4:#f1f7ff;
+    --colour-bg5:#FF9107;
+    --colour-border1:#FF9107;
+    --colour-border2:#0474BA;
+    --colour-border3:#999999;
+    --colour-btn1:#0474BA;
+    --colour-btn2:#FF9107;
+    --colour-text1:#0474BA;
+    --colour-text2:#333333;
+    --colour-text3:#595959;
+    --colour-text4:#CDECFF;
+
+}
+
+
 
 @layer utilities {
     .scrollbar-hide {

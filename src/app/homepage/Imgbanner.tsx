@@ -1,13 +1,11 @@
-'use client';
-
 import React, { useState, useEffect, useCallback } from 'react';
-import {  Shield, CreditCard, Truck, TagIcon, ShieldCheck } from 'lucide-react';
+import { Shield, CreditCard, Truck, Tag, ShieldCheck, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
 import Image from 'next/image';
-import { imagesArray } from '../api/ContextStore';
+
 
 export const ImagesListBanner = [
     {
-        name: 'Sample Image 1',
+        name: 'iPhone 16 Series EMI Plans',
         default: "https://fatafatsewa.com/storage/media/9919/iPhone-16-Series-in-EMI-Plans.jpg",
         original: "https://fatafatsewa.com/storage/media/9919/iPhone-16-Series-in-EMI-Plans.jpg",
         preview: "https://fatafatsewa.com/storage/media/9919/iPhone-16-Series-in-EMI-Plans.jpg",
@@ -15,7 +13,7 @@ export const ImagesListBanner = [
         is_default: true,
     },
     {
-        name: 'Sample Image 2',
+        name: 'Samsung Banner',
         default: "https://fatafatsewa.com/storage/media/9772/conversions/Samung-Banner-thumb.jpg",
         original: "https://fatafatsewa.com/storage/media/9772/conversions/Samung-Banner-thumb.jpg",
         preview: "https://fatafatsewa.com/storage/media/9772/conversions/Samung-Banner-thumb.jpg",
@@ -23,69 +21,63 @@ export const ImagesListBanner = [
         is_default: true,
     },
     {
-        name: 'Sample Image 3',
+        name: 'iPhone Deal',
         default: "https://fatafatsewa.com/storage/media/9771/conversions/iPhone-Deal-thumb.jpg",
         original: "https://fatafatsewa.com/storage/media/9771/conversions/iPhone-Deal-thumb.jpg",
         preview: "https://fatafatsewa.com/storage/media/9771/conversions/iPhone-Deal-thumb.jpg",
         thumbnail: 'https://fatafatsewa.com/storage/media/9771/conversions/iPhone-Deal-thumb.jpg',
         is_default: false,
     },
-]
+];
 
 const features = [
     {
         icon: ShieldCheck,
         title: "Genuine Products",
-        description: "24 months",
-        bgColor: "bg-green-100",
-        iconColor: "text-green-600"
+        description: "24 months warranty",
+        bgColor: "from-emerald-50 to-emerald-100",
+        iconColor: "text-emerald-600",
+        borderColor: "border-emerald-200"
     },
     {
         icon: CreditCard,
         title: "EMI Available",
         description: "3-12 months",
-        bgColor: "bg-yellow-100",
-        iconColor: "text-yellow-600"
+        bgColor: "from-amber-50 to-amber-100",
+        iconColor: "text-amber-600",
+        borderColor: "border-amber-200"
     },
     {
         icon: Shield,
-        title: "Payments",
-        description: "Secured",
-        bgColor: "bg-blue-100",
-        iconColor: "text-blue-600"
+        title: "Secure Payments",
+        description: "100% protected",
+        bgColor: "from-blue-50 to-blue-100",
+        iconColor: "text-blue-600",
+        borderColor: "border-blue-200"
     },
     {
         icon: Truck,
         title: "Quick Delivery",
-        description: "One day delivery",
-        bgColor: "bg-green-100",
-        iconColor: "text-green-600"
+        description: "Same day delivery",
+        bgColor: "from-purple-50 to-purple-100",
+        iconColor: "text-purple-600",
+        borderColor: "border-purple-200"
     },
     {
-        icon: TagIcon,
-        title: "Brands",
-        description: "Top Brands",
-        bgColor: "bg-pink-950",
-        iconColor: "text-pink-950"
+        icon: Tag,
+        title: "Top Brands",
+        description: "Premium quality",
+        bgColor: "from-rose-50 to-rose-100",
+        iconColor: "text-rose-600",
+        borderColor: "border-rose-200"
     }
 ];
 
 const Imgbanner = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-    //   const { categories } = useContextStore();
-    const [images, setImages] = useState<imagesArray[]>(ImagesListBanner);
-
-
-
-    // useEffect(() => {
-    //     if (categories && categories.length > 0) {
-    //     const firstCategory = categories[0];
-    //     if (firstCategory.image && firstCategory.image.length > 0) {
-    //         setImages(firstCategory.image);
-    //     }
-    //     }
-    // }, [categories]);
+    const [images] = useState(ImagesListBanner);
+    const [imageLoading, setImageLoading] = useState(true);
 
     // Memoize slide navigation functions
     const nextSlide = useCallback(() => {
@@ -100,15 +92,19 @@ const Imgbanner = () => {
         );
     }, [images.length]);
 
-    const goToSlide = useCallback((index: number) => {
+    const goToSlide = useCallback((index) => {
         setCurrentIndex(index);
     }, []);
 
     // Handle keyboard navigation
     useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
+        const handleKeyDown = (e) => {
             if (e.key === 'ArrowLeft') prevSlide();
             if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === ' ') {
+                e.preventDefault();
+                setIsAutoPlaying(prev => !prev);
+            }
         };
 
         window.addEventListener('keydown', handleKeyDown);
@@ -119,93 +115,106 @@ const Imgbanner = () => {
     useEffect(() => {
         if (!isAutoPlaying || images.length === 0) return;
 
-        const interval = setInterval(nextSlide, 4000);
+        const interval = setInterval(nextSlide, 5000);
         return () => clearInterval(interval);
     }, [isAutoPlaying, nextSlide, images.length]);
 
     if (images.length === 0) {
-        return null; // Or a loading state
+        return (
+            <div className="w-full h-80 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl animate-pulse flex items-center justify-center">
+                <div className="text-gray-400">Loading...</div>
+            </div>
+        );
     }
 
     return (
-        <div className="w-full  bg-white overflow-hidden">
-            <div
-                className="relative group"
-                onMouseEnter={() => setIsAutoPlaying(false)}
-                onMouseLeave={() => setIsAutoPlaying(true)}
-            >
-                {/* Image Container */}
-                <div className="relative h-72 md:h-[18rem] lg:h-[18rem] rounded-xl overflow-hidden">
+        <div className="w-full bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+            {/* Main Banner Section */}
+            <div className="flex flex-col lg:flex-row gap-6 mb-8">
+                {/* Main Carousel */}
+                <div className="flex-1">
                     <div
-                        className="flex transition-transform duration-700 ease-out h-full"
-                        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                        role="region"
-                        aria-label="Image carousel"
+                        className="relative group"
+                        onMouseEnter={() => setIsAutoPlaying(false)}
+                        onMouseLeave={() => setIsAutoPlaying(true)}
                     >
-                        {images.map((image, index) => (
+                        {/* Image Container with Enhanced Styling */}
+                        <div className="relative h-80 md:h-96 lg:h-[28rem] rounded-2xl overflow-hidden ">
                             <div
-                                key={`${image.name}-${index}`}
-                                className="w-full flex-shrink-0 relative"
-                                aria-hidden={currentIndex !== index}
+                                className="flex transition-transform duration-700 ease-out h-full"
+                                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                                role="region"
+                                aria-label="Image carousel"
                             >
-                                <Image
-                                    src={image.default}
-                                    alt={image.name}
-                                    className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
-                                    fill
-                                    priority={index === currentIndex}
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                                    quality={90}
-                                />
-                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent">
-                                    <div className="p-4">
-                                        <h3 className="text-xl md:text-2xl font-semibold text-white">
-                                            {image.name}
-                                        </h3>
+                                {images.map((image, index) => (
+                                    <div
+                                        key={`${image.name}-${index}`}
+                                        className="w-full flex-shrink-0 relative"
+                                        aria-hidden={currentIndex !== index}
+                                    >
+                                        <Image
+                                            src={image.default}
+                                            alt={image.name}
+                                            fill
+                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                            onLoad={() => setImageLoading(false)}
+
+                                        />
+                                 
                                     </div>
-                                </div>
+                                ))}
                             </div>
-                        ))}
+
+
+
+                        </div>
+
+
+
+                        {/* Dots Indicator */}
+                        <div className="flex justify-center space-x-2 py-3 bg-gray-50" role="tablist">
+                            {images.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => goToSlide(index)}
+                                    className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
+                                        ? 'bg-blue-600 scale-125'
+                                        : 'bg-gray-300 hover:bg-gray-400'
+                                        }`}
+                                    aria-label={`Go to slide ${index + 1}`}
+                                    aria-selected={index === currentIndex}
+                                    role="tab"
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Navigation Arrows */}
-                {/* <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
-          aria-label="Previous image"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
+                {/* Side Images - Improved Layout */}
+                <div className="lg:w-80 flex lg:flex-col gap-4">
+                    {images.slice(1, 3).map((image, index) => (
+                        <div key={index} className="relative group cursor-pointer flex-1">
+                            <div className="relative h-40 lg:h-48 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-100 to-gray-200">
+                                <Image
+                                    src={image.default}
+                                    alt={image.name}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    onClick={() => goToSlide(index + 1)}
+                                    fill
 
-        <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
-          aria-label="Next image"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button> */}
-            </div>
-
-            {/* Dots Indicator */}
-            <div className="flex justify-center space-x-2 py-3 bg-gray-50" role="tablist">
-                {images.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => goToSlide(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
-                                ? 'bg-blue-600 scale-125'
-                                : 'bg-gray-300 hover:bg-gray-400'
-                            }`}
-                        aria-label={`Go to slide ${index + 1}`}
-                        aria-selected={index === currentIndex}
-                        role="tab"
-                    />
-                ))}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <p className="text-sm font-medium drop-shadow-lg">{image.name}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Features Section */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-gray-50 py-4 px-2 md:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 border rounded-xl border-gray-300 shadow bg-gray-50 py-4 px-2 md:px-8">
                 {features.map((feature, index) => {
                     const Icon = feature.icon;
                     return (
@@ -226,6 +235,8 @@ const Imgbanner = () => {
                     );
                 })}
             </div>
+
+
         </div>
     );
 };

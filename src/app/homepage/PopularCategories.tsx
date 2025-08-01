@@ -36,9 +36,9 @@ const PopularCategories = ({ categories }: PopularCategoriesProps) => {
             {/* Header Section */}
               <div className="mb-8 w-full">
         <div className="flex items-center justify-center mb-6 w-full">
-          <div className="flex-1 h-1 bg-blue-500"></div>
+          <div className="flex-1 h-1 bg-[var(--colour-border2)]"></div>
           <h2 className="px-6 text-2xl font-bold text-gray-900">Popular Categories  </h2>
-          <div className="flex-1 h-1 bg-blue-500"></div>
+          <div className="flex-1 h-1 bg-[var(--colour-border2)]"></div>
         </div>
       </div>
 

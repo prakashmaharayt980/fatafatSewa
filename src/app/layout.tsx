@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex flex-col min-h-screen">
         <ContextStoreProvider >
           <HeaderBody />
-          <main className="flex-1 w-full max-w-7xl mx-auto p-2">{children}</main>
+          <main className="flex-1 w-full  mx-auto p-2">{children}</main>
           <FooterBody />
 
         </ContextStoreProvider>

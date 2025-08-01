@@ -57,12 +57,41 @@ export interface CategorySlug {
   };
 }
 
+
+
 export interface HomePageData {
-  categories: DefaultProductInterface[];
+  categories: Array<{
+    id: number;
+    title: string;
+    slug: string;
+    parent_id: number | null;
+    parent_tree: string | null;
+    children: HomePageData['categories'];
+    image: {
+      name: string;
+      default: string;
+      original: string;
+      preview: string;
+      thumbnail: string;
+      is_default: boolean;
+    }
+
+    created_at?: string;
+    updated_at?: string;
+  }>;
+
   newArrivals: ProductTrending[];
   laptops: CategorySlug[];
   accessories: CategorySlug[];
   waterPumps: CategorySlug[];
+  blogContent: Array<[{
+    author: string;
+    content: string;
+    slug: string;
+    title: string;
+    created_at: Date;
+    id: number
+  }]>
 }
 
 interface ContextStoreContextType {
@@ -96,7 +125,7 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
 
         ] = await Promise.all([
           RemoteServices.Categories(),
-          RemoteServices.CategoriesSlug('laptop-price-in-nepal'),
+          RemoteServices.CategoriesSlug('mobile-price-in-nepal'),
           RemoteServices.CategoriesSlug('accessories-price-in-nepal'),
           RemoteServices.CategoriesSlug('water-pump-price-in-nepal'),
           RemoteServices.ProductTranding(),
@@ -109,9 +138,10 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           laptops: [laptopRes],
           accessories: [accessoriesRes],
           waterPumps: [waterPumpRes],
+          blogContent: [blogsRes]
         });
 
-        console.log('Blogs Data:', blogsRes);
+        console.log('cat Data:', categoriesRes.data);
       } catch (err) {
         setError('Failed to fetch data. Please try again later.');
       } finally {

@@ -9,15 +9,14 @@ import BasketCard from './homepage/BasketCard';
 import PopularCategories from './homepage/PopularCategories';
 import OfferBanner from './homepage/OfferBanner';
 import OurArticles from './homepage/OurArticles';
+import SkeletonHomepage from './homepage/skeletonHomepage';
 
 export default function Page() {
   const { homePageData, loading, error } = useContextStore();
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 text-center text-gray-600">
-        Loading...
-      </div>
+   <SkeletonHomepage/>
     );
   }
 
@@ -40,7 +39,7 @@ export default function Page() {
   const { laptops, accessories, waterPumps ,categories} = homePageData;
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 space-y-12">
+    <div className=" mx-auto py-8 px-4 sm:px-2 space-y-12">
       <Imgbanner />
 
       {/* New Arrivals - Laptops */}
