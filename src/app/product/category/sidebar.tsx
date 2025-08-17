@@ -50,13 +50,15 @@ const CategorySideDrawer = ({
       setOpenCategory(openCategory === id ? null : id);
      
     } else {
-      router.push(`/category/${slug}`);
+      router.push(`/product/category/${slug}`);
+        localStorage.setItem('categorySlug1',slug)
       toggleCategoryDrawer();
     }
   };
 
-  const navigateToCategory = (slug: string) => {
-    router.push(`/category/${slug}`);
+  const navigateToCategory = (categorie: string) => {
+    router.push(`/product/category/${categorie}`);
+    localStorage.setItem('categorySlug1',categorie)
     toggleCategoryDrawer();
   };
 
@@ -168,6 +170,7 @@ const CategorySideDrawer = ({
                     }}
                     onMouseEnter={() => handleHoverEnter(cat.id)}
                     onMouseLeave={handleHoverLeave}
+           
                   >
                     <div
                       className={cn(

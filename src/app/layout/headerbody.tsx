@@ -6,12 +6,13 @@ import imglogo from '../assets/logoimg.png';
 import CategorySideDrawer from '../product/category/sidebar';
 import { useContextStore } from '../api/ContextStore';
 import RemoteServices from '../api/remoteservice';
-
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 const HeaderComponent = () => {
     const [search, setSearch] = useState("");
     const { homePageData } = useContextStore()
     const categories = homePageData?.categories || []
-
+    const router =useRouter()
     const [searchResults, setSearchResults] = useState([]);
     const [showSearchDropdown, setShowSearchDropdown] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
@@ -40,6 +41,9 @@ const HeaderComponent = () => {
     const handleProductClick = (id) => {
 
         setShowSearchDropdown(false);
+    };
+    const handleroute = (path:string) => {
+router.push(`${path}`)
     };
 
     // Toggle category drawer
@@ -85,7 +89,7 @@ const HeaderComponent = () => {
                 <div className="container mx-auto px-4 py-1">
                     <div className="flex items-center justify-between">
                         {/* Logo */}
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2" onClick={()=>handleroute('/')}>
                             <Image
                                 src={imglogo}
                                 alt="Fatafatsewa Logo"
@@ -234,27 +238,28 @@ const HeaderComponent = () => {
 
                         {/* Navigation Links */}
                         <div className="hidden md:flex items-center space-x-8">
-                            <a 
-                                href="#" 
+                            <div
+                            role='button'
+                              onClick={()=>handleroute('/brand')}
                                 className="flex items-center space-x-1 px-2 py-2 rounded-full border border-transparent text-sm font-medium text-gray-700 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200"
                             >
                                 <Tag className="h-4 w-4 text-red-600" />
                                 <span>Brands</span>
-                            </a>
-                            <a 
-                                href="#" 
+                            </div>
+                            <div
+                           
                                 className="flex items-center space-x-2 px-2 py-2 rounded-full border border-transparent text-sm font-medium text-gray-700 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200"
                             >
                                 <Calculator className="h-4 w-4 text-green-600" />
                                 <span>EMI Calculator</span>
-                            </a>
-                            <a 
-                                href="#" 
+                            </div>
+                            <div
+                    
                                 className="flex items-center space-x-2 px-2 py-2 rounded-full border border-transparent text-sm font-medium text-gray-700 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200"
                             >
                                 <BookType className="h-4 w-4 text-blue-600" />
                                 <span>Blogs</span>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>

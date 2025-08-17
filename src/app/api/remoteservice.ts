@@ -1,10 +1,10 @@
 // src/app/api/remoteservice.ts
 
 import axios, { AxiosHeaders } from 'axios';
-import { Filter } from 'lucide-react';
+
 
 const remote = {
-  address: 'https://fatafatsewa.com/api/v1',
+  address: 'https://fatafatsewa.com/api',
   ApiKey: 'pk_live_ObeGTVPwD6F3XqRZ79M4JxOMEpg5Vrtg',
 };
 
@@ -31,33 +31,48 @@ axiosInstance.interceptors.request.use(
 const getRequest = async (api: string) =>
   axiosInstance.get(`${remote.address}${api}`);
 
+const postRequest = async (api: string, data: any) =>
+  axiosInstance.post(`${remote.address}${api}`, data);
+
 const RemoteServices = {
   SerachProducts: (data: string) =>
-    getRequest(`/products?name=${data}&limit=10`).then(res => res.data),
+    getRequest(`/v1/products?name=${data}&limit=10`).then(res => res.data),
   ProductTranding: () =>
-    getRequest(`/products?order_by=-created`).then(res => res.data),
+    getRequest(`/v1/products?order_by=-created`).then(res => res.data),
 
-  // FilterProducts: (data: Filter) =>
-  //   getRequest(`/products?category=${data.category}&sort=${data.sort}&limit=${data.limit}&page=${data.page}`)
-  //     .then(res => res.data),
+  FilterProducts: ({slug,sort,page}) =>
+    getRequest(`/get-products?category=${slug}&sorting=${sort}&page=${page}&get_filters=true`)
+      .then(res => res.data),
 
   Categories: () =>
-    getRequest(`/categories?order_by=created`).then(res => res.data),
+    getRequest(`/v1/categories?order_by=created`).then(res => res.data),
 
   CategoriesSlug: (slug: string) =>
-    getRequest(`/categories/${slug}`).then(res => res.data),
+    getRequest(`/v1/categories/${slug}`).then(res => res.data),
 
   ProductId: (id: string) =>
-    getRequest(`/products/${id}`).then(res => res.data.data),
+    getRequest(`/v1/products/${id}`).then(res => res.data.data),
 
   ProductDetailsSlug: (slug: string) =>
-    getRequest(`/products-details/${slug}`).then(res => res.data.data),
+    getRequest(`/v1/products-details/${slug}`).then(res => res.data.data),
 
   BlogsAll: () =>
-    getRequest(`/blogs`).then(res => res.data.data),
+    getRequest(`/v1/blogs`).then(res => res.data.data),
 
-  BlogSlug: (slug: string) =>
-    getRequest(`/blogs/${slug}`).then(res => res.data.data),
+  Login: (data: { email: string; password: string }) =>
+    postRequest(`/v1/login`, data).then(res => res.data.data),
+
+  Register: (data: { email: string; password: string; name: string; address: string; phone_number: string }) =>
+    postRequest(`/v1/register`, data).then(res => res.data.data),
+
+  LoginwithGoogle: (data: { id_token: string }) =>
+    postRequest(`/v1/login/google`, data).then(res => res.data.data),
+
+  ForgottenPassword: (data: { email: string }) =>
+    postRequest(`/v1/forgotten-password`, data).then(res => res.data.data),
+
+  VerifyOtp: (data: { email: string }) =>
+    postRequest(`/v1/verify-otp`, data).then(res => res.data.data),
 
 };
 
