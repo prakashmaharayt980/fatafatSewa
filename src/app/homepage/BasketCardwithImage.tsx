@@ -34,7 +34,7 @@ const BasketCard = ({ title, items }: BasketCardProps) => {
 
     // Responsive items per page
     const isMobile = windowWidth < 640;
-    const itemsPerPage = isMobile ? 2 : 5; // 2 items on mobile, 5 on desktop
+    const itemsPerPage = isMobile ? 2 : 4; // 2 items on mobile, 4 on desktop
     const totalPages = Math.ceil(Datalist.length / itemsPerPage);
 
     // Scroll to specific page
@@ -108,8 +108,8 @@ const BasketCard = ({ title, items }: BasketCardProps) => {
                             className={cn(
                                 'flex-shrink-0',
                                 // Mobile: each item takes ~45% width (2 items visible with gap)
-                                // Desktop: each item takes ~18% width (5+ items visible)
-                                'w-[calc(50%-8px)] sm:w-[calc(20%-6px)]'
+                                // Desktop: each item takes ~25% width minus gap adjustment (4 items visible)
+                                'w-[calc(50%-8px)] sm:w-[calc(25%-6px)]'
                             )}
                         >
                             <ProductCard product={product} index={index} />

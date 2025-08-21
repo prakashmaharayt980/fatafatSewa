@@ -1,154 +1,404 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import useWebSocket from './socketconnection';
 import { cn } from '@/lib/utils';
+import { Send, X, HelpCircle, ShoppingCart, Contact, Package, MessageCircleMore, Minimize2, Paperclip, Mic, History, Pause } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
-// Add commands list
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
+// Mock WebSocket hook for demo
+const useWebSocket = () => {
+  const [messages, setMessages] = useState([
+    { user: 'Bot', message: 'Hello! I\'m here to help. Try typing @Help to see available commands.' }
+  ]);
+  
+  const sendMessage = (message) => {
+    setMessages(prev => [
+      ...prev,
+      { user: 'User', message },
+      { user: 'Bot', message: `You sent: ${message}` }
+    ]);
+  };
+  
+  return { messages, sendMessage };
+};
+
+// Command list with associated icons
 const commands = [
-  { command: '/help', description: 'Show all available commands' },
-  { command: '/productpage', description: 'Go to product page' },
-  { command: '/cart', description: 'View shopping cart' },
-  { command: '/contact', description: 'Contact support' },
+  { command: '@Help', description: 'Show all available commands', icon: HelpCircle },
+  { command: '@ProductPage', description: 'Go to product page', icon: Package },
+  { command: '@Cart', description: 'View shopping cart', icon: ShoppingCart },
+  { command: '@Contact', description: 'Contact support', icon: Contact },
 ];
 
-export default function Index() {
+export default function ChatBot() {
   const [input, setInput] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [recentInputs, setRecentInputs] = useState([]);
   const { messages, sendMessage } = useWebSocket();
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [showCommands, setShowCommands] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState(commands);
+  const [isRecording, setIsRecording] = useState(false);
+  const recognitionRef = useRef(null);
+  const [activeTab, setActiveTab] = useState('chat');
 
+  // Auto-scroll to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
-    if (input.trim()) {
-      sendMessage(input);
-      setInput('');
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
     }
+  }, [input]);
+
+  // Setup speech recognition
+  useEffect(() => {
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInput((prev) => prev + transcript);
+        setIsRecording(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsRecording(false);
+      };
+    }
+  }, []);
+
+  const handleVoiceInput = () => {
+    if (isRecording) {
+      recognitionRef.current?.stop();
+    } else {
+      recognitionRef.current?.start();
+    }
+    setIsRecording(!isRecording);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    e.preventDefault();
-    if (e.key === 'Enter') {
+  const handleSend = () => {
+    const trimmedInput = input.trim();
+    if (!trimmedInput) return;
+
+    sendMessage(trimmedInput);
+    setRecentInputs((prev) => {
+      const newInputs = [trimmedInput, ...prev].slice(0, 10); // Keep last 10 inputs
+      return newInputs;
+    });
+    setInput('');
+    setShowCommands(false);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSend();
     }
+    if (e.key === ' ') {
+      setInput((prev) => prev + ' ');
+    }
   };
 
-  const handleInputChange = (e : React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (e) => {
     const value = e.target.value;
     setInput(value);
-    
-    if (value.startsWith('/')) {
-      const search = value.slice(1).toLowerCase();
-      const filtered = commands.filter(cmd => 
-        cmd.command.toLowerCase().includes(search) ||
-        cmd.description.toLowerCase().includes(search)
+
+    if (value.startsWith('@')) {
+      const search = value.slice(1);
+      const filtered = commands.filter(
+        (cmd) =>
+          cmd.command.toLowerCase().startsWith('@' + search.toLowerCase()) ||
+          cmd.description.toLowerCase().includes(search.toLowerCase())
       );
       setFilteredCommands(filtered);
-      setShowCommands(true);
+      setShowCommands(filtered.length > 0);
     } else {
       setShowCommands(false);
     }
   };
 
   const selectCommand = (command) => {
-    setInput(command);
+    setInput(command + ' ');
     setShowCommands(false);
+    textareaRef.current?.focus();
+  };
+
+  const handleFileAttach = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Mock sending file - in real app, upload and send URL or something
+      sendMessage(`Attached file: ${file.name}`);
+    }
+  };
+
+  const highlightMessage = (message) => {
+    const command = commands.find((cmd) => cmd.command === message);
+    if (command) {
+      return <span className="font-semibold text-emerald-600">{command.command}</span>;
+    }
+    return message;
   };
 
   return (
     <>
+      {/* Chat Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          'fixed bottom-4 right-4 z-50 p-4 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all',
-          'transition-transform duration-300 ease-in-out transform',
-          isOpen ? ' hidden' : 'scale-95'
+          'fixed z-[9999] w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group',
+          // Desktop positioning
+          'bottom-4 right-4',
+          // Mobile positioning - centered at bottom
+          'sm:bottom-4 sm:right-4',
+          isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100 hover:scale-110'
         )}
+        aria-label="Open chat"
       >
-        💬
+        <MessageCircleMore className="w-6 h-6 group-hover:scale-110 transition-transform" />
       </button>
 
-      <div className={cn(
-        `fixed md:w-96 bottom-20 right-4 z-40 transition-all duration-300 ${
-        isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
-      }`
-      )}>
-        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
-          <div className="p-4 bg-green-500 text-white flex justify-between items-center">
-            <h3 className="font-bold">Chat Assistant</h3>
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="p-1 hover:bg-green-600 rounded-full transition-colors"
+      {/* Chat Window */}
+      <div
+        className={cn(
+          'fixed z-[9998] transition-all duration-300 ease-out',
+          // Mobile: Full screen with padding
+          'inset-0 p-4 sm:inset-auto',
+          // Desktop: Bottom right positioning with max width
+          'sm:bottom-4 sm:right-4 sm:w-full sm:max-w-sm sm:p-0',
+          isOpen 
+            ? 'scale-100 opacity-100 translate-y-0' 
+            : 'scale-95 opacity-0 translate-y-2 pointer-events-none'
+        )}
+      >
+        <div className={cn(
+          'bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-200/50 backdrop-blur-sm',
+          // Mobile: Full height with flex layout
+          'h-full flex flex-col sm:h-auto sm:max-h-[700px] sm:block'
+        )}>
+          {/* Header */}
+          <div className="px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white flex-shrink-0">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <MessageCircleMore className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Chat Assistant</h3>
+                  <p className="text-xs text-emerald-100">Online</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-1.5 hover:bg-white/20 rounded-lg transition-colors sm:block"
+                  aria-label="Minimize chat"
+                >
+                  <Minimize2 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-1.5 hover:bg-white/20 rounded-lg transition-colors"
+                  aria-label="Close chat"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Tab Bar */}
+          <div className="flex border-b border-gray-200 flex-shrink-0">
+            <button
+              onClick={() => setActiveTab('chat')}
+              className={cn(
+                'flex-1 py-2 flex items-center justify-center text-sm font-medium transition-colors',
+                activeTab === 'chat' ? 'border-b-2 border-emerald-500 text-emerald-600' : 'text-gray-600 hover:text-emerald-500'
+              )}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
+              <MessageCircleMore className="w-4 h-4 mr-2" />
+              Chat Assistant
+            </button>
+            <button
+              onClick={() => setActiveTab('history')}
+              className={cn(
+                'flex-1 py-2 flex items-center justify-center text-sm font-medium transition-colors',
+                activeTab === 'history' ? 'border-b-2 border-emerald-500 text-emerald-600' : 'text-gray-600 hover:text-emerald-500'
+              )}
+            >
+              <History className="w-4 h-4 mr-2" />
+              Recent Messages
             </button>
           </div>
 
-          <div className="h-96 overflow-y-auto border-x border-gray-200 p-4 bg-gray-50">
-            {messages.map((msg, index) => (
-              <div key={index} className={`mb-3 ${msg.user === 'Bot' ? 'pl-2' : 'pr-2'}`}>
-                <div className={`p-3 rounded-lg ${
-                  msg.user === 'Bot' 
-                    ? 'bg-white border border-gray-200' 
-                    : 'bg-green-500 text-white ml-auto'
-                }`}>
-                  <p className="text-sm">{msg.message}</p>
-                  {msg.pathaction && 
-                    <span className="text-xs text-blue-500 block mt-1">
-                      [Action: {msg.pathaction}]
-                    </span>
-                  }
+          {/* Content Area */}
+          {activeTab === 'chat' ? (
+            <>
+              {/* Messages Area */}
+              <div className={cn(
+                'overflow-y-auto px-3 py-4 space-y-4 bg-gray-50/30 flex-1 sm:flex-none sm:h-80'
+              )}>
+                {messages.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'flex',
+                      msg.user === 'Bot' ? 'justify-start' : 'justify-end'
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        'max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed',
+                        msg.user === 'Bot'
+                          ? 'bg-white border border-gray-200 text-gray-800 rounded-bl-md'
+                          : 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-br-md'
+                      )}
+                    >
+                      {highlightMessage(msg.message)}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Command Suggestions */}
+              {showCommands && filteredCommands.length > 0 && (
+                <div className="mx-3 mb-2 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-[9997] flex-shrink-0">
+                  {filteredCommands.map((cmd, index) => (
+                    <button
+                      key={index}
+                      onClick={() => selectCommand(cmd.command)}
+                      className="w-full px-3 py-2.5 text-left hover:bg-gray-50 flex items-center gap-3 transition-colors border-b border-gray-100 last:border-b-0"
+                    >
+                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <cmd.icon className="w-4 h-4 text-gray-600" />
+                      </div>
+                      <div>
+                        <span className="font-medium text-sm text-gray-900">{cmd.command}</span>
+                        <p className="text-xs text-gray-500">{cmd.description}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Input Area - Grok-like Style */}
+              <div className="p-3 border-t border-gray-200/50 flex-shrink-0">
+                <div className="relative bg-white border border-gray-300 rounded-2xl shadow-sm hover:border-gray-400 transition-all">
+                  <textarea
+                    ref={textareaRef}
+                    value={input}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyPress}
+                    placeholder={isRecording ? 'Listening...' : 'Type @Help for commands or ask anything...'}
+                    className="w-full resize-none outline-none bg-transparent px-4 py-3 text-sm text-gray-900 min-h-[65px] max-h-[120px] pl-12 pr-12"
+                    rows={1}
+                    style={{ 
+                      scrollbarWidth: 'none',
+                      msOverflowStyle: 'none',
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  />
+                  {/* Attachment Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className="absolute left-2 bottom-2 w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:text-emerald-500 transition-colors"
+                        aria-label="Attach file"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuItem onClick={handleFileAttach}>
+                        Upload from local device
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  {/* Voice/Send Button */}
+                  <button
+                    onClick={input.trim() ? handleSend : handleVoiceInput}
+                    className={cn(
+                      'absolute right-2 bottom-2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200',
+                      input.trim() || isRecording
+                        ? 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm hover:shadow-md'
+                        : 'bg-white text-gray-500 hover:text-emerald-500'
+                    )}
+                    aria-label={input.trim() ? 'Send message' : 'Voice input'}
+                  >
+                    {input.trim() ? (
+                      <Send className="w-4 h-4" />
+                    ) : isRecording ? (
+                      <Pause className={cn('w-4 h-4 animate-pulse')} />
+                    ) : (
+                      <Mic className="w-4 h-4" />
+                    )}
+                  </button>
                 </div>
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="p-4 border-t border-gray-200">
-            <div className="relative flex items-end gap-2">
-              <div className="flex-1 relative">
-                <Textarea
-                  value={input}
-                  onChange={(e)=>handleInputChange(e)}
-                  onKeyDown={(e) => handleKeyPress(e)}
-                  placeholder="Type / for commands or write a message..."
-                  className="w-full p-3 min-h-[45px] max-h-[120px] border text-black border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-sm resize-y"
-                  rows={1}
-                />
-                {showCommands && (
-                  <div className="absolute bottom-full mb-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-[200px] overflow-y-auto">
-                    {filteredCommands.map((cmd, index) => (
-                      <button
-                        key={index}
-                        onClick={() => selectCommand(cmd.command)}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-100 flex flex-col"
-                      >
-                        <span className="font-medium">{cmd.command}</span>
-                        <span className="text-xs text-gray-500">{cmd.description}</span>
-                      </button>
-                    ))}
+            </>
+          ) : (
+           
+            <div className={cn(
+              'overflow-y-auto px-3 py-4 space-y-4 bg-gray-50/30 flex-1 sm:flex-none sm:h-80'
+            )}>
+              {messages.length === 0 ? (
+                <p className="text-sm text-gray-500">No recent messages yet.</p>
+              ) : (
+                messages.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'flex',
+                      msg.user === 'Bot' ? 'justify-start' : 'justify-end'
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        'max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed',
+                        msg.user === 'Bot'
+                          ? 'bg-gray-100 text-gray-800 rounded-bl-md'
+                          : 'bg-emerald-100 text-emerald-800 rounded-br-md'
+                      )}
+                    >
+                      <span className="font-bold">{msg.user}: </span>
+                      {highlightMessage(msg.message)}
+                    </div>
                   </div>
-                )}
-              </div>
-              <button
-                onClick={handleSend}
-                className="h-[45px] px-5 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md flex-shrink-0"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                </svg>
-              </button>
+                ))
+              )}
+              <div ref={messagesEndRef} />
             </div>
-          </div>
+          )}
         </div>
       </div>
+
+      <style jsx>{`
+        textarea::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </>
   );
 }

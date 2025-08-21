@@ -59,7 +59,7 @@ const FooterBody = () => {
   ];
 
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer className="bg-white border-t  border-gray-200">
       {/* Top Section - Outlet Information */}
       <div className="bg-blue-800 w-full py-4 text-white">
         <div className="mx-auto max-w-7xl px-4">
@@ -85,7 +85,7 @@ const FooterBody = () => {
       </div>
 
       {/* Main Footer Content */}
-      <div className="bg-white py-6 max-w-7xl mx-auto px-2">
+      <div className="bg-white py-6 sm:max-md:px-4 max-w-7xl mx-auto px-2">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
           {/* Logo and Social Media */}
           <div className="md:col-span-1 flex flex-col items-start">

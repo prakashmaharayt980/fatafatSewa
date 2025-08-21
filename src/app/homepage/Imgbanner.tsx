@@ -121,16 +121,16 @@ const Imgbanner = () => {
 
     if (images.length === 0) {
         return (
-            <div className="w-full h-80 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl animate-pulse flex items-center justify-center">
+            <div className="w-full h-60 sm:h-80 bg-gradient-to-r from-gray-100 to-gray-200 rounded-none sm:rounded-2xl animate-pulse flex items-center justify-center">
                 <div className="text-gray-400">Loading...</div>
             </div>
         );
     }
 
     return (
-        <div className="w-full bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+        <div className="w-full bg-gradient-to-br from-gray-50 to-white overflow-hidden m-0 p-0 sm:px-4">
             {/* Main Banner Section */}
-            <div className="flex flex-col lg:flex-row gap-6 mb-8">
+            <div className="flex flex-col lg:flex-row gap-0 sm:gap-6 mb-2 sm:mb-8">
                 {/* Main Carousel */}
                 <div className="flex-1">
                     <div
@@ -139,7 +139,7 @@ const Imgbanner = () => {
                         onMouseLeave={() => setIsAutoPlaying(true)}
                     >
                         {/* Image Container with Enhanced Styling */}
-                        <div className="relative h-80 md:h-96 lg:h-[28rem] rounded-2xl overflow-hidden ">
+                        <div className="relative h-48 sm:h-80 md:h-96 lg:h-[28rem] rounded-none sm:rounded-2xl overflow-hidden">
                             <div
                                 className="flex transition-transform duration-700 ease-out h-full"
                                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -156,23 +156,16 @@ const Imgbanner = () => {
                                             src={image.default}
                                             alt={image.name}
                                             fill
-                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                            className="w-full h-full object-cover transition-transform duration-700"
                                             onLoad={() => setImageLoading(false)}
-
                                         />
-                                 
                                     </div>
                                 ))}
                             </div>
-
-
-
                         </div>
 
-
-
                         {/* Dots Indicator */}
-                        <div className="flex justify-center space-x-2 py-3 bg-gray-50" role="tablist">
+                        <div className="flex justify-center space-x-2 py-2 sm:py-3 bg-gray-50" role="tablist">
                             {images.map((_, index) => (
                                 <button
                                     key={index}
@@ -190,18 +183,17 @@ const Imgbanner = () => {
                     </div>
                 </div>
 
-                {/* Side Images - Improved Layout */}
-                <div className="lg:w-80 flex lg:flex-col gap-4">
+                {/* Side Images - Hidden on Mobile */}
+                <div className="hidden lg:flex lg:w-80 lg:flex-col gap-4">
                     {images.slice(1, 3).map((image, index) => (
                         <div key={index} className="relative group cursor-pointer flex-1">
-                            <div className="relative h-40 lg:h-48 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-100 to-gray-200">
+                            <div className="relative h-48 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-100 to-gray-200">
                                 <Image
                                     src={image.default}
                                     alt={image.name}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    className="w-full h-full object-cover transition-transform duration-500"
                                     onClick={() => goToSlide(index + 1)}
                                     fill
-
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                 <div className="absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -213,30 +205,26 @@ const Imgbanner = () => {
                 </div>
             </div>
 
-            {/* Features Section */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 border rounded-xl border-gray-300 shadow bg-gray-50 py-4 px-2 md:px-8">
+            {/* Features Section - Mobile Optimized */}
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4 border border-gray-300 rounded-xl shadow bg-gray-50 py-3 px-2 sm:py-4 sm:px-2 md:px-8 m-0">
                 {features.map((feature, index) => {
                     const Icon = feature.icon;
                     return (
                         <div
                             key={index}
-                            className="flex items-center gap-3 "
+                            className="flex flex-col sm:flex-row items-center sm:gap-3 p-1 text-center sm:text-left"
                         >
-                            <div
-                                className={`flex items-center justify-center rounded-full w-10 h-10 `}
-                            >
-                                <Icon className={`w-6 h-6 ${feature.iconColor}`} absoluteStrokeWidth={true} />
+                            <div className="flex items-center justify-center rounded-full w-8 h-8 sm:w-10 sm:h-10 mb-1 sm:mb-0">
+                                <Icon className={`w-4 h-4 sm:w-6 sm:h-6 ${feature.iconColor}`} absoluteStrokeWidth={true} />
                             </div>
-                            <div>
-                                <h4 className="font-semibold text-sm text-gray-800">{feature.title}</h4>
-                                <p className="text-xs text-gray-500">{feature.description}</p>
+                            <div className="min-w-0 flex-1">
+                                <h4 className="font-semibold text-xs sm:text-sm text-gray-800 leading-tight">{feature.title}</h4>
+                                <p className="text-xs text-gray-500 leading-tight hidden sm:block">{feature.description}</p>
                             </div>
                         </div>
                     );
                 })}
             </div>
-
-
         </div>
     );
 };

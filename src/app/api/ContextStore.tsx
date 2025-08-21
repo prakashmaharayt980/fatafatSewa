@@ -53,6 +53,7 @@ export interface CategorySlug {
       price: string;
       average_rating: number;
       name: string;
+      
     }>;
   };
 }
@@ -92,6 +93,10 @@ export interface HomePageData {
     created_at: Date;
     id: number
   }]>
+    homeappliance: CategorySlug[],
+      laptopitem: CategorySlug[],
+          droneitem: CategorySlug[]
+
 }
 
 interface ContextStoreContextType {
@@ -120,16 +125,22 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           laptopRes,
           accessoriesRes,
           waterPumpRes,
+          homeappliance,
           trendingRes,
           blogsRes,
+          laptopitem,
+          droneitem
 
         ] = await Promise.all([
           RemoteServices.Categories(),
           RemoteServices.CategoriesSlug('mobile-price-in-nepal'),
           RemoteServices.CategoriesSlug('accessories-price-in-nepal'),
           RemoteServices.CategoriesSlug('water-pump-price-in-nepal'),
+          RemoteServices.CategoriesSlug('macbook-price-in-nepal'),
           RemoteServices.ProductTranding(),
           RemoteServices.BlogsAll(),
+            RemoteServices.CategoriesSlug('laptop-price-in-nepal'),
+            RemoteServices.CategoriesSlug('drone-price-in-nepal'),
         ]);
 
         setHomePageData({
@@ -138,7 +149,11 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           laptops: [laptopRes],
           accessories: [accessoriesRes],
           waterPumps: [waterPumpRes],
-          blogContent: [blogsRes]
+          blogContent: [blogsRes],
+          homeappliance:[homeappliance],
+          laptopitem:[laptopitem],
+          droneitem:[droneitem]
+
         });
 
         console.log('cat Data:', categoriesRes.data);
