@@ -99,7 +99,7 @@ const FooterBody = () => {
               />
             </div>
             <p className="text-gray-600  text-[9px] font-medium">
-              Nepal's Leading Online Shopping Platform<br />
+              Nepal&apos;s Leading Online Shopping Platform<br />
               Making Quality Products Accessible to All
             </p>
             <div className="mt-3">

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, User, Heart, CreditCard, Menu, X, Tag, Calculator, BookType, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, User, Heart, Menu, X, Tag, Calculator, BookType, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import imglogo from '../assets/logoimg.png';
 import CategorySideDrawer from '../product/category/sidebar';
@@ -171,7 +171,7 @@ const HeaderComponent = () => {
             ) : (
                 <div className="p-6 text-center text-gray-500">
                     <Search className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                    <p>No products found for "{state.search}"</p>
+                    <p>No products found for &lsquo;{state.search}&lsquo;</p>
                 </div>
             )}
         </div>
@@ -380,7 +380,7 @@ const HeaderComponent = () => {
                 <CategorySideDrawer
                     categories={categories}
                     showCategoryDrawer={state.showCategoryDrawer}
-                    toggleCategoryDrawer={toggleCategoryDrawer}
+                    toggleCategoryDrawer={()=>toggleCategoryDrawer}
                 />
 
                 {/* Mobile Menu */}

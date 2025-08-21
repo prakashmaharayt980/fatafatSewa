@@ -157,8 +157,8 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
         });
 
         console.log('cat Data:', categoriesRes.data);
-      } catch (err) {
-        setError('Failed to fetch data. Please try again later.');
+      } catch (e) {
+        setError('Failed to fetch data. Please try again later. ');
       } finally {
         setLoading(false);
       }

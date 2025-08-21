@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Send, X, HelpCircle, ShoppingCart, Contact, Package, MessageCircleMore, Minimize2, Paperclip, Mic, History, Pause } from 'lucide-react';
-import { Textarea } from '@/components/ui/textarea';
+
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 // Mock WebSocket hook for demo

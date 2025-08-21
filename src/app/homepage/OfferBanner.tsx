@@ -120,7 +120,7 @@ const OfferBanner = () => {
           </div>
           <div className="bg-white/90 backdrop-blur-md p-2 rounded-2xl items-center text-center shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
             <p className="text-yellow-500 text-sm">★★★★★</p>
-            <p className="text-indigo-800 font-semibold text-base">iMac 24"</p>
+            <p className="text-indigo-800 font-semibold text-base">iMac 24</p>
             <p className="text-indigo-800 font-bold text-sm">Rs. 107,767</p>
           </div>
         </div>
