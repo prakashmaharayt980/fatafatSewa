@@ -30,44 +30,6 @@ const commands = [
   { command: '@Contact', description: 'Contact support', icon: Contact },
 ];
 
-// Type definitions for SpeechRecognition
-interface SpeechRecognition extends EventTarget {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  onresult: (event: SpeechRecognitionEvent) => void;
-  onend: () => void;
-  start: () => void;
-  stop: () => void;
-}
-
-interface SpeechRecognitionEvent {
-  results: SpeechRecognitionResultList;
-}
-
-interface SpeechRecognitionResultList {
-  [index: number]: SpeechRecognitionResult;
-  length: number;
-}
-
-interface SpeechRecognitionResult {
-  [index: number]: SpeechRecognitionAlternative;
-  length: number;
-}
-
-interface SpeechRecognitionAlternative {
-  transcript: string;
-  confidence: number;
-}
-
-// Type guard to check for SpeechRecognition support
-function isSpeechRecognitionSupported(window: Window): window is Window & {
-  SpeechRecognition?: new () => SpeechRecognition;
-  webkitSpeechRecognition?: new () => SpeechRecognition;
-} {
-  return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
-}
-
 export default function ChatBot() {
   const [input, setInput] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -79,7 +41,8 @@ export default function ChatBot() {
   const [showCommands, setShowCommands] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState(commands);
   const [isRecording, setIsRecording] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
   const [activeTab, setActiveTab] = useState<'chat' | 'history'>('chat');
 
   // Auto-scroll to latest message
@@ -95,48 +58,66 @@ export default function ChatBot() {
     }
   }, [input]);
 
-  // Setup speech recognition
+  // Setup MediaRecorder for audio recording
   useEffect(() => {
-    if (isSpeechRecognitionSupported(window)) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = false;
-      recognitionRef.current.lang = 'en-US';
-
-      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
-        const transcript = event.results[0][0].transcript;
-        setInput((prev) => prev + transcript);
-        setIsRecording(false);
-      };
-
-      recognitionRef.current.onend = () => {
-        setIsRecording(false);
-      };
-    } else {
-      console.warn('SpeechRecognition API is not supported in this browser.');
+    if (!navigator.mediaDevices || !window.MediaRecorder) {
+      console.warn('MediaRecorder API is not supported in this browser.');
+      return;
     }
+
+    let stream: MediaStream | null = null;
+
+    const setupMediaRecorder = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorderRef.current = new MediaRecorder(stream);
+
+        mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorderRef.current.onstop = () => {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          audioChunksRef.current = [];
+          // For demo, send a message with the audio Blob info
+          // In a real app, send audioBlob to a server for transcription
+          sendMessage(`Audio recorded: ${audioBlob.type}, ${audioBlob.size} bytes`);
+          setIsRecording(false);
+        };
+      } catch (err) {
+        console.error('Error accessing microphone:', err);
+        setIsRecording(false);
+      }
+    };
+
+    setupMediaRecorder();
 
     // Cleanup on unmount
     return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
 
   const handleVoiceInput = () => {
-    if (!recognitionRef.current) {
-      console.warn('SpeechRecognition is not available.');
+    if (!mediaRecorderRef.current) {
+      console.warn('MediaRecorder is not available.');
       return;
     }
 
     if (isRecording) {
-      recognitionRef.current.stop();
+      mediaRecorderRef.current.stop();
     } else {
-      recognitionRef.current.start();
+      audioChunksRef.current = [];
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
     }
-    setIsRecording(!isRecording);
   };
 
   const handleSend = () => {
@@ -328,7 +309,7 @@ export default function ChatBot() {
                     <button
                       key={index}
                       onClick={() => selectCommand(cmd.command)}
-                      className="w-full px-3 py-2.5 text-left hover:bg-gray-50 flex items-center gap-3 transition-colors border-b border-gray-100 last:border-b-0"
+                      className="w-full px-3 py-2. kawałek text-left hover:bg-gray-50 flex items-center gap-3 transition-colors border-b border-gray-100 last:border-b-0"
                     >
                       <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
                         <cmd.icon className="w-4 h-4 text-gray-600" />
@@ -350,7 +331,7 @@ export default function ChatBot() {
                     value={input}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyPress}
-                    placeholder={isRecording ? 'Listening...' : 'Type @Help for commands or ask anything...'}
+                    placeholder={isRecording ? 'Recording audio...' : 'Type @Help for commands or ask anything...'}
                     className="w-full resize-none outline-none bg-transparent px-4 py-3 text-sm text-gray-900 min-h-[65px] max-h-[120px] pl-12 pr-12"
                     rows={1}
                     style={{ 
@@ -390,7 +371,7 @@ export default function ChatBot() {
                         ? 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm hover:shadow-md'
                         : 'bg-white text-gray-500 hover:text-emerald-500'
                     )}
-                    aria-label={input.trim() ? 'Send message' : 'Voice input'}
+                    aria-label={input.trim() ? 'Send message' : 'Record audio'}
                   >
                     {input.trim() ? (
                       <Send className="w-4 h-4" />
