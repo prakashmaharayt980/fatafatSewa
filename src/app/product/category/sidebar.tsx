@@ -15,7 +15,7 @@ import { HomePageData } from '@/app/api/ContextStore';
 interface CategorySideDrawerProps {
   categories: HomePageData['categories'];
   showCategoryDrawer: boolean;
-  toggleCategoryDrawer: () =>{};
+  toggleCategoryDrawer: () =>void;
 }
 
 const CategorySideDrawer = ({
