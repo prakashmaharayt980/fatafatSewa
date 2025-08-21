@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Send, X, HelpCircle, ShoppingCart, Contact, Package, MessageCircleMore, Minimize2, Paperclip, Mic, History, Pause } from 'lucide-react';
-
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 // Mock WebSocket hook for demo
@@ -12,7 +11,7 @@ const useWebSocket = () => {
     { user: 'Bot', message: 'Hello! I\'m here to help. Try typing @Help to see available commands.' }
   ]);
   
-  const sendMessage = (message) => {
+  const sendMessage = (message: string) => {
     setMessages(prev => [
       ...prev,
       { user: 'User', message },
@@ -31,19 +30,57 @@ const commands = [
   { command: '@Contact', description: 'Contact support', icon: Contact },
 ];
 
+// Type definitions for SpeechRecognition
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onend: () => void;
+  start: () => void;
+  stop: () => void;
+}
+
+interface SpeechRecognitionEvent {
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  [index: number]: SpeechRecognitionResult;
+  length: number;
+}
+
+interface SpeechRecognitionResult {
+  [index: number]: SpeechRecognitionAlternative;
+  length: number;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+// Type guard to check for SpeechRecognition support
+function isSpeechRecognitionSupported(window: Window): window is Window & {
+  SpeechRecognition?: new () => SpeechRecognition;
+  webkitSpeechRecognition?: new () => SpeechRecognition;
+} {
+  return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+}
+
 export default function ChatBot() {
   const [input, setInput] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [recentInputs, setRecentInputs] = useState([]);
+  const [recentInputs, setRecentInputs] = useState<string[]>([]);
   const { messages, sendMessage } = useWebSocket();
-  const messagesEndRef = useRef(null);
-  const textareaRef = useRef(null);
-  const fileInputRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [showCommands, setShowCommands] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState(commands);
   const [isRecording, setIsRecording] = useState(false);
-  const recognitionRef = useRef(null);
-  const [activeTab, setActiveTab] = useState('chat');
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const [activeTab, setActiveTab] = useState<'chat' | 'history'>('chat');
 
   // Auto-scroll to latest message
   useEffect(() => {
@@ -60,14 +97,14 @@ export default function ChatBot() {
 
   // Setup speech recognition
   useEffect(() => {
-    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+    if (isSpeechRecognitionSupported(window)) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;
       recognitionRef.current.lang = 'en-US';
 
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         const transcript = event.results[0][0].transcript;
         setInput((prev) => prev + transcript);
         setIsRecording(false);
@@ -76,14 +113,28 @@ export default function ChatBot() {
       recognitionRef.current.onend = () => {
         setIsRecording(false);
       };
+    } else {
+      console.warn('SpeechRecognition API is not supported in this browser.');
     }
+
+    // Cleanup on unmount
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
   }, []);
 
   const handleVoiceInput = () => {
+    if (!recognitionRef.current) {
+      console.warn('SpeechRecognition is not available.');
+      return;
+    }
+
     if (isRecording) {
-      recognitionRef.current?.stop();
+      recognitionRef.current.stop();
     } else {
-      recognitionRef.current?.start();
+      recognitionRef.current.start();
     }
     setIsRecording(!isRecording);
   };
@@ -101,7 +152,7 @@ export default function ChatBot() {
     setShowCommands(false);
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -111,7 +162,7 @@ export default function ChatBot() {
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setInput(value);
 
@@ -129,7 +180,7 @@ export default function ChatBot() {
     }
   };
 
-  const selectCommand = (command) => {
+  const selectCommand = (command: string) => {
     setInput(command + ' ');
     setShowCommands(false);
     textareaRef.current?.focus();
@@ -139,15 +190,14 @@ export default function ChatBot() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
-      // Mock sending file - in real app, upload and send URL or something
       sendMessage(`Attached file: ${file.name}`);
     }
   };
 
-  const highlightMessage = (message) => {
+  const highlightMessage = (message: string) => {
     const command = commands.find((cmd) => cmd.command === message);
     if (command) {
       return <span className="font-semibold text-emerald-600">{command.command}</span>;
@@ -162,9 +212,7 @@ export default function ChatBot() {
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'fixed z-[9999] w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group',
-          // Desktop positioning
           'bottom-4 right-4',
-          // Mobile positioning - centered at bottom
           'sm:bottom-4 sm:right-4',
           isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100 hover:scale-110'
         )}
@@ -177,9 +225,7 @@ export default function ChatBot() {
       <div
         className={cn(
           'fixed z-[9998] transition-all duration-300 ease-out',
-          // Mobile: Full screen with padding
           'inset-0 p-4 sm:inset-auto',
-          // Desktop: Bottom right positioning with max width
           'sm:bottom-4 sm:right-4 sm:w-full sm:max-w-sm sm:p-0',
           isOpen 
             ? 'scale-100 opacity-100 translate-y-0' 
@@ -188,7 +234,6 @@ export default function ChatBot() {
       >
         <div className={cn(
           'bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-200/50 backdrop-blur-sm',
-          // Mobile: Full height with flex layout
           'h-full flex flex-col sm:h-auto sm:max-h-[700px] sm:block'
         )}>
           {/* Header */}
@@ -359,7 +404,6 @@ export default function ChatBot() {
               </div>
             </>
           ) : (
-           
             <div className={cn(
               'overflow-y-auto px-3 py-4 space-y-4 bg-gray-50/30 flex-1 sm:flex-none sm:h-80'
             )}>
