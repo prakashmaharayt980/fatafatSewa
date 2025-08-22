@@ -368,7 +368,8 @@ export default function CategoryPageWithChatbot() {
     <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-background to-muted/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2 animate-fade-in">
       <div className="relative overflow-hidden">
         <div className="aspect-square overflow-hidden">
-          <img
+          <Image
+            fill
             src={product.imageurl || "/placeholder.svg"}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
@@ -480,7 +481,7 @@ export default function CategoryPageWithChatbot() {
             </div>
             {data.image.length > 0 && (
               <div className="w-full lg:w-80 h-64 lg:h-80 flex flex-col items-center justify-center relative">
-                <img
+                <Image
                   key={heroImgIdx}
                   src={data.image[heroImgIdx].url}
                   alt={data.image[heroImgIdx].name}
@@ -489,6 +490,7 @@ export default function CategoryPageWithChatbot() {
                     (imgAnimating ? "opacity-0 scale-95" : "opacity-100 scale-100")
                   }
                   style={{ position: "absolute", inset: 0 }}
+                  fill
                 />
               </div>
             )}
