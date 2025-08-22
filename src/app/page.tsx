@@ -4,7 +4,7 @@ import React from 'react';
 
 import Image from 'next/image';
 import { useContextStore } from './api/ContextStore';
-import Imgbanner, { ImagesListBanner } from './homepage/Imgbanner';
+import Imgbanner from './homepage/Imgbanner';
 import BasketCard from './homepage/BasketCard';
 import PopularCategories from './homepage/PopularCategories';
 import OfferBanner from './homepage/OfferBanner';
