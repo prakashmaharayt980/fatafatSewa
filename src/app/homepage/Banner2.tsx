@@ -2,14 +2,14 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+
 import { cn } from '@/lib/utils'; // Assuming cn is a utility like clsx or cva
-import  { ImagesListBanner } from './Imgbanner';
+
 import img1 from '../../../public/imgfile/banner1.jpeg'
 import img2 from '../../../public/imgfile/banner2.jpeg'
 
 const TwoImageBanner = () => {
-  const router = useRouter();
+  
 
   return (
     <div className={cn(

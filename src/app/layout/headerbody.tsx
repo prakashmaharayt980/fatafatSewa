@@ -9,13 +9,16 @@ import RemoteServices from '../api/remoteservice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import nvaitemlist from './navitem.json'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import NavBar from './NavBar';
 
 const HeaderComponent = () => {
     const { homePageData } = useContextStore();
     const categories = homePageData?.categories || [];
     const router = useRouter();
     const searchRef = useRef(null);
-
+const [activeDropdown, setActiveDropdown] = useState(null);
     // Consolidated state object
     const [state, setState] = useState({
         search: "",
@@ -41,18 +44,18 @@ const HeaderComponent = () => {
 
         if (value.trim().length > 2) {
             updateState({ isSearching: true, showSearchDropdown: true });
-            
+
             try {
                 const res = await RemoteServices.SerachProducts(value.trim());
-                updateState({ 
-                    searchResults: res.data || [], 
-                    isSearching: false 
+                updateState({
+                    searchResults: res.data || [],
+                    isSearching: false
                 });
             } catch (error) {
                 console.error('Search error:', error);
-                updateState({ 
-                    searchResults: [], 
-                    isSearching: false 
+                updateState({
+                    searchResults: [],
+                    isSearching: false
                 });
             }
         } else {
@@ -70,13 +73,10 @@ const HeaderComponent = () => {
         updateState({ isMobileMenuOpen: false });
     };
 
-    const toggleCategoryDrawer = (e) => {
-        e?.stopPropagation();
-        updateState({ showCategoryDrawer: !state.showCategoryDrawer });
-    };
+
 
     const toggleMobileSearch = () => {
-        updateState({ 
+        updateState({
             mobileSearchVisible: !state.mobileSearchVisible,
             search: "",
             searchResults: [],
@@ -99,14 +99,14 @@ const HeaderComponent = () => {
             if (searchRef.current && !searchRef.current.contains(event.target)) {
                 updateState({ showSearchDropdown: false });
             }
-            
+
             // Close category drawer
-            if (state.showCategoryDrawer && 
-                !event.target.closest('.category-drawer') && 
+            if (state.showCategoryDrawer &&
+                !event.target.closest('.category-drawer') &&
                 !event.target.closest('.category-button')) {
                 updateState({ showCategoryDrawer: false });
             }
-            
+
             // Close account menu
             if (!event.target.closest('.account-menu')) {
                 updateState({ showAccountMenu: false });
@@ -195,8 +195,8 @@ const HeaderComponent = () => {
                     <div className="container mx-auto px-2 sm:px-4 lg:px-6">
                         <div className="flex items-center justify-between h-14 sm:h-16">
                             {/* Logo */}
-                            <div 
-                                className="flex items-center space-x-2 cursor-pointer flex-shrink-0" 
+                            <div
+                                className="flex items-center space-x-2 cursor-pointer flex-shrink-0"
                                 onClick={() => handleroute('/')}
                             >
                                 <Image
@@ -239,9 +239,9 @@ const HeaderComponent = () => {
                                 >
                                     <Search className="h-4 w-4" />
                                 </button>
-                      
 
-                       
+
+
 
                                 {/* User Account */}
                                 <div className="relative account-menu">
@@ -252,7 +252,7 @@ const HeaderComponent = () => {
                                         <User className="h-4 w-4" />
                                         <ChevronDown className="h-3 w-3" />
                                     </button>
-                                    
+
                                     {/* Account Dropdown */}
                                     {state.showAccountMenu && (
                                         <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
@@ -267,10 +267,10 @@ const HeaderComponent = () => {
                                     )}
                                 </div>
 
-             
+
 
                                 {/* Cart */}
-                                <button 
+                                <button
                                     onClick={() => handleroute('/cart')}
                                     className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
                                 >
@@ -281,12 +281,12 @@ const HeaderComponent = () => {
                                     </span>
                                 </button>
 
-                                          <button
+                                <button
                                     onClick={() => handleroute('/wishlist')}
-                                 className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
+                                    className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
                                 >
-                                     <Heart className="h-4 w-4" />
-                                 
+                                    <Heart className="h-4 w-4" />
+
                                 </button>
 
                                 {/* Mobile Menu Toggle */}
@@ -315,14 +315,14 @@ const HeaderComponent = () => {
                                         className="w-full px-3 py-2 bg-transparent border-none focus:outline-none text-sm"
                                         autoFocus
                                     />
-                                    <button 
+                                    <button
                                         onClick={toggleMobileSearch}
                                         className="px-3 py-2 text-gray-400 hover:text-gray-600"
                                     >
                                         <X className="h-4 w-4" />
                                     </button>
                                 </div>
-                                
+
                                 {/* Mobile Search Results */}
                                 {state.showSearchDropdown && <SearchResults isMobile={true} />}
                             </div>
@@ -331,126 +331,7 @@ const HeaderComponent = () => {
                 )}
 
                 {/* Navigation Bar - Desktop Only */}
-                <div className="hidden md:block bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
-                    <div className="container mx-auto px-2 sm:px-4 lg:px-6">
-                        <div className="flex items-center justify-between py-2">
-                            {/* Categories and Navigation */}
-                            <div className="flex items-center space-x-4 sm:space-x-6">
-                                {/* Category Button */}
-                                <button
-                                    onClick={toggleCategoryDrawer}
-                                    className="category-button flex items-center space-x-2 px-3 py-1.5 bg-white rounded-full border border-gray-200 shadow-sm text-sm font-medium text-gray-700 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200"
-                                >
-                                    <Menu className="h-4 w-4" />
-                                    <span>Categories</span>
-                                </button>
-
-                                {/* Desktop Navigation Links */}
-                                <div className="flex items-center space-x-4">
-                                    <button
-                                        onClick={() => handleroute('/brands')}
-                                        className="flex items-center space-x-1.5 px-2 py-1.5 rounded-full text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
-                                    >
-                                        <Tag className="h-4 w-4 text-red-500" />
-                                        <span>Brands</span>
-                                    </button>
-                                    <button
-                                        onClick={() => handleroute('/emi-calculator')}
-                                        className="flex items-center space-x-1.5 px-2 py-1.5 rounded-full text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
-                                    >
-                                        <Calculator className="h-4 w-4 text-green-500" />
-                                        <span>EMI</span>
-                                    </button>
-                                    <button
-                                        onClick={() => handleroute('/blogs')}
-                                        className="flex items-center space-x-1.5 px-2 py-1.5 rounded-full text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
-                                    >
-                                        <BookType className="h-4 w-4 text-blue-500" />
-                                        <span>Blogs</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                  
-                        </div>
-                    </div>
-                </div>
-
-                {/* Category Side Drawer */}
-                <CategorySideDrawer
-                    categories={categories}
-                    showCategoryDrawer={state.showCategoryDrawer}
-                    toggleCategoryDrawer={()=>toggleCategoryDrawer}
-                />
-
-                {/* Mobile Menu */}
-                {state.isMobileMenuOpen && (
-                    <div className="sm:hidden bg-white border-t border-gray-200">
-                        <div className="container mx-auto px-2 py-3">
-                            <div className="grid grid-cols-2 gap-2">
-                                {/* User Account - Mobile */}
-                                <button
-                                    onClick={() => handleroute('/profile')}
-                                    className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                                >
-                                    <User className="h-4 w-4" />
-                                    <span className="text-sm">Account</span>
-                                </button>
-                                
-                                <button
-                                    onClick={() => handleroute('/wishlist')}
-                                    className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                                >
-                                    <Heart className="h-4 w-4" />
-                                    <span className="text-sm">Wishlist</span>
-                                </button>
-                                
-                                <button
-                                    onClick={() => handleroute('/brands')}
-                                    className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                                >
-                                    <Tag className="h-4 w-4 text-red-500" />
-                                    <span className="text-sm">Brands</span>
-                                </button>
-                                
-                                <button
-                                    onClick={() => handleroute('/emi-calculator')}
-                                    className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                                >
-                                    <Calculator className="h-4 w-4 text-green-500" />
-                                    <span className="text-sm">EMI</span>
-                                </button>
-                                
-                                <button
-                                    onClick={() => handleroute('/blogs')}
-                                    className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                                >
-                                    <BookType className="h-4 w-4 text-blue-500" />
-                                    <span className="text-sm">Blogs</span>
-                                </button>
-                                
-                                <button
-                                    onClick={() => handleroute('/orders')}
-                                    className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                                >
-                                    <ShoppingCart className="h-4 w-4" />
-                                    <span className="text-sm">Orders</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Mobile Menu Overlay */}
-                {(state.isMobileMenuOpen || (state.showCategoryDrawer && window.innerWidth >= 768)) && (
-                    <div 
-                        className="fixed inset-0 bg-black bg-opacity-25 z-30"
-                        onClick={() => updateState({ 
-                            isMobileMenuOpen: false, 
-                            showCategoryDrawer: false 
-                        })}
-                    />
-                )}
+<NavBar/>
             </header>
         </>
     );

@@ -32,7 +32,7 @@ const OurArticles = () => {
   };
 
   return (
-    <div className=" mx-auto px-4 py-8">
+    <div className=" mx-auto px-4 py-8 font-faily-blogcontent">
       {/* Header Section */}
       <div className="mb-2">
         <div className="flex items-center justify-center mb-6">
@@ -77,11 +77,11 @@ const OurArticles = () => {
                 {article.title}
               </h3>
               <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-                {stripHtml(article.content).length > 100
-                  ? `${stripHtml(article.content).substring(0, 100)}...`
+                {stripHtml(article.content).length > 120
+                  ? `${stripHtml(article.content).substring(0, 120)}......`
                   : stripHtml(article.content)}
               </p>
-              <div className="flex items-center text-center justify-between">
+              {/* <div className="flex items-center text-center justify-between">
                 <div className="flex  flex-col justify-between mb-1">
                   <span className="text-sm text-gray-600">{article.author}</span>
                   <span className="text-sm text-gray-500">
@@ -96,7 +96,7 @@ const OurArticles = () => {
                 >
                   Read More
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         ))}

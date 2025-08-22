@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { CheckCheck, Heart, Truck } from "lucide-react";
 import Image from "next/image";
 
@@ -117,8 +118,13 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
             {/* Product Details */}
             <div className="p-2 sm:p-3 pt-1  font-family-all">
                 {/* Product Title */}
-                <h3 className="mb-2 line-clamp-2 text-xs sm:text-sm font-medium text-[var(--colour-text2)] transition-colors duration-200 group-hover:text-[var(--colour-fsP2)] leading-tight">
+                <h3 className={cn(
+                     
+                    " line-clamp-2 text-xs sm:text-sm font-medium text-[var(--colour-text2)] transition-colors duration-200 group-hover:text-[var(--colour-fsP2)] leading-tight"
+                  
+                )}>
                     {product.highlights !== null ? product.highlights : product.name}
+                
                 </h3>
 
                 {/* Price Section */}

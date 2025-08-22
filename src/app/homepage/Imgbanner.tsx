@@ -184,10 +184,10 @@ const Imgbanner = () => {
                 </div>
 
                 {/* Side Images - Hidden on Mobile */}
-                <div className="hidden lg:flex lg:w-80 lg:flex-col gap-4">
+                <div className=" lg:flex lg:w-80 lg:flex-col gap-4">
                     {images.slice(1, 3).map((image, index) => (
                         <div key={index} className="relative group cursor-pointer flex-1">
-                            <div className="relative h-48 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-gray-100 to-gray-200">
+                            <div className="relative grid grid-cols-2 rounded-xl overflow-hidden shadow-lg ">
                                 <Image
                                     src={image.default}
                                     alt={image.name}

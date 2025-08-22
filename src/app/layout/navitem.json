@@ -1,0 +1,659 @@
+[
+  {
+    "title": "Laptops By Brands",
+    "content": [
+      {
+        "innerTittle": "Dell",
+        "childernlistL": [
+          { "title": "Inspiron Series", "to": "/laptops-by-brands/dell/inspiron-series" },
+          { "title": "Vostro Series", "to": "/laptops-by-brands/dell/vostro-series" },
+          { "title": "Gaming Series", "to": "/laptops-by-brands/dell/gaming-series" },
+          { "title": "Latitude Series", "to": "/laptops-by-brands/dell/latitude-series" },
+          { "title": "2-in-1", "to": "/laptops-by-brands/dell/2-in-1" },
+          { "title": "XPS", "to": "/laptops-by-brands/dell/xps" },
+          { "title": "Alienware", "to": "/laptops-by-brands/dell/alienware" }
+        ]
+      },
+      {
+        "innerTittle": "Asus",
+        "childernlistL": [
+          { "title": "Zenbook Series", "to": "/laptops-by-brands/asus/zenbook" },
+          { "title": "ROG Series", "to": "/laptops-by-brands/asus/rog" },
+          { "title": "TUF Gaming Series", "to": "/laptops-by-brands/asus/tuf-gaming" },
+          { "title": "Vivobook Series", "to": "/laptops-by-brands/asus/vivobook" },
+          { "title": "Zephyrus", "to": "/laptops-by-brands/asus/zephyrus" },
+          { "title": "Asus Gaming Series", "to": "/laptops-by-brands/asus/gaming" }
+        ]
+      },
+      {
+        "innerTittle": "Acer",
+        "childernlistL": [
+          { "title": "Nitro Series", "to": "/laptops-by-brands/acer/nitro" },
+          { "title": "Helios Series", "to": "/laptops-by-brands/acer/helios" },
+          { "title": "Aspire Series", "to": "/laptops-by-brands/acer/aspire" },
+          { "title": "Swift Series", "to": "/laptops-by-brands/acer/swift" },
+          { "title": "Triton Series", "to": "/laptops-by-brands/acer/triton" },
+          { "title": "Spin Series", "to": "/laptops-by-brands/acer/spin" },
+          { "title": "Extensa Series", "to": "/laptops-by-brands/acer/extensa" },
+          { "title": "Travelmate Series", "to": "/laptops-by-brands/acer/travelmate" }
+        ]
+      },
+      {
+        "innerTittle": "Apple",
+        "childernlistL": [
+          { "title": "Macbook Pro", "to": "/laptops-by-brands/apple/macbook-pro" },
+          { "title": "Macbook Air", "to": "/laptops-by-brands/apple/macbook-air" },
+          { "title": "iPad", "to": "/laptops-by-brands/apple/ipad" },
+          { "title": "iMac", "to": "/laptops-by-brands/apple/imac" },
+          { "title": "Mac Mini", "to": "/laptops-by-brands/apple/mac-mini" },
+          { "title": "Airpods", "to": "/laptops-by-brands/apple/airpods" }
+        ]
+      },
+      {
+        "innerTittle": "HP",
+        "childernlistL": [
+          { "title": "Pavilion Series", "to": "/laptops-by-brands/hp/pavilion" },
+          { "title": "Victus Series", "to": "/laptops-by-brands/hp/victus" },
+          { "title": "Omen Series", "to": "/laptops-by-brands/hp/omen" },
+          { "title": "Spectre Series", "to": "/laptops-by-brands/hp/spectre" },
+          { "title": "Envy Series", "to": "/laptops-by-brands/hp/envy" },
+          { "title": "Notebook Series", "to": "/laptops-by-brands/hp/notebook" },
+          { "title": "OmniBook Series", "to": "/laptops-by-brands/hp/omnibook" }
+        ]
+      },
+      {
+        "innerTittle": "Lenovo",
+        "childernlistL": [
+          { "title": "ThinkPad", "to": "/laptops-by-brands/lenovo/thinkpad" },
+          { "title": "IdeaPad", "to": "/laptops-by-brands/lenovo/ideapad" },
+          { "title": "Flex", "to": "/laptops-by-brands/lenovo/flex" },
+          { "title": "Legion", "to": "/laptops-by-brands/lenovo/legion" },
+          { "title": "Yoga", "to": "/laptops-by-brands/lenovo/yoga" },
+          { "title": "ThinkBook", "to": "/laptops-by-brands/lenovo/thinkbook" }
+        ]
+      },
+      {
+        "innerTittle": "MSI",
+        "childernlistL": [
+          { "title": "Crosshair / Pulse GL Series", "to": "/laptops-by-brands/msi/crosshair-pulse-gl" },
+          { "title": "Cyborg / Thin GF Series", "to": "/laptops-by-brands/msi/cyborg-thin-gf" },
+          { "title": "Vector / Leopard GP Series", "to": "/laptops-by-brands/msi/vector-leopard-gp" },
+          { "title": "Titan GT Series", "to": "/laptops-by-brands/msi/titan-gt" },
+          { "title": "Stealth Series", "to": "/laptops-by-brands/msi/stealth" },
+          { "title": "Delta Series", "to": "/laptops-by-brands/msi/delta" },
+          { "title": "Prestige Series", "to": "/laptops-by-brands/msi/prestige" }
+        ]
+      },
+      {
+        "innerTittle": "Others",
+        "childernlistL": [
+          { "title": "Microsoft", "to": "/laptops-by-brands/others/microsoft" },
+          { "title": "Gigabyte", "to": "/laptops-by-brands/others/gigabyte" },
+          { "title": "Avita", "to": "/laptops-by-brands/others/avita" },
+          { "title": "Huawei", "to": "/laptops-by-brands/others/huawei" },
+          { "title": "Razer Blade", "to": "/laptops-by-brands/others/razer-blade" },
+          { "title": "Honor", "to": "/laptops-by-brands/others/honor" },
+          { "title": "VAIO", "to": "/laptops-by-brands/others/vaio" }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Accessories",
+    "content": [
+      {
+        "innerTittle": "Computer Accessories",
+        "childernlistL": [
+          { "title": "Mouse Pad", "to": "/accessories/computer/mouse-pad" },
+          { "title": "Combo Set", "to": "/accessories/computer/combo-set" },
+          { "title": "Webcam", "to": "/accessories/computer/webcam" },
+          { "title": "Joystick", "to": "/accessories/computer/joystick" },
+          { "title": "USB Dongles", "to": "/accessories/computer/usb-dongles" },
+          { "title": "Card Readers", "to": "/accessories/computer/card-readers" },
+          { "title": "Keyboard", "to": "/accessories/computer/keyboard" },
+          { "title": "Mouse", "to": "/accessories/computer/mouse" }
+        ]
+      },
+      {
+        "innerTittle": "Storage Device",
+        "childernlistL": [
+          { "title": "HDD", "to": "/accessories/storage/hdd" },
+          { "title": "External SSD", "to": "/accessories/storage/external-ssd" },
+          { "title": "Laptop RAM", "to": "/accessories/storage/laptop-ram" },
+          { "title": "External HDD", "to": "/accessories/storage/external-hdd" },
+          { "title": "Jet Flash Drive", "to": "/accessories/storage/jet-flash-drive" },
+          { "title": "Pen Drive", "to": "/accessories/storage/pen-drive" },
+          { "title": "Memory Card", "to": "/accessories/storage/memory-card" },
+          { "title": "SSD", "to": "/accessories/storage/ssd" }
+        ]
+      },
+      {
+        "innerTittle": "Audio Devices",
+        "childernlistL": [
+          { "title": "Earbuds", "to": "/accessories/audio/earbuds" },
+          { "title": "Earphones", "to": "/accessories/audio/earphones" },
+          { "title": "Woofers", "to": "/accessories/audio/woofers" },
+          { "title": "Microphones", "to": "/accessories/audio/microphones" },
+          { "title": "Sound Bar", "to": "/accessories/audio/sound-bar" },
+          { "title": "Home Theatre", "to": "/accessories/audio/home-theatre" },
+          { "title": "Headphones", "to": "/accessories/audio/headphones" },
+          { "title": "Speakers", "to": "/accessories/audio/speakers" }
+        ]
+      },
+      {
+        "innerTittle": "Laptop Accessories",
+        "childernlistL": [
+          { "title": "Laptop Charger", "to": "/accessories/laptop/charger" },
+          { "title": "Laptop Battery", "to": "/accessories/laptop/battery" },
+          { "title": "Laptop Screen", "to": "/accessories/laptop/screen" },
+          { "title": "Laptop Keyboard", "to": "/accessories/laptop/keyboard" },
+          { "title": "Laptop Stand", "to": "/accessories/laptop/stand" },
+          { "title": "Laptop Cooler", "to": "/accessories/laptop/cooler" },
+          { "title": "Laptop Bags", "to": "/accessories/laptop/bags" },
+          { "title": "Sleeve Cases", "to": "/accessories/laptop/sleeve-cases" }
+        ]
+      },
+      {
+        "innerTittle": "Cables & Connectors",
+        "childernlistL": [
+          { "title": "HDMI Adapters", "to": "/accessories/cables/hdmi-adapters" },
+          { "title": "USB Adapters", "to": "/accessories/cables/usb-adapters" },
+          { "title": "LAN Adapters", "to": "/accessories/cables/lan-adapters" },
+          { "title": "Cables", "to": "/accessories/cables/cables" },
+          { "title": "Enclosure", "to": "/accessories/cables/enclosure" },
+          { "title": "Adapter", "to": "/accessories/cables/adapter" },
+          { "title": "Converters", "to": "/accessories/cables/converters" },
+          { "title": "Hubs & Dock", "to": "/accessories/cables/hubs-dock" }
+        ]
+      },
+      {
+        "innerTittle": "Cleaning & Repair",
+        "childernlistL": [
+          { "title": "Thermal Paste", "to": "/accessories/cleaning/thermal-paste" },
+          { "title": "Cleaning Dusters", "to": "/accessories/cleaning/dusters" },
+          { "title": "Screw Driver Tool Set", "to": "/accessories/cleaning/screw-driver" },
+          { "title": "Cleaning Wipes", "to": "/accessories/cleaning/wipes" },
+          { "title": "Cleaning Solution", "to": "/accessories/cleaning/solution" },
+          { "title": "Toolkit", "to": "/accessories/cleaning/toolkit" },
+          { "title": "Blower", "to": "/accessories/cleaning/blower" }
+        ]
+      },
+      {
+        "innerTittle": "Safety & Protection",
+        "childernlistL": [
+          { "title": "Screen Protectors", "to": "/accessories/safety/screen-protectors" },
+          { "title": "Skins", "to": "/accessories/safety/skins" },
+          { "title": "Laptop Keyguard", "to": "/accessories/safety/laptop-keyguard" },
+          { "title": "Tempered Glass", "to": "/accessories/safety/tempered-glass" },
+          { "title": "Mobile Cases", "to": "/accessories/safety/mobile-cases" }
+        ]
+      },
+      {
+        "innerTittle": "Software/Games",
+        "childernlistL": [
+          { "title": "Operating System", "to": "/accessories/software/os" },
+          { "title": "MS Office", "to": "/accessories/software/ms-office" },
+          { "title": "Adobe", "to": "/accessories/software/adobe" },
+          { "title": "Antivirus", "to": "/accessories/software/antivirus" },
+          { "title": "AutoDesk", "to": "/accessories/software/autodesk" },
+          { "title": "Games", "to": "/accessories/software/games" }
+        ]
+      }
+    ]
+  }
+,
+  {
+    "title": "Accessories",
+    "content": [
+      {
+        "innerTittle": "Computer Accessories",
+        "childernlistL": [
+          { "title": "Mouse Pad", "to": "/accessories/computer/mouse-pad" },
+          { "title": "Combo Set", "to": "/accessories/computer/combo-set" },
+          { "title": "Webcam", "to": "/accessories/computer/webcam" },
+          { "title": "Joystick", "to": "/accessories/computer/joystick" },
+          { "title": "USB Dongles", "to": "/accessories/computer/usb-dongles" },
+          { "title": "Card Readers", "to": "/accessories/computer/card-readers" },
+          { "title": "Keyboard", "to": "/accessories/computer/keyboard" },
+          { "title": "Mouse", "to": "/accessories/computer/mouse" }
+        ]
+      },
+      {
+        "innerTittle": "Storage Device",
+        "childernlistL": [
+          { "title": "HDD", "to": "/accessories/storage/hdd" },
+          { "title": "External SSD", "to": "/accessories/storage/external-ssd" },
+          { "title": "Laptop RAM", "to": "/accessories/storage/laptop-ram" },
+          { "title": "External HDD", "to": "/accessories/storage/external-hdd" },
+          { "title": "Jet Flash Drive", "to": "/accessories/storage/jet-flash-drive" },
+          { "title": "Pen Drive", "to": "/accessories/storage/pen-drive" },
+          { "title": "Memory Card", "to": "/accessories/storage/memory-card" },
+          { "title": "SSD", "to": "/accessories/storage/ssd" }
+        ]
+      },
+      {
+        "innerTittle": "Audio Devices",
+        "childernlistL": [
+          { "title": "Earbuds", "to": "/accessories/audio/earbuds" },
+          { "title": "Earphones", "to": "/accessories/audio/earphones" },
+          { "title": "Woofers", "to": "/accessories/audio/woofers" },
+          { "title": "Microphones", "to": "/accessories/audio/microphones" },
+          { "title": "Sound Bar", "to": "/accessories/audio/sound-bar" },
+          { "title": "Home Theatre", "to": "/accessories/audio/home-theatre" },
+          { "title": "Headphones", "to": "/accessories/audio/headphones" },
+          { "title": "Speakers", "to": "/accessories/audio/speakers" }
+        ]
+      },
+      {
+        "innerTittle": "Laptop Accessories",
+        "childernlistL": [
+          { "title": "Laptop Charger", "to": "/accessories/laptop/charger" },
+          { "title": "Laptop Battery", "to": "/accessories/laptop/battery" },
+          { "title": "Laptop Screen", "to": "/accessories/laptop/screen" },
+          { "title": "Laptop Keyboard", "to": "/accessories/laptop/keyboard" },
+          { "title": "Laptop Stand", "to": "/accessories/laptop/stand" },
+          { "title": "Laptop Cooler", "to": "/accessories/laptop/cooler" },
+          { "title": "Laptop Bags", "to": "/accessories/laptop/bags" },
+          { "title": "Sleeve Cases", "to": "/accessories/laptop/sleeve-cases" }
+        ]
+      },
+      {
+        "innerTittle": "Cables & Connectors",
+        "childernlistL": [
+          { "title": "HDMI Adapters", "to": "/accessories/cables/hdmi-adapters" },
+          { "title": "USB Adapters", "to": "/accessories/cables/usb-adapters" },
+          { "title": "LAN Adapters", "to": "/accessories/cables/lan-adapters" },
+          { "title": "Cables", "to": "/accessories/cables/cables" },
+          { "title": "Enclosure", "to": "/accessories/cables/enclosure" },
+          { "title": "Adapter", "to": "/accessories/cables/adapter" },
+          { "title": "Converters", "to": "/accessories/cables/converters" },
+          { "title": "Hubs & Dock", "to": "/accessories/cables/hubs-dock" }
+        ]
+      },
+      {
+        "innerTittle": "Cleaning & Repair",
+        "childernlistL": [
+          { "title": "Thermal Paste", "to": "/accessories/cleaning/thermal-paste" },
+          { "title": "Cleaning Dusters", "to": "/accessories/cleaning/dusters" },
+          { "title": "Screw Driver Tool Set", "to": "/accessories/cleaning/screw-driver" },
+          { "title": "Cleaning Wipes", "to": "/accessories/cleaning/wipes" },
+          { "title": "Cleaning Solution", "to": "/accessories/cleaning/solution" },
+          { "title": "Toolkit", "to": "/accessories/cleaning/toolkit" },
+          { "title": "Blower", "to": "/accessories/cleaning/blower" }
+        ]
+      },
+      {
+        "innerTittle": "Safety & Protection",
+        "childernlistL": [
+          { "title": "Screen Protectors", "to": "/accessories/safety/screen-protectors" },
+          { "title": "Skins", "to": "/accessories/safety/skins" },
+          { "title": "Laptop Keyguard", "to": "/accessories/safety/laptop-keyguard" },
+          { "title": "Tempered Glass", "to": "/accessories/safety/tempered-glass" },
+          { "title": "Mobile Cases", "to": "/accessories/safety/mobile-cases" }
+        ]
+      },
+      {
+        "innerTittle": "Software/Games",
+        "childernlistL": [
+          { "title": "Operating System", "to": "/accessories/software/os" },
+          { "title": "MS Office", "to": "/accessories/software/ms-office" },
+          { "title": "Adobe", "to": "/accessories/software/adobe" },
+          { "title": "Antivirus", "to": "/accessories/software/antivirus" },
+          { "title": "AutoDesk", "to": "/accessories/software/autodesk" },
+          { "title": "Games", "to": "/accessories/software/games" }
+        ]
+      }
+    ]
+  }
+,
+  {
+    "title": "Accessories",
+    "content": [
+      {
+        "innerTittle": "Computer Accessories",
+        "childernlistL": [
+          { "title": "Mouse Pad", "to": "/accessories/computer/mouse-pad" },
+          { "title": "Combo Set", "to": "/accessories/computer/combo-set" },
+          { "title": "Webcam", "to": "/accessories/computer/webcam" },
+          { "title": "Joystick", "to": "/accessories/computer/joystick" },
+          { "title": "USB Dongles", "to": "/accessories/computer/usb-dongles" },
+          { "title": "Card Readers", "to": "/accessories/computer/card-readers" },
+          { "title": "Keyboard", "to": "/accessories/computer/keyboard" },
+          { "title": "Mouse", "to": "/accessories/computer/mouse" }
+        ]
+      },
+      {
+        "innerTittle": "Storage Device",
+        "childernlistL": [
+          { "title": "HDD", "to": "/accessories/storage/hdd" },
+          { "title": "External SSD", "to": "/accessories/storage/external-ssd" },
+          { "title": "Laptop RAM", "to": "/accessories/storage/laptop-ram" },
+          { "title": "External HDD", "to": "/accessories/storage/external-hdd" },
+          { "title": "Jet Flash Drive", "to": "/accessories/storage/jet-flash-drive" },
+          { "title": "Pen Drive", "to": "/accessories/storage/pen-drive" },
+          { "title": "Memory Card", "to": "/accessories/storage/memory-card" },
+          { "title": "SSD", "to": "/accessories/storage/ssd" }
+        ]
+      },
+      {
+        "innerTittle": "Audio Devices",
+        "childernlistL": [
+          { "title": "Earbuds", "to": "/accessories/audio/earbuds" },
+          { "title": "Earphones", "to": "/accessories/audio/earphones" },
+          { "title": "Woofers", "to": "/accessories/audio/woofers" },
+          { "title": "Microphones", "to": "/accessories/audio/microphones" },
+          { "title": "Sound Bar", "to": "/accessories/audio/sound-bar" },
+          { "title": "Home Theatre", "to": "/accessories/audio/home-theatre" },
+          { "title": "Headphones", "to": "/accessories/audio/headphones" },
+          { "title": "Speakers", "to": "/accessories/audio/speakers" }
+        ]
+      },
+      {
+        "innerTittle": "Laptop Accessories",
+        "childernlistL": [
+          { "title": "Laptop Charger", "to": "/accessories/laptop/charger" },
+          { "title": "Laptop Battery", "to": "/accessories/laptop/battery" },
+          { "title": "Laptop Screen", "to": "/accessories/laptop/screen" },
+          { "title": "Laptop Keyboard", "to": "/accessories/laptop/keyboard" },
+          { "title": "Laptop Stand", "to": "/accessories/laptop/stand" },
+          { "title": "Laptop Cooler", "to": "/accessories/laptop/cooler" },
+          { "title": "Laptop Bags", "to": "/accessories/laptop/bags" },
+          { "title": "Sleeve Cases", "to": "/accessories/laptop/sleeve-cases" }
+        ]
+      },
+      {
+        "innerTittle": "Cables & Connectors",
+        "childernlistL": [
+          { "title": "HDMI Adapters", "to": "/accessories/cables/hdmi-adapters" },
+          { "title": "USB Adapters", "to": "/accessories/cables/usb-adapters" },
+          { "title": "LAN Adapters", "to": "/accessories/cables/lan-adapters" },
+          { "title": "Cables", "to": "/accessories/cables/cables" },
+          { "title": "Enclosure", "to": "/accessories/cables/enclosure" },
+          { "title": "Adapter", "to": "/accessories/cables/adapter" },
+          { "title": "Converters", "to": "/accessories/cables/converters" },
+          { "title": "Hubs & Dock", "to": "/accessories/cables/hubs-dock" }
+        ]
+      },
+      {
+        "innerTittle": "Cleaning & Repair",
+        "childernlistL": [
+          { "title": "Thermal Paste", "to": "/accessories/cleaning/thermal-paste" },
+          { "title": "Cleaning Dusters", "to": "/accessories/cleaning/dusters" },
+          { "title": "Screw Driver Tool Set", "to": "/accessories/cleaning/screw-driver" },
+          { "title": "Cleaning Wipes", "to": "/accessories/cleaning/wipes" },
+          { "title": "Cleaning Solution", "to": "/accessories/cleaning/solution" },
+          { "title": "Toolkit", "to": "/accessories/cleaning/toolkit" },
+          { "title": "Blower", "to": "/accessories/cleaning/blower" }
+        ]
+      },
+      {
+        "innerTittle": "Safety & Protection",
+        "childernlistL": [
+          { "title": "Screen Protectors", "to": "/accessories/safety/screen-protectors" },
+          { "title": "Skins", "to": "/accessories/safety/skins" },
+          { "title": "Laptop Keyguard", "to": "/accessories/safety/laptop-keyguard" },
+          { "title": "Tempered Glass", "to": "/accessories/safety/tempered-glass" },
+          { "title": "Mobile Cases", "to": "/accessories/safety/mobile-cases" }
+        ]
+      },
+      {
+        "innerTittle": "Software/Games",
+        "childernlistL": [
+          { "title": "Operating System", "to": "/accessories/software/os" },
+          { "title": "MS Office", "to": "/accessories/software/ms-office" },
+          { "title": "Adobe", "to": "/accessories/software/adobe" },
+          { "title": "Antivirus", "to": "/accessories/software/antivirus" },
+          { "title": "AutoDesk", "to": "/accessories/software/autodesk" },
+          { "title": "Games", "to": "/accessories/software/games" }
+        ]
+      }
+    ]
+  }
+,
+  {
+    "title": "Office Components",
+    "content": [
+      {
+        "innerTittle": "PC Components",
+        "childernlistL": [
+          { "title": "CPU/Processor", "to": "/office-components/pc-components/cpu-processor" },
+          { "title": "Motherboards", "to": "/office-components/pc-components/motherboards" },
+          { "title": "Graphics Card", "to": "/office-components/pc-components/graphics-card" },
+          { "title": "Cooling Fans", "to": "/office-components/pc-components/cooling-fans" },
+          { "title": "RAM", "to": "/office-components/pc-components/ram" },
+          { "title": "Power Supply", "to": "/office-components/pc-components/power-supply" },
+          { "title": "Casing", "to": "/office-components/pc-components/casing" },
+          { "title": "Casing Fan", "to": "/office-components/pc-components/casing-fan" }
+        ]
+      },
+      {
+        "innerTittle": "Monitors",
+        "childernlistL": [
+          { "title": "Gaming Monitors", "to": "/office-components/monitors/gaming" },
+          { "title": "Curved Monitors", "to": "/office-components/monitors/curved" },
+          { "title": "4K Monitors", "to": "/office-components/monitors/4k" },
+          { "title": "Portable Monitors", "to": "/office-components/monitors/portable" },
+          { "title": "Professional Monitors", "to": "/office-components/monitors/professional" },
+          { "title": "Normal Monitors", "to": "/office-components/monitors/normal" },
+          { "title": "Monitor Stands", "to": "/office-components/monitors/monitor-stands" }
+        ]
+      },
+      {
+        "innerTittle": "Television",
+        "childernlistL": [
+          { "title": "Smart TV", "to": "/office-components/television/smart-tv" },
+          { "title": "LED TV", "to": "/office-components/television/led-tv" },
+          { "title": "4K UHD TV", "to": "/office-components/television/4k-uhd-tv" },
+          { "title": "OLED TV", "to": "/office-components/television/oled-tv" },
+          { "title": "Television Accessories", "to": "/office-components/television/accessories" }
+        ]
+      },
+      {
+        "innerTittle": "Projectors",
+        "childernlistL": [
+          { "title": "Wireless Projector", "to": "/office-components/projectors/wireless" },
+          { "title": "Short Throw Projector", "to": "/office-components/projectors/short-throw" },
+          { "title": "Home Theatre Cinema Projector", "to": "/office-components/projectors/home-theatre-cinema" },
+          { "title": "4K Projectors", "to": "/office-components/projectors/4k" },
+          { "title": "Mini Projector", "to": "/office-components/projectors/mini" },
+          { "title": "LED Mini Projector", "to": "/office-components/projectors/led-mini" },
+          { "title": "Laser Projector", "to": "/office-components/projectors/laser" },
+          { "title": "Gaming Projector", "to": "/office-components/projectors/gaming" },
+          { "title": "Projector Screen", "to": "/office-components/projectors/screen" },
+          { "title": "Presentation Pointers", "to": "/office-components/projectors/presentation-pointers" }
+        ]
+      },
+      {
+        "innerTittle": "Printers | Scanners",
+        "childernlistL": [
+          { "title": "Laser Printers", "to": "/office-components/printers-scanners/laser" },
+          { "title": "Inkjet Printers", "to": "/office-components/printers-scanners/inkjet" },
+          { "title": "Tank Printers", "to": "/office-components/printers-scanners/tank" },
+          { "title": "Business Printers", "to": "/office-components/printers-scanners/business" },
+          { "title": "Dot Matrix Printers", "to": "/office-components/printers-scanners/dot-matrix" },
+          { "title": "Multifunction Printers", "to": "/office-components/printers-scanners/multifunction" },
+          { "title": "Color Printers", "to": "/office-components/printers-scanners/color" },
+          { "title": "Barcode Printers", "to": "/office-components/printers-scanners/barcode" },
+          { "title": "Toner | Cartage | Ink", "to": "/office-components/printers-scanners/toner-cartage-ink" },
+          { "title": "Scanners", "to": "/office-components/printers-scanners/scanners" }
+        ]
+      },
+      {
+        "innerTittle": "Networking",
+        "childernlistL": [
+          { "title": "Routers", "to": "/office-components/networking/routers" },
+          { "title": "Pocket Router", "to": "/office-components/networking/pocket-router" },
+          { "title": "Access Point & Range Extender", "to": "/office-components/networking/access-point-range-extender" },
+          { "title": "Network Switch", "to": "/office-components/networking/network-switch" }
+        ]
+      },
+      {
+        "innerTittle": "Security",
+        "childernlistL": [
+          { "title": "Portable WiFi Camera", "to": "/office-components/security/portable-wifi-camera" },
+          { "title": "IP Camera", "to": "/office-components/security/ip-camera" },
+          { "title": "CC Camera", "to": "/office-components/security/cc-camera" },
+          { "title": "PTZ Camera", "to": "/office-components/security/ptz-camera" },
+          { "title": "DVR", "to": "/office-components/security/dvr" }
+        ]
+      },
+      {
+        "innerTittle": "Consoles",
+        "childernlistL": [
+          { "title": "Playstation", "to": "/office-components/consoles/playstation" }
+        ]
+      },
+      {
+        "innerTittle": "Smart Board",
+        "childernlistL": []
+      },
+      {
+        "innerTittle": "Others",
+        "childernlistL": [
+          { "title": "Money Counting Machine", "to": "/office-components/others/money-counting-machine" },
+          { "title": "Paper Shredder", "to": "/office-components/others/paper-shredder" },
+          { "title": "Photocopier", "to": "/office-components/others/photocopier" },
+          { "title": "Telephone Set", "to": "/office-components/others/telephone-set" },
+          { "title": "Conference System", "to": "/office-components/others/conference-system" }
+        ]
+      }
+    ]
+}
+,
+  {
+    "title": "Emi Services",
+    "content": [
+      {
+        "innerTittle": "Emi Process",
+        "childernlistL": [
+          { "title": "CPU/Processor", "to": "/office-components/pc-components/cpu-processor" }
+   
+        ]
+      },
+      {
+        "innerTittle": "Emi Apply",
+        "childernlistL": [
+  
+        ]
+      }
+
+    ]}
+,
+  {
+    "title": "Emi Blog",
+    "content": [
+ 
+
+    ]
+}
+,
+  {
+    "title": "Office Components",
+    "content": [
+      {
+        "innerTittle": "PC Components",
+        "childernlistL": [
+          { "title": "CPU/Processor", "to": "/office-components/pc-components/cpu-processor" },
+          { "title": "Motherboards", "to": "/office-components/pc-components/motherboards" },
+          { "title": "Graphics Card", "to": "/office-components/pc-components/graphics-card" },
+          { "title": "Cooling Fans", "to": "/office-components/pc-components/cooling-fans" },
+          { "title": "RAM", "to": "/office-components/pc-components/ram" },
+          { "title": "Power Supply", "to": "/office-components/pc-components/power-supply" },
+          { "title": "Casing", "to": "/office-components/pc-components/casing" },
+          { "title": "Casing Fan", "to": "/office-components/pc-components/casing-fan" }
+        ]
+      },
+      {
+        "innerTittle": "Monitors",
+        "childernlistL": [
+          { "title": "Gaming Monitors", "to": "/office-components/monitors/gaming" },
+          { "title": "Curved Monitors", "to": "/office-components/monitors/curved" },
+          { "title": "4K Monitors", "to": "/office-components/monitors/4k" },
+          { "title": "Portable Monitors", "to": "/office-components/monitors/portable" },
+          { "title": "Professional Monitors", "to": "/office-components/monitors/professional" },
+          { "title": "Normal Monitors", "to": "/office-components/monitors/normal" },
+          { "title": "Monitor Stands", "to": "/office-components/monitors/monitor-stands" }
+        ]
+      },
+      {
+        "innerTittle": "Television",
+        "childernlistL": [
+          { "title": "Smart TV", "to": "/office-components/television/smart-tv" },
+          { "title": "LED TV", "to": "/office-components/television/led-tv" },
+          { "title": "4K UHD TV", "to": "/office-components/television/4k-uhd-tv" },
+          { "title": "OLED TV", "to": "/office-components/television/oled-tv" },
+          { "title": "Television Accessories", "to": "/office-components/television/accessories" }
+        ]
+      },
+      {
+        "innerTittle": "Projectors",
+        "childernlistL": [
+          { "title": "Wireless Projector", "to": "/office-components/projectors/wireless" },
+          { "title": "Short Throw Projector", "to": "/office-components/projectors/short-throw" },
+          { "title": "Home Theatre Cinema Projector", "to": "/office-components/projectors/home-theatre-cinema" },
+          { "title": "4K Projectors", "to": "/office-components/projectors/4k" },
+          { "title": "Mini Projector", "to": "/office-components/projectors/mini" },
+          { "title": "LED Mini Projector", "to": "/office-components/projectors/led-mini" },
+          { "title": "Laser Projector", "to": "/office-components/projectors/laser" },
+          { "title": "Gaming Projector", "to": "/office-components/projectors/gaming" },
+          { "title": "Projector Screen", "to": "/office-components/projectors/screen" },
+          { "title": "Presentation Pointers", "to": "/office-components/projectors/presentation-pointers" }
+        ]
+      },
+      {
+        "innerTittle": "Printers | Scanners",
+        "childernlistL": [
+          { "title": "Laser Printers", "to": "/office-components/printers-scanners/laser" },
+          { "title": "Inkjet Printers", "to": "/office-components/printers-scanners/inkjet" },
+          { "title": "Tank Printers", "to": "/office-components/printers-scanners/tank" },
+          { "title": "Business Printers", "to": "/office-components/printers-scanners/business" },
+          { "title": "Dot Matrix Printers", "to": "/office-components/printers-scanners/dot-matrix" },
+          { "title": "Multifunction Printers", "to": "/office-components/printers-scanners/multifunction" },
+          { "title": "Color Printers", "to": "/office-components/printers-scanners/color" },
+          { "title": "Barcode Printers", "to": "/office-components/printers-scanners/barcode" },
+          { "title": "Toner | Cartage | Ink", "to": "/office-components/printers-scanners/toner-cartage-ink" },
+          { "title": "Scanners", "to": "/office-components/printers-scanners/scanners" }
+        ]
+      },
+      {
+        "innerTittle": "Networking",
+        "childernlistL": [
+          { "title": "Routers", "to": "/office-components/networking/routers" },
+          { "title": "Pocket Router", "to": "/office-components/networking/pocket-router" },
+          { "title": "Access Point & Range Extender", "to": "/office-components/networking/access-point-range-extender" },
+          { "title": "Network Switch", "to": "/office-components/networking/network-switch" }
+        ]
+      },
+      {
+        "innerTittle": "Security",
+        "childernlistL": [
+          { "title": "Portable WiFi Camera", "to": "/office-components/security/portable-wifi-camera" },
+          { "title": "IP Camera", "to": "/office-components/security/ip-camera" },
+          { "title": "CC Camera", "to": "/office-components/security/cc-camera" },
+          { "title": "PTZ Camera", "to": "/office-components/security/ptz-camera" },
+          { "title": "DVR", "to": "/office-components/security/dvr" }
+        ]
+      },
+      {
+        "innerTittle": "Consoles",
+        "childernlistL": [
+          { "title": "Playstation", "to": "/office-components/consoles/playstation" }
+        ]
+      },
+      {
+        "innerTittle": "Smart Board",
+        "childernlistL": []
+      },
+      {
+        "innerTittle": "Others",
+        "childernlistL": [
+          { "title": "Money Counting Machine", "to": "/office-components/others/money-counting-machine" },
+          { "title": "Paper Shredder", "to": "/office-components/others/paper-shredder" },
+          { "title": "Photocopier", "to": "/office-components/others/photocopier" },
+          { "title": "Telephone Set", "to": "/office-components/others/telephone-set" },
+          { "title": "Conference System", "to": "/office-components/others/conference-system" }
+        ]
+      }
+    ]
+}
+]
