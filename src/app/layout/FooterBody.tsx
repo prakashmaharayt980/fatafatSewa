@@ -12,24 +12,6 @@ import {
 import Image from 'next/image';
 
 const FooterBody = () => {
-  const outlets = [
-    {
-      name: "Kathmandu Outlet",
-      address: "Sitapaila - 14, Kathmandu",
-      phone: "01-1010101, 9812083182"
-    },
-    {
-      name: "Pokhara Outlet",
-      address: "Lakeside - 6, Pokhara",
-      phone: "01-2020202, 9812083183"
-    },
-    {
-      name: "Chitwan Outlet",
-      address: "Bharatpur - 10, Chitwan",
-      phone: "01-3030303, 9812083184"
-    }
-  ];
-
   const Information = [
     { title: "About Us", url: "#" },
     { title: "Terms and Conditions", url: "#" },
@@ -59,41 +41,22 @@ const FooterBody = () => {
   ];
 
   const paymentMethods = [
-    { src: "/imgfile/esewa.png", alt: "eSewa" },
-    { src: "/imgfile/khalti.webp", alt: "Khalti" },
+    { src: "/imgfile/paymentMethod1.svg", alt: "eSewa" },
+    { src: "/imgfile/paymentMethod2.svg", alt: "Khalti" },
     { src: "/imgfile/paymentMethod4.png", alt: "Payment Method 4" },
     { src: "/imgfile/paymentMethod3.png", alt: "Payment Method 3" },
     { src: "/imgfile/paymentMethod6.png", alt: "Payment Method 6" },
   ];
 
-  return (
-    <footer className="bg-gray-50 border-t border-gray-100 font-sans">
-      {/* Top Section - Outlet Information */}
-      <div className="bg-gradient-to-r from-blue-900 to-blue-700 w-full py-4 text-white">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {outlets.map((outlet, index) => (
-              <div key={index} className="flex flex-col items-center text-center">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-base font-bold tracking-tight">{outlet.name}</h3>
-                  <ChevronRight className="w-4 h-4 bg-white text-blue-900 rounded-full p-0.5" />
-                </div>
-                <p className="text-gray-200 flex items-center gap-1 text-xs">
-                  <MapPin className="w-4 h-4" />
-                  <span>{outlet.address}</span>
-                </p>
-                <p className="text-gray-200 flex items-center gap-1 mt-1 text-xs">
-                  <Phone className="w-4 h-4" />
-                  <span>{outlet.phone}</span>
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+  const playStoreImages = [
+    { src: "/imgfile/google-play.svg", alt: "Google Play Store 1", url: "#" },
+    { src: "/imgfile/app-store.svg", alt: "Google Play Store 2", url: "#" },
+  ];
 
+  return (
+    <footer className="bg-gray-50 border-t border-gray-100 font-[Inter,sans-serif]">
       {/* Main Footer Content */}
-      <div className="py-6 max-w-6xl mx-auto px-4">
+      <div className="py-4 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {/* Logo, Social Media, and Payment Methods */}
           <div className="lg:col-span-2">
@@ -101,41 +64,42 @@ const FooterBody = () => {
               <Image
                 src="/imgfile/footerlogo.png"
                 alt="Logo"
-                width={120}
-                height={120}
+                width={100}
+                height={100}
                 className="rounded-md object-contain"
               />
             </div>
-            <p className="text-gray-600 text-xs leading-relaxed max-w-xs">
+            <p className="text-gray-600 text-sm font-normal leading-relaxed max-w-xs">
               Nepal&apos;s Leading Online Shopping Platform<br />
               Making Quality Products Accessible to All
             </p>
-            <div className="mt-3">
-              <h4 className="font-semibold text-gray-800 text-sm">Follow Us</h4>
-              <div className="flex gap-3 mt-2 border-b border-gray-100 pb-2">
+            <div className="mt-2">
+              <h4 className="font-semibold text-gray-800 text-base">Follow Us</h4>
+              <div className="flex gap-2 mt-1 border-b border-gray-100 pb-1">
                 {socialIcons.map(({ Icon, url }, index) => (
                   <a
                     key={index}
                     href={url}
                     className="text-gray-600 hover:text-blue-600 transition-transform transform hover:scale-105"
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-4 h-4" />
                   </a>
                 ))}
               </div>
               {/* Payment Methods */}
-              <div className="flex flex-row gap-2 mt-3 flex-wrap justify-start">
+              <div className="flex gap-2 mt-2 flex-wrap justify-start">
                 {paymentMethods.map((method, index) => (
                   <div
                     key={index}
-                    className="flex justify-center items-center bg-white rounded-md shadow-sm p-2 hover:shadow transition-shadow"
+                    className="flex justify-center items-center bg-white rounded-md shadow-sm p-1 hover:shadow transition-shadow"
                   >
                     <Image
                       src={method.src}
                       alt={method.alt}
-                      width={60}
+                      width={40}
                       height={20}
                       className="object-contain"
+                      quality={100}
                     />
                   </div>
                 ))}
@@ -145,8 +109,8 @@ const FooterBody = () => {
 
           {/* Information */}
           <div>
-            <h3 className="font-semibold text-gray-800 text-base mb-2">Information</h3>
-            <ul className="space-y-1 text-xs text-gray-600">
+            <h3 className="font-semibold text-gray-800 text-base mb-1">Information</h3>
+            <ul className="space-y-0.5 text-sm font-normal text-gray-600">
               {Information.map((link, index) => (
                 <li key={index}>
                   <a
@@ -162,8 +126,8 @@ const FooterBody = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-gray-800 text-base mb-2">Quick Links</h3>
-            <ul className="space-y-1 text-xs text-gray-600">
+            <h3 className="font-semibold text-gray-800 text-base mb-1">Quick Links</h3>
+            <ul className="space-y-0.5 text-sm font-normal text-gray-600">
               {QuickLinks.map((link, index) => (
                 <li key={index}>
                   <a
@@ -176,13 +140,48 @@ const FooterBody = () => {
               ))}
             </ul>
           </div>
+
+          {/* Kathmandu Outlet */}
+          <div className="flex flex-col items-center text-center">
+            <div className="flex items-center gap-3 mb-1">
+              <h3 className="text-base font-bold text-gray-800 tracking-tight">Kathmandu Outlet</h3>
+              <ChevronRight className="w-4 h-4 bg-blue-50 text-blue-900 rounded-full p-0.5" />
+            </div>
+            <p className="text-gray-600 flex items-center mt-2 gap-2 text-sm font-normal">
+              <MapPin className="w-4 h-4 text-blue-600" />
+              <span>Sitapaila - 14, Kathmandu</span>
+            </p>
+            <p className="text-gray-600 flex items-center gap-2 mt-2 text-sm font-normal">
+              <Phone className="w-4 h-4 text-blue-600" />
+              <span>01-1010101, 9812083182</span>
+            </p>
+            {/* Google Play Store Images */}
+            <div className="flex gap-2 mt-3 flex-wrap justify-center">
+              {playStoreImages.map((image, index) => (
+                <a
+                  key={index}
+                  href={image.url}
+                  className="flex justify-center items-center bg-white rounded-md shadow-sm p-1 hover:shadow transition-shadow"
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={90}
+                    height={30}
+                    className="object-contain"
+                    quality={100}
+                  />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Bottom Copyright */}
       <div className="bg-gray-100 py-2 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-xs text-gray-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <p className="text-sm font-normal text-gray-600">
             © 2025 UC Sewa. All rights reserved. | Powered by FatafatSewa
           </p>
         </div>

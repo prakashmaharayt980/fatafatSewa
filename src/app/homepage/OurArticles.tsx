@@ -32,7 +32,7 @@ const OurArticles = () => {
   };
 
   return (
-    <div className=" mx-auto px-4 py-8 font-faily-blogcontent">
+    <div className="mx-auto px-4 py-8 ">
       {/* Header Section */}
       <div className="mb-2">
         <div className="flex items-center justify-center mb-6">
@@ -40,63 +40,59 @@ const OurArticles = () => {
           <h2 className="px-6 text-2xl font-bold text-gray-900">Our Articles</h2>
           <div className="flex-1 h-1 bg-gradient-to-l from-transparent via-blue-500 to-blue-500"></div>
         </div>
-
       </div>
 
       {/* Articles Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-6 sm:grid-rows-4 lg:grid-rows-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {visibleArticles.map((article) => (
           <div
             key={article.id}
-            className="bg-transparent border border-gray-200 rounded-3xl hover:scale-[1.05] p-3"
+            className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300  overflow-hidden"
           >
             {/* Article Image */}
-            <div className="mb-4">
+            <div className="relative">
               {article.image ? (
                 <Image
                   src={article.image}
                   alt={article.title}
                   width={300}
-                  height={200}
-                  className="w-full h-40 object-cover rounded"
+                  height={180}
+                  className="w-full h-44 object-cover"
                 />
               ) : (
                 <Image
                   src={imglogo}
                   alt="Fatafatsewa Logo"
                   width={300}
-                  height={200}
-                  className="w-full h-40 object-contain rounded bg-gray-100"
+                  height={180}
+                  className="w-full h-44 object-contain bg-gray-50"
                 />
               )}
             </div>
 
             {/* Article Content */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
+            <div className="p-4">
+              {/* Title */}
+              <h3 className="font-serif text-lg font-bold text-gray-900 mb-2 line-clamp-2 leading-tight">
                 {article.title}
               </h3>
-              <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-                {stripHtml(article.content).length > 120
-                  ? `${stripHtml(article.content).substring(0, 120)}......`
+
+              {/* Author and Date */}
+              <div className="flex items-center justify-between mb-3 text-xs">
+                <span className="text-blue-600 font-medium uppercase tracking-wide">
+                  {article.author}
+                </span>
+                <span className="text-gray-500">
+                  {formatDate(article.created_at)}
+                </span>
+              </div>
+
+              {/* Content Preview */}
+              <p className="text-gray-700 text-sm leading-relaxed line-clamp-3 ">
+                {stripHtml(article.content).length > 100
+                  ? `${stripHtml(article.content).substring(0, 100)}...`
                   : stripHtml(article.content)}
               </p>
-              {/* <div className="flex items-center text-center justify-between">
-                <div className="flex  flex-col justify-between mb-1">
-                  <span className="text-sm text-gray-600">{article.author}</span>
-                  <span className="text-sm text-gray-500">
-                    {formatDate(article.created_at)}
-                  </span>
-                </div>
-
-                
-                <button
-                  onClick={() => router.push(`/articles/${article.id}`)}
-                  className="text-xs flex flex-row  gap-2 sm:text-sm font-medium hover:shadow-lg hover:scale-[1.03] border-transparent bg-[var(--colour-bg1)] text-[var(--colour-text4)] px-2 py-1 rounded-2xl"
-                >
-                  Read More
-                </button>
-              </div> */}
             </div>
           </div>
         ))}

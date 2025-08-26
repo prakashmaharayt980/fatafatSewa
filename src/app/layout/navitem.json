@@ -538,14 +538,7 @@
       }
 
     ]}
-,
-  {
-    "title": "Emi Blog",
-    "content": [
- 
 
-    ]
-}
 ,
   {
     "title": "Office Components",
@@ -654,6 +647,21 @@
           { "title": "Conference System", "to": "/office-components/others/conference-system" }
         ]
       }
+    ]
+}
+
+,
+  {
+    "title": "Blog",
+    "type":"button",
+    "buttonDetails": {
+      "title": "Visit Blog",
+      "to": "https://blog.example.com",
+       "icon":"Book"
+    },
+    "content": [
+ 
+
     ]
 }
 ]
