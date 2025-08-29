@@ -13,6 +13,7 @@ import SkeletonHomepage from './homepage/skeletonHomepage';
 import CategoryProductSection from './homepage/BasketCardwithImage';
 import TwoImageBanner from './homepage/Banner2';
 import img1 from '../../public/imgfile/banner3.png'
+import MetaTagData from './homepage/MetaTagData';
 export default function Page() {
   const { homePageData, loading, error } = useContextStore();
 
@@ -113,6 +114,8 @@ export default function Page() {
       <div className="m-0 p-0 sm:mx-0 sm:px-0">
         <OurArticles />
       </div>
+
+      <MetaTagData />
     </div>
   );
 }

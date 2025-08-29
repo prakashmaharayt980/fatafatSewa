@@ -1,24 +1,22 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, User, Heart, Menu, X, Tag, Calculator, BookType, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, User, Heart, Menu, X, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import imglogo from '../assets/logoimg.png';
-import CategorySideDrawer from '../product/category/sidebar';
-import { useContextStore } from '../api/ContextStore';
+
 import RemoteServices from '../api/remoteservice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import nvaitemlist from './navitem.json'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
 import NavBar from './NavBar';
 
 const HeaderComponent = () => {
-    const { homePageData } = useContextStore();
-    const categories = homePageData?.categories || [];
+
+
     const router = useRouter();
     const searchRef = useRef(null);
-const [activeDropdown, setActiveDropdown] = useState(null);
+
     // Consolidated state object
     const [state, setState] = useState({
         search: "",
@@ -63,9 +61,12 @@ const [activeDropdown, setActiveDropdown] = useState(null);
         }
     };
 
-    const handleProductClick = (id) => {
+    const handleProductClick = (slug) => {
+         console.log('Navigating to product:', slug)
+        router.push(`/product/${slug}`);
         updateState({ showSearchDropdown: false, mobileSearchVisible: false });
-        router.push(`/product/${id}`);
+      
+       
     };
 
     const handleroute = (path) => {
@@ -120,8 +121,8 @@ const [activeDropdown, setActiveDropdown] = useState(null);
     // Search Results Component
     const SearchResults = ({ isMobile = false }) => (
         <div className={cn(
-            "absolute bg-white border border-gray-200 rounded-lg shadow-lg mt-2 max-h-80 overflow-y-auto z-50",
-            isMobile ? "left-0 right-0" : "left-0 right-0"
+            "absolute bg-white border border-gray-200 rounded-lg shadow-lg mt-2 max-h-80 overflow-y-auto z-51",
+       
         )}>
             {state.isSearching ? (
                 <div className="p-6 text-center text-gray-500">
@@ -133,7 +134,7 @@ const [activeDropdown, setActiveDropdown] = useState(null);
                     {state.searchResults.map((product) => (
                         <div
                             key={product.id}
-                            onClick={() => handleProductClick(product.id)}
+                 onClick={() =>handleProductClick(product.slug)}
                             className="flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors"
                         >
                             {product.image && (
@@ -156,11 +157,11 @@ const [activeDropdown, setActiveDropdown] = useState(null);
                                 </p>
                                 <div className="flex items-center space-x-2 mt-1">
                                     <span className="text-sm font-semibold text-blue-600">
-                                        ₹{product.discounted_price}
+                                        Rs .{product.discounted_price}
                                     </span>
                                     {product.discounted_price !== product.price && (
                                         <span className="text-xs text-gray-500 line-through">
-                                            ₹{product.price}
+                                            Rs .{product.price}
                                         </span>
                                     )}
                                 </div>

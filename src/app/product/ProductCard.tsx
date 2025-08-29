@@ -1,16 +1,32 @@
 import { cn } from "@/lib/utils";
 import { CheckCheck, Heart, Truck } from "lucide-react";
 import Image from "next/image";
-
+import { useRouter } from 'next/navigation';
 const ProductCard = ({ product, index }: { product: any, index: number }) => {
+    const router = useRouter();
+
+    // Early return if product or ID is missing
+    if (!product || !product.id) {
+        console.warn('Invalid product data:', product);
+        return null;
+    }
+
     const originalPrice = parseInt(product.price) || product.discounted_price;
     const discountPercent = originalPrice > product.discounted_price
         ? Math.round(((originalPrice - product.discounted_price) / originalPrice) * 100)
         : 0;
 
+    const handleProductClick = () => {
+        if (!product.id) {
+            console.warn('Cannot navigate - missing product ID');
+            return;
+        }
+        router.push(`/product/${product.slug}`);
+    };
+
     return (
         <div
-            key={index}
+            onClick={handleProductClick}
             className="group relative cursor-pointer rounded-xl bg-white 
                        transition-all duration-300 overflow-hidden
                        hover:translate-y-3 mb-4 "
@@ -57,12 +73,7 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
                     background: 'linear-gradient(145deg, #ffffff, #f3f4f6)',
                     boxShadow: '0 2px 6px rgba(107, 114, 128, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
                 }}
-                // onMouseEnter={(e) => {
-                //     e.currentTarget.style.boxShadow = '0 3px 10px rgba(107, 114, 128, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9)';
-                // }}
-                // onMouseLeave={(e) => {
-                //     e.currentTarget.style.boxShadow = '0 2px 6px rgba(107, 114, 128, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8)';
-                // }}
+
             >
                 <Heart
                     className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${true
@@ -95,12 +106,12 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
                     )}
                 </div>
 
-                {/* Image */}
+  
                 <div 
                     className="relative aspect-square w-full rounded-lg overflow-hidden"
                     style={{
                         background: 'linear-gradient(145deg, #f9fafb, #f3f4f6)',
-                        // boxShadow: 'inset 0 2px 4px rgba(107, 114, 128, 0.1)'
+                 
                     }}
                 >
                     {product.image && (
@@ -115,9 +126,9 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
                 </div>
             </div>
 
-            {/* Product Details */}
+
             <div className="p-2 sm:p-3 pt-1  font-family-all">
-                {/* Product Title */}
+  
                 <h3 className={cn(
                      
                     " line-clamp-2 text-xs sm:text-sm font-medium text-[var(--colour-text2)] transition-colors duration-200 group-hover:text-[var(--colour-fsP2)] leading-tight"
@@ -167,25 +178,7 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
                     </span>
                 </div>
 
-                {/* Action Button */}
-                {/* <button 
-                    className="w-full text-white text-xs sm:text-sm font-medium py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
-                    style={{
-                        background: 'linear-gradient(145deg, var(--colour-bg1, #3b82f6), #2563eb)',
-                        boxShadow: '0 3px 8px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-                        border: '1px solid rgba(37, 99, 235, 0.3)'
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
-                        e.currentTarget.style.background = 'linear-gradient(145deg, #2563eb, #1d4ed8)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = '0 3px 8px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)';
-                        e.currentTarget.style.background = 'linear-gradient(145deg, var(--colour-bg1, #3b82f6), #2563eb)';
-                    }}
-                >
-                    Add to Cart
-                </button> */}
+
             </div>
         </div>
     );

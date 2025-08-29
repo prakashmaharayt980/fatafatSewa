@@ -95,7 +95,7 @@ const NavBar = () => {
     }
 
     return (
-        <nav className="bg-[var(--colour-fsP2)] shadow-md relative z-50 hidden md:block">
+        <nav className="bg-[var(--colour-fsP2)] shadow-md relative  hidden md:block">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-center py-2 gap-0.5">
                     {validatedNavItems.map((category, categoryIndex) => (
@@ -139,7 +139,7 @@ const NavBar = () => {
                                 </HoverCard>
                             ) : (
                                 <Link
-                                    href={category.to || '#'}
+                                    href={ '#'}
                                     className="flex items-center text-[var(--colour-fsP1)] rounded-full px-2 py-1.5 text-sm font-medium bg-white   transition-all duration-200"
                                 >
                                     <Book className='h-5 w-5 mr-1 text-[var(--colour-fsP2)] '   />

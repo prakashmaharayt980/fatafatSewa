@@ -1,7 +1,7 @@
 import React, {  useMemo, useRef, useState } from 'react';
 import { FileText, Star, Truck, MessageCircle, SendIcon, Trash2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ProductDetails } from './[id]/page';
+import { ProductDetails } from './[slug]/page';
 import parse, { domToReact, HTMLReactParserOptions, Element, DOMNode } from 'html-react-parser';
 
 import DOMPurify from 'dompurify';

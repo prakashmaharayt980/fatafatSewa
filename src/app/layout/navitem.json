@@ -653,12 +653,8 @@
 ,
   {
     "title": "Blog",
-    "type":"button",
-    "buttonDetails": {
-      "title": "Visit Blog",
-      "to": "https://blog.example.com",
-       "icon":"Book"
-    },
+    "to":"/blog",
+   
     "content": [
  
 
