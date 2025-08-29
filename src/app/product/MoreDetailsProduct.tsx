@@ -8,8 +8,8 @@ import DOMPurify from 'dompurify';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 interface BrowserStyleTabsProps {
-    productDesciption: ProductDetails['description'];
-    keyFeatures: ProductDetails['attributes']['product_attributes'];
+    productDesciption: ProductDetails['highlights'];
+    keyFeatures: ProductDetails['attributes'];
     ReviewsData: ProductDetails['reviews']
 }
 

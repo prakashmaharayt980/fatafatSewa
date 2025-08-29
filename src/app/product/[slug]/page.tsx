@@ -512,7 +512,7 @@ export default function ProductDetailsPage({ params }: Props) {
         <div className="mt-8">
           <BrowserStyleTabs
             productDesciption={productDetails?.highlights}
-            keyFeatures={productDetails?.attributes}
+            keyFeatures={productDetails.attributes}
             ReviewsData={productDetails?.reviews}
           />
         </div>
