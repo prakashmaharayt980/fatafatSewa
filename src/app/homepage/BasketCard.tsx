@@ -17,7 +17,7 @@ const BasketCard = ({ title, items }: BasketCardProps) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [activeDot, setActiveDot] = useState(0);
     const [windowWidth, setWindowWidth] = useState(0);
-
+    console.log("BasketCard items  fff:", items);
     const Datalist = items[0]?.products.data || [];
     const ItemCatg = items[0]?.category;
 

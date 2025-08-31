@@ -49,9 +49,13 @@
     --colour-fsP1:#ff6a00;
     --colour-fsP2:#1967b3;
 
+    --colour-fsp2:rgb(79 99 235);
+
     --font-family-price:Georgia, 'Times New Roman', Times, serif;
     --font-family-all: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     --font-faily-blogcontent: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+
 
 
 }

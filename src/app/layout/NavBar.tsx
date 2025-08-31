@@ -94,6 +94,10 @@ const NavBar = () => {
         );
     }
 
+    const handlerouter=()=>{
+
+    }
+
     return (
         <nav className="bg-[var(--colour-fsP2)] shadow-md relative  hidden md:block">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -138,13 +142,26 @@ const NavBar = () => {
                                     </HoverCardContent>
                                 </HoverCard>
                             ) : (
-                                <Link
-                                    href={ '#'}
-                                    className="flex items-center text-[var(--colour-fsP1)] rounded-full px-2 py-1.5 text-sm font-medium bg-white   transition-all duration-200"
-                                >
-                                    <Book className='h-5 w-5 mr-1 text-[var(--colour-fsP2)] '   />
-                                    <span className="truncate max-w-[160px] text-sm text-black font-semibold">{category.title}</span>
-                                </Link>
+                                // <Link
+                                //     href={ '#'}
+                                //     className="flex items-center text-[var(--colour-fsP1)] rounded-full px-2 py-1.5 text-sm font-medium bg-white   transition-all duration-200"
+                                // >
+                                //     <Book className='h-5 w-5 mr-1 text-[var(--colour-fsP2)] '   />
+                                //     <span className="truncate max-w-[160px] text-sm text-black font-semibold">{category.title}</span>
+                                // </Link>
+                                  <button
+                                                                
+                                                                onClick={() => handlerouter()}
+                                                               
+                                                                className={`px-2.5  py-1.5 bg-white rounded-full transition-all duration-300 text-sm font-medium capitalize   flex items-center gap-4 `}
+                                                            >
+                                                                <span className={" font-medium items-center pl-2"}>Blog</span>
+                                                                <div className=" rounded-full p-1.5 bg-gray-200">
+                                                                    <Book className="w-4 h-4  rounded-full " />
+                                                                </div>
+                                
+                                
+                                                            </button>
                             )}
                         </div>
                     ))}

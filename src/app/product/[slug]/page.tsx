@@ -1,15 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Star, ShoppingCart, CreditCard, ChevronRight, Shield, Truck, Package2, Gift } from "lucide-react";
 import RemoteServices from "@/app/api/remoteservice";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Shippinginfo from "../Shippinginfo";
-import BrowserStyleTabs from "../MoreDetailsProduct";
+
 import ImageGallery from "./ImageGallery";
 import ProductInfo from "./ProductInfo";
+import MoreDetailsProduct from "./MoreDetailsProduct";
+import BasketCard from "@/app/homepage/BasketCard";
+import { CategorySlug, useContextStore } from "@/app/api/ContextStore";
+import { cn } from "@/lib/utils";
 
 // ProductDetails interface based on API response
 export interface ProductDetails {
@@ -95,7 +98,13 @@ export default function ProductDetailsPage({ params }: Props) {
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
-
+  const [ProductReleted, setProductReleted] = useState<{
+    slug: string;
+    outCome:CategorySlug[]
+  }> ({
+    slug: '',
+    outCome:[]
+  })
   const slug = React.use(params).slug;
 
   useEffect(() => {
@@ -106,6 +115,7 @@ export default function ProductDetailsPage({ params }: Props) {
       .then((data: ProductDetails) => {
         setProductDetails(data);
         setSelectedImage(data.image);
+        setProductReleted(prev => ({ ...prev, slug: data.categories[0]?.slug }))
         if (data.variants.length > 0) {
           setSelectedColor(data.variants[0].attributes.Color);
           setSelectedImage(data.variants[0].attributes.image || data.image);
@@ -117,7 +127,18 @@ export default function ProductDetailsPage({ params }: Props) {
         setLoading(false);
         console.error("Error fetching product:", err);
       });
+
+
   }, [slug]);
+
+  useEffect(() => {
+ if(ProductReleted.slug){
+     RemoteServices.CategoriesSlug(ProductReleted.slug).then((data) => {
+      console.log("Categories data:", data);
+      setProductReleted({ ...ProductReleted, outCome: [data] })
+    })
+ }
+  }, [ProductReleted.slug]);
 
   if (loading) {
     return (
@@ -153,7 +174,7 @@ export default function ProductDetailsPage({ params }: Props) {
 
   if (!productDetails) return null;
 
-  const renderRating = (rating: number, size = 18) => (
+  const renderRating = (rating: number, size = 12) => (
     <div className="flex items-center" aria-label={`${rating} out of 5 stars`}>
       {[...Array(5)].map((_, i) => (
         <Star
@@ -167,10 +188,10 @@ export default function ProductDetailsPage({ params }: Props) {
   );
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto ">
+    <div className="min-h-screen bg-white max-w-8xl mx-auto px-2 ">
+      <div className="">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm mb-3 bg-white/60 backdrop-blur-md rounded-full px-6 py-3 border border-gray-200/50">
+        <nav className="flex items-center space-x-2 text-sm mb-6 bg-white/60 backdrop-blur-md rounded-full px-2.5 py-1.5 border border-gray-200/50">
           <Link href="/" className="text-gray-500 hover:text-blue-600 transition-colors font-medium">
             Home
           </Link>
@@ -186,34 +207,54 @@ export default function ProductDetailsPage({ params }: Props) {
         </nav>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
-          <ImageGallery
-            product={productDetails}
-            selectedColor={selectedColor}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-          />
-          <ProductInfo
-            product={productDetails}
-            selectedColor={selectedColor}
-            setSelectedColor={setSelectedColor}
-            selectedImage={selectedImage}
-            setSelectedImage={setSelectedImage}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            renderRating={renderRating}
-          />
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap-2 lg:gap-10">
+          <div className="col-span-2">
+            <ImageGallery
+              product={productDetails}
+              selectedColor={selectedColor}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+            />
+          </div>
+          <div className="col-span-1 md:col-span-3">
+            <ProductInfo
+              product={productDetails}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+              quantity={quantity}
+              setQuantity={setQuantity}
+              renderRating={renderRating}
+            />
+          </div>
         </div>
 
         {/* Product Details Tabs */}
-        <div className="mt-8">
-          <BrowserStyleTabs
-            productDesciption={""}
+        <div className="mt-10">
+          <MoreDetailsProduct
+            productDesciption={productDetails.highlights}
             keyFeatures={productDetails.attributes}
             ReviewsData={productDetails?.reviews}
           />
         </div>
       </div>
+     {ProductReleted.outCome !== null &&
+          <div className=       "mx-auto max-w-8xl">
+        <BasketCard title={` More from  ${productDetails.brand.name}`} items={ProductReleted.outCome} />
+      </div>
+     }
+     {ProductReleted.outCome !== null &&
+          <div className= ''      >
+        <BasketCard title="Customer Also Viewed" items={ProductReleted.outCome} />
+      </div>
+     }
+     {ProductReleted.outCome !== null &&
+          <div className= ''>
+        <BasketCard title="Product Related to this" items={ProductReleted.outCome} />
+      </div>
+     }
     </div>
   );
 }
