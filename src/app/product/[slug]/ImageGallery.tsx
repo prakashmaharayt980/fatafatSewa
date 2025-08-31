@@ -14,21 +14,22 @@ interface ProductDetails {
 }
 
 interface ImageGalleryProps {
-  product?: ProductDetails;
+  product: ProductDetails;
   selectedColor: string;
   selectedImage: string;
   setSelectedImage: (image: string) => void;
 }
 
+// = {
+//     name: "Premium Wireless Headphones",
+//     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop",
+//     variants: [
+//       { attributes: { Color: "black", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop" } },
+//       { attributes: { Color: "white", image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&h=600&fit=crop" } },
+//     ],
+//   }, 
 const ImageGallery: React.FC<ImageGalleryProps> = ({ 
-  product = {
-    name: "Premium Wireless Headphones",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop",
-    variants: [
-      { attributes: { Color: "black", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop" } },
-      { attributes: { Color: "white", image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&h=600&fit=crop" } },
-    ],
-  }, 
+  product ,
   selectedColor, 
   selectedImage, 
   setSelectedImage 
