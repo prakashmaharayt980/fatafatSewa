@@ -62,11 +62,11 @@ const HeaderComponent = () => {
     };
 
     const handleProductClick = (slug) => {
-         console.log('Navigating to product:', slug)
+        console.log('Navigating to product:', slug)
         router.push(`/product/${slug}`);
         updateState({ showSearchDropdown: false, mobileSearchVisible: false });
-      
-       
+
+
     };
 
     const handleroute = (path) => {
@@ -122,7 +122,7 @@ const HeaderComponent = () => {
     const SearchResults = ({ isMobile = false }) => (
         <div className={cn(
             "absolute bg-white border border-gray-200 rounded-lg shadow-lg mt-2 max-h-80 overflow-y-auto z-51",
-       
+
         )}>
             {state.isSearching ? (
                 <div className="p-6 text-center text-gray-500">
@@ -134,7 +134,7 @@ const HeaderComponent = () => {
                     {state.searchResults.map((product) => (
                         <div
                             key={product.id}
-                 onClick={() =>handleProductClick(product.slug)}
+                            onClick={() => handleProductClick(product.slug)}
                             className="flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors"
                         >
                             {product.image && (
@@ -233,7 +233,7 @@ const HeaderComponent = () => {
 
                             {/* Right Icons */}
                             <div className="flex items-center space-x-1.5 sm:space-x-2">
-                                {/* Mobile Search Toggle */}
+
                                 <button
                                     onClick={toggleMobileSearch}
                                     className="md:hidden p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
@@ -242,10 +242,15 @@ const HeaderComponent = () => {
                                 </button>
 
 
+                              {
+                                true ?  ( <button
+                                    onClick={() => handleroute('/login')}
+                                    className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
+                                >
+                                    Login
 
-
-                                {/* User Account */}
-                                <div className="relative account-menu">
+                                </button>) : (<>
+                                   <div className="relative account-menu">
                                     <button
                                         onClick={toggleAccountMenu}
                                         className="hidden sm:flex items-center space-x-1 p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
@@ -269,8 +274,6 @@ const HeaderComponent = () => {
                                 </div>
 
 
-
-                                {/* Cart */}
                                 <button
                                     onClick={() => handleroute('/cart')}
                                     className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
@@ -289,6 +292,14 @@ const HeaderComponent = () => {
                                     <Heart className="h-4 w-4" />
 
                                 </button>
+                                </>)
+                              }
+
+
+
+
+
+                             
 
                                 {/* Mobile Menu Toggle */}
                                 <button
@@ -332,7 +343,7 @@ const HeaderComponent = () => {
                 )}
 
                 {/* Navigation Bar - Desktop Only */}
-<NavBar/>
+                <NavBar />
             </header>
         </>
     );

@@ -65,10 +65,10 @@ interface ratingInterface {
   commentOpen: boolean;
 }
 
-export default function MoreDetailsProduct({ 
-  productDesciption , 
-  keyFeatures = mockKeyFeatures, 
-  ReviewsData = mockReviews 
+export default function MoreDetailsProduct({
+  productDesciption,
+  keyFeatures = mockKeyFeatures,
+  ReviewsData = mockReviews
 }: MoreDetailsProductProps) {
   const [activeTab, setActiveTab] = useState('description');
   const [Rating, setRating] = useState<ratingInterface>({
@@ -87,7 +87,7 @@ export default function MoreDetailsProduct({
       return;
     }
     setRating({ ...Rating, isSubmittingReview: true });
-    
+
     // Simulate submission
     setTimeout(() => {
       setRating({
@@ -110,27 +110,26 @@ export default function MoreDetailsProduct({
   ];
 
   return (
-    <div className="w-full max-w-8xl mx-auto">
+    <div className="w-full max-w-8xl mx-auto shadow-lg border border-slate-200 rounded-xl overflow-hidden px-1 py-3">
       {/* Professional Tab Navigation */}
-     <div className="flex justify-center  mb-3">
-          <div className="flex space-x-3 w-full bg-white rounded-full p-2 shadow-lg border border-slate-200">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-6 py-2 rounded-full transition-all duration-300 text-sm font-medium capitalize ${
-                  activeTab === tab.id
-                    ? 'bg-blue-500 text-white shadow-md'
-                    : 'text-slate-600 hover:bg-slate-100'
+      <div className="flex justify-center  mb-3">
+        <div className="flex space-x-3 w-full bg-white  p-2 ">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-1.5 px-6 py-2 rounded-full transition-all duration-300 text-sm font-medium capitalize ${activeTab === tab.id
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'text-slate-600 hover:bg-slate-100'
                 }`}
-                aria-label={`View ${tab.label}`}
-              >
-                {tab.icon}
-                {tab.label}
-              </button>
-            ))}
-          </div>
+              aria-label={`View ${tab.label}`}
+            >
+              {tab.icon}
+              {tab.label}
+            </button>
+          ))}
         </div>
+      </div>
 
       {/* Tab Content */}
       <div className="tab-content px-6">
@@ -168,7 +167,7 @@ export default function MoreDetailsProduct({
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                
+
                 <div className="space-y-4">
                   {/* Star Rating */}
                   <div>
@@ -185,11 +184,10 @@ export default function MoreDetailsProduct({
                         >
                           <Star
                             size={20}
-                            className={`transition-colors ${
-                              star <= (Rating.newRating || Rating.hoverRating)
+                            className={`transition-colors ${star <= (Rating.newRating || Rating.hoverRating)
                                 ? 'text-yellow-400 fill-yellow-400'
                                 : 'text-gray-300 hover:text-gray-400'
-                            }`}
+                              }`}
                           />
                         </button>
                       ))}
@@ -217,7 +215,7 @@ export default function MoreDetailsProduct({
                   <div className="flex gap-3">
                     <button
                       type="submit"
-                      onClick={()=>handleSubmit}
+                      onClick={() => handleSubmit}
                       disabled={!Rating.newReview.trim() || Rating.newRating === 0 || Rating.isSubmittingReview}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                     >
@@ -268,16 +266,16 @@ export default function MoreDetailsProduct({
 
         {activeTab === 'KeyFeatures' && (
           <div className="space-y-6">
-                            <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Key Features</h3>
-                            <ul className="list-disc pl-6 space-y-4 text-gray-700 text-base">
-                                {Object.entries(keyFeatures).map(([key, value], index) => (
-                                    <li key={index} className="leading-relaxed">
-                                        <span className="font-semibold">{key}: </span>
-                                        <span>{value}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+            <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Key Features</h3>
+            <ul className="list-disc pl-6 space-y-4 text-gray-700 text-base">
+              {Object.entries(keyFeatures).map(([key, value], index) => (
+                <li key={index} className="leading-relaxed">
+                  <span className="font-semibold">{key}: </span>
+                  <span>{value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>

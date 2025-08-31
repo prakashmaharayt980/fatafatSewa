@@ -188,10 +188,10 @@ export default function ProductDetailsPage({ params }: Props) {
   );
 
   return (
-    <div className="min-h-screen bg-white max-w-8xl mx-auto px-2 ">
+    <div className="min-h-screen bg-white max-w-7xl mx-auto px-2 ">
       <div className="">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm mb-6 bg-white/60 backdrop-blur-md rounded-full px-2.5 py-1.5 border border-gray-200/50">
+        <nav className="flex items-center space-x-2 text-sm mb-6 bg-white/60 backdrop-blur-md  px-2.5 py-1.5 border-b border-gray-200/50">
           <Link href="/" className="text-gray-500 hover:text-blue-600 transition-colors font-medium">
             Home
           </Link>
@@ -206,8 +206,7 @@ export default function ProductDetailsPage({ params }: Props) {
           <span className="text-gray-900 font-semibold">{productDetails?.name}</span>
         </nav>
 
-        {/* Product Grid */}
-        {/* Product Grid */}
+     
         <div className="grid grid-cols-1 md:grid-cols-5 gap-2 md:gap-2 lg:gap-10">
           <div className="col-span-2">
             <ImageGallery

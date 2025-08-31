@@ -1,17 +1,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ProductDetails } from "./page";
 
-interface ProductDetails {
-  name: string;
-  image: string;
-  variants: Array<{
-    attributes: {
-      Color: string;
-      image: string;
-    };
-  }>;
-}
+
 
 interface ImageGalleryProps {
   product: ProductDetails;
@@ -20,19 +12,12 @@ interface ImageGalleryProps {
   setSelectedImage: (image: string) => void;
 }
 
-// = {
-//     name: "Premium Wireless Headphones",
-//     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop",
-//     variants: [
-//       { attributes: { Color: "black", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop" } },
-//       { attributes: { Color: "white", image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&h=600&fit=crop" } },
-//     ],
-//   }, 
-const ImageGallery: React.FC<ImageGalleryProps> = ({ 
-  product ,
-  selectedColor, 
-  selectedImage, 
-  setSelectedImage 
+
+const ImageGallery: React.FC<ImageGalleryProps> = ({
+  product,
+  selectedColor,
+  selectedImage,
+  setSelectedImage
 }) => {
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [zoomImageIndex, setZoomImageIndex] = useState(0);
@@ -43,7 +28,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
       variant?.attributes.image || product.image,
       "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=600&h=600&fit=crop",
       "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1564424224651-efa32efb7d0f?w=600&h=600&fit=crop",
+   
     ];
   };
 
@@ -51,7 +36,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
     product.image,
     "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=600&h=600&fit=crop",
     "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1564424224651-efa32efb7d0f?w=600&h=600&fit=crop",
+
   ];
 
   const openZoom = (imageIndex: number) => {
@@ -77,7 +62,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
     <>
       <div className="w-full h-full flex flex-col gap-3">
         {/* Main Image Container */}
-        <div className="relative group">
+        {/* <div className="relative group">
           <div className="relative w-full min-w-[400px] min-h-[400px] aspect-square bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm">
             <Image
               src={selectedImage || currentImages[0]}
@@ -94,18 +79,32 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
               <ZoomIn size={16} />
             </button>
           </div>
+        </div> */}
+        <div className="relative group">
+          <div className="relative w-full min-w-[400px] h-[600px] bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+            <Image
+              src={selectedImage}
+              alt={product.name}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102"
+              fill
+            />
+            <button
+              onClick={() => openZoom(currentSelectedIndex)}
+              className="absolute top-3 right-3 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-900 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-sm"
+            >
+              <ZoomIn size={18} />
+            </button>
+          </div>
         </div>
-
         {/* Thumbnail Strip */}
         <div className="flex gap-2 overflow-x-auto scrollbar-hide items-center justify-center">
           {currentImages.slice(0, 4).map((image, idx) => (
             <div
               key={`${selectedColor}-${idx}`}
-              className={`relative w-16 h-16 cursor-pointer overflow-hidden rounded-md border transition-all duration-200 flex-shrink-0 ${
-                selectedImage === image 
-                  ? "border-blue-500 ring-1 ring-blue-500/20" 
+              className={`relative w-16 h-16 cursor-pointer overflow-hidden rounded-md border transition-all duration-200 flex-shrink-0 ${selectedImage === image
+                  ? "border-blue-500 ring-1 ring-blue-500/20"
                   : "border-gray-200 hover:border-gray-300 hover:ring-1 hover:ring-gray-300/20"
-              }`}
+                }`}
               onClick={() => setSelectedImage(image)}
             >
               <Image

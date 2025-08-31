@@ -1,5 +1,5 @@
 import React from "react";
-import { Star, ShoppingCart, CreditCard, Truck, Gift, Shield, Pin, Tag, Package2, Info, ArrowRight, Eye, ArrowLeftRight } from "lucide-react";
+import { Star, ShoppingCart, CreditCard, Truck, Gift, Shield, Pin, Tag, Package2, Info, ArrowRight, Eye, ArrowLeftRight, Package, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductDetails } from "./page";
 import Image from "next/image";
@@ -102,87 +102,101 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     const timeLeft = 24 - currentTime.getHours() - currentTime.getMinutes() / 60;
 
     return (
-        <div className="space-y-3 px-5 py-2 bg-white rounded-xl shadow-sm font-sans">
-            {/* Brand and Product Title */}
-            <div className="flex items-center gap-3">
-                <h1 className="text-2xl md:text-3xl font-semibold text-gray-800">
+        <div className="space-y-3 px-5 py-2 bg-white rounded-xl shadow-sm font-faily-blogcontent ">
+            <div className="">
+                <h1 className="text-2xl md:text-3xl text-gray-900 font-bold ">
                     {product?.name} {selectedColor ? `- ${selectedColor}` : ""}
                 </h1>
+
+                <div className="flex items-center gap-3 text-sm text-gray-600">
+                    <span>SKU: 12_abc</span>
+                    <span>•</span>
+                    <div className="flex items-center gap-1">
+                        {renderRating(product?.average_rating || 3)}
+                        <span className="text-blue-600 font-medium">4.5</span>
+                    </div>
+                    <span>•</span>
+                    <span>234 reviews</span>
+                </div>
             </div>
 
-            {/* Rating and SKU */}
-            <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">SKU: 12_abc</span>
-                {renderRating(product?.average_rating || 3, 16)}
-                {/* <span className="text-sm text-gray-500">
-                    ({product?.reviews.length} ratings)
-                </span> */}
-                <span className="text-sm text-blue-600">4.5 reviews</span>
-            </div>
 
-            {/* Price and Discount */}
-            <div className="flex items-center gap-3">
-                <span className="text-3xl font-bold text-gray-800">
-                    {currencyunit}{product?.discounted_price.toLocaleString()}
-                </span>
-                {true && (
-                    <>
-                        <span className="text-lg text-gray-400 line-through">
-                            {currencyunit}{originalPrice.toLocaleString()}
-                        </span>
-                        <span className="text-sm bg-yellow-100 text-yellow-800 py-1 px-3 rounded-full font-medium">
-                            {discountPercentage}% OFF
-                        </span>
-                    </>
-                )}
-                {/* <span className="inline-flex items-center gap-2 rounded-full px-2 py-1 text-xs border border-gray-200">
-                    <Tag className="w-4 h-4 text-blue-500" />
-                    <p className="font-bold  text-blue-600">{product.brand.name}</p>
-                </span> */}
+            <div className="flex items-center gap-2 py-1.5">
+                <div className="flex  gap-3 items-center">
+                    <span className="text-3xl font-bold text-gray-900">
+                        {currencyunit}{product?.discounted_price.toLocaleString()}
+                    </span>
+                    {true && (
+                        <>
+                            <span className="text-lg text-gray-400 line-through">
+                                {currencyunit}{originalPrice.toLocaleString()}
+                            </span>
+                            <span className="text-sm bg-green-100 text-green-700 py-1 px-2 rounded font-medium">
+                                {discountPercentage}% OFF
+                            </span>
+                        </>
+                    )}
+                </div>
+                <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">
+                    <Tag className="w-3 h-3" />
+                    {product.brand.name}
+                </div>
             </div>
 
             {/* EMI Option */}
-            <div className="flex items-center gap-3  py-1  ">
-                <span className="text-sm font-medium text-gray-700">
-                    EMI from <span className="font-semibold text-lg text-blue-600">Rs. 0/mo</span>
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs bg-blue-100 text-blue-700 border border-blue-200 hover:bg-blue-200 transition-colors">
-                    <p className="font-medium">Apply now</p>
-                    <ArrowRight className="h-4 w-4 ml-1" />
-                </span>
+            <div className="flex items-center gap-4 py-2 px-3 border-b border-gray-200">
+                <div className="text-sm text-gray-700">
+                    EMI starting from <span className="font-semibold text-blue-600">₹0/month</span>
+                </div>
+                <button className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                    Apply now →
+                </button>
             </div>
 
+
             {/* Delivery Info */}
-            <div className="flex items-center gap-2  ">
-                <Truck className="w-5 h-5 text-blue-500" />
-                <span className="text-sm text-gray-700">
-                    Estimated Delivery:&nbsp;
-                    <span className="font-semibold">
-                        {deliveryDate.toLocaleDateString(undefined, {
-                            weekday: "short",
-                            month: "short",
-                            day: "numeric",
-                        })}
-                    </span>
-                    {timeLeft > 0 && (
-                        <span className="ml-2 text-xs text-gray-500">
-                            (Order within {Math.floor(timeLeft)}h {Math.round((timeLeft % 1) * 60)}m)
+            <div className="flex items-center gap-3 py-2">
+                <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
+                    <Truck className="w-4 h-4 text-blue-600" />
+                </div>
+                <div className="text-sm">
+                    <div className="text-gray-700">
+                        Estimated delivery: <span className="font-semibold text-gray-900">
+                            {deliveryDate.toLocaleDateString(undefined, {
+                                weekday: "short",
+                                month: "short",
+                                day: "numeric",
+                            })}
                         </span>
+                    </div>
+                    {timeLeft > 0 && (
+                        <div className="flex items-center gap-1 mt-1">
+                            <Clock className="w-3 h-3 text-orange-500" />
+                            <span className="text-xs text-orange-600 font-medium">
+                                Order within {Math.floor(timeLeft)}h {Math.round((timeLeft % 1) * 60)}m for this date
+                            </span>
+                        </div>
                     )}
-                </span>
+                </div>
             </div>
 
             {/* View and Stock Info */}
-   <div className="flex flex-col gap-1 bg-blue-50 py-1 px-3 rounded-lg border border-blue-100 shadow-sm text-[var(--colour-fsP2)]/70">
-    <div className="flex items-center gap-2 font-semibold">
-        <Eye className="h-4 w-4 " />
-        <span className="text-sm ">
-            Viewed by 256 users in last 24 hours <br/>
-                    Only {product.quantity} left in stock
-        </span>
-    </div>
-   
-</div>
+            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 shadow-sm">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <Eye className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-800">256 recent views</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Package className="h-4 w-4 text-orange-500" />
+                        <span className="text-sm font-semibold text-orange-700">
+                            {/* {product.quantity} */}
+                            10 left
+                        </span>
+                    </div>
+                </div>
+            </div>
+
 
             {/* Color Selector */}
             {product.variants.length > 0 && (
@@ -212,14 +226,14 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             {/* Quantity Selector */}
             {true && (
                 <div className="flex items-center gap-4">
-                    <label htmlFor="quantity" className="text-sm font-medium text-gray-700">
-                        Quantity
+                    <label htmlFor="quantity" className="text-[16px] font-medium text-gray-700">
+                        Quantity :
                     </label>
                     <div className="flex items-center border border-gray-200 rounded-lg mt-1 bg-white shadow-sm">
                         <Button
                             onClick={() => handleQuantityChange(quantity - 1)}
                             disabled={quantity <= 1}
-                            className="px-4 py-2 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50 rounded-l-full"
+                            className="px-4 py-1 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50 rounded-l-full"
                             aria-label="Decrease quantity"
                         >
                             -
@@ -246,84 +260,62 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                 </div>
             )}
 
-            {/* Purchase Actions */}
-            {/* <div className="flex justify-start gap-3 mt-6">
-                <div className="flex space-x-2 bg-gray-50 rounded-lg p-2 w-full max-w-md">
-                    {[
-                        { name: "Add to Cart", Icon: ShoppingCart, action: handleAddToCart, className: "bg-[var(--colour-fsP1)] text-white hover:bg-blue-200" },
-                        { name: "Buy Now", Icon: CreditCard, action: handleBuyNow, className: " bg-[var(--colour-fsP2)] text-white hover:bg-blue-700" },
-                        { name: " ", Icon: ArrowLeftRight, action: handleBuyNow, className: " bg-blue-100 text-white hover:bg-blue-700" },
-                    ].map((btn, idx) => {
-                        const Icon = btn.Icon;
-                        return (
-                            <Button
-                                key={`product-info-btn-${idx}-${btn.name}`}
-                                onClick={btn.action}
-                                disabled={product.quantity === 0}
-                                className={cn(
-                                    "flex-1 py-4 px-4 rounded-lg transition-all  duration-300 text-lg font-medium capitalize",
-                                    btn.className,
-                                    "flex items-center justify-center gap-3"
-                                )}
-                            >
-                                <span>{btn.name}</span>
-                                <Icon className="w-5 h-5" />
-                            </Button>
-                        );
-                    })}
-                </div>
-            </div> */}
-            
-        <div className="flex justify-start gap-4 my-2">
-          {[
-            { 
-              name: "Add to Cart", 
-              Icon: ShoppingCart, 
-              action: handleAddToCart, 
-              className: "bg-[var(--colour-fsP1)] hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" 
-            },
-            { 
-              name: "Apply Emi", 
-              Icon: CreditCard, 
-              action: handleBuyNow, 
-              className: "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" 
-            },
-            { 
-              name: "Compare", 
-              Icon: ArrowLeftRight, 
-              action: handleBuyNow, 
-              className: "bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-900 shadow-md hover:shadow-lg transform hover:-translate-y-0.5" 
-            },
-          ].map((btn, idx) => {
-            const Icon = btn.Icon;
-            return (
-              <Button
-                key={`product-info-btn-${idx}-${btn.name}`}
-                onClick={btn.action}
-                disabled={product.quantity === 0}
-                className={cn(
-                  "group relative overflow-hidden px-10 py-4 rounded-xl transition-all duration-300 text-base font-semibold min-w-[180px]",
-                  "flex items-center justify-center gap-3",
-                  "focus-visible:ring-blue-500 focus-visible:ring-offset-2",
-                  "disabled:transform-none disabled:shadow-none",
-                  btn.className
-                )}
-              >
-                
-             
-                <span className="relative z-10 ">{btn.name}</span>
-                   <Icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-              </Button>
-            );
-          })}
-        </div>
+
+            <div className="flex justify-start gap-3 my-6">
+                {[
+                    {
+                        name: "Add to Cart",
+                        Icon: ShoppingCart,
+                        action: handleAddToCart,
+                        className: "bg-blue-700 hover:bg-blue-700 text-white"
+                    },
+                    {
+                        name: "Apply EMI",
+                        Icon: CreditCard,
+                        action: handleBuyNow,
+                        className: "bg-yellow-600 hover:bg-green-700 text-white"
+                    },
+                    {
+                        name: "Compare",
+                        Icon: ArrowLeftRight,
+                        action: handleBuyNow,
+                        className: "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300"
+                    },
+                ].map((btn, idx) => {
+                    const Icon = btn.Icon;
+                    return (
+                        <Button
+                            key={`compact-btn-${idx}`}
+                            onClick={btn.action}
+                            disabled={product.quantity === 0}
+                            className={cn(
+                                "group px-4 py-3 rounded-lg transition-all duration-200 text-sm font-medium",
+                                "flex items-center gap-2",
+                                "focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1",
+                                "hover:shadow-sm",
+                                btn.className
+                            )}
+                        >
+                            <Icon className="w-4 h-4" />
+                            <span>{btn.name}</span>
+                        </Button>
+                    );
+                })}
+            </div>
 
             {/* Express Delivery */}
             <div className="flex flex-col gap-3">
                 {product.highlights && (
-                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg text-sm font-medium shadow-sm">
-                        {product.highlights}
-                    </span>
+                    <div className="grid grid-cols-2 gap-4 p-4 ">
+                        {product.highlights.split('|').map((highlight, index) => (
+                            <div key={`highlight-${index}`} className="flex items-start gap-2">
+                                <span className="text-yellow-600 text-lg leading-none">•</span>
+                                <span className="text-sm font-medium text-gray-800">
+                                    {highlight.trim()}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
 
