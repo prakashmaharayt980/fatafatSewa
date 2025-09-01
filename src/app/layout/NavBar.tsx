@@ -4,9 +4,9 @@ import { Book, BookOpen, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import nvaitemlist from './navitem.json';
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
 const NavBar = () => {
@@ -22,7 +22,7 @@ const NavBar = () => {
                 console.warn(`Invalid navigation item at index ${index}:`, item);
                 return false;
             }
-            
+
             if (!item.title || typeof item.title !== 'string') {
                 console.warn(`Missing or invalid title at index ${index}:`, item);
                 return false;
@@ -35,7 +35,7 @@ const NavBar = () => {
                         console.warn(`Invalid content item at ${index}-${contentIndex}:`, contentItem);
                         return false;
                     }
-                    
+
                     if (!contentItem.innerTittle) {
                         console.warn(`Missing innerTittle at ${index}-${contentIndex}:`, contentItem);
                         return false;
@@ -48,24 +48,24 @@ const NavBar = () => {
                                 console.warn(`Invalid child item at ${index}-${contentIndex}-${childIndex}:`, child);
                                 return false;
                             }
-                            
+
                             if (!child.title || !child.to) {
                                 console.warn(`Missing title or 'to' property at ${index}-${contentIndex}-${childIndex}:`, child);
                                 return false;
                             }
-                            
+
                             return true;
                         });
                     } else {
                         contentItem.childernlistL = [];
                     }
-                    
+
                     return true;
                 });
             } else {
                 item.content = [];
             }
-            
+
             return true;
         });
     }, []);
@@ -94,7 +94,7 @@ const NavBar = () => {
         );
     }
 
-    const handlerouter=()=>{
+    const handlerouter = () => {
 
     }
 
@@ -112,7 +112,7 @@ const NavBar = () => {
                                             <ChevronDown className="h-3.5 w-3.5" />
                                         </button>
                                     </HoverCardTrigger>
-                                    <HoverCardContent 
+                                    <HoverCardContent
                                         className={`${getDropdownWidth(category)} bg-white mx-4 mt-1 mb-8 rounded-xl shadow-lg border-0 p-4 max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-orange-400 transition-colors`}
                                         align="start"
                                         sideOffset={8}
@@ -149,19 +149,19 @@ const NavBar = () => {
                                 //     <Book className='h-5 w-5 mr-1 text-[var(--colour-fsP2)] '   />
                                 //     <span className="truncate max-w-[160px] text-sm text-black font-semibold">{category.title}</span>
                                 // </Link>
-                                  <button
-                                                                
-                                                                onClick={() => handlerouter()}
-                                                               
-                                                                className={`px-2.5  py-1.5 bg-white rounded-full transition-all duration-300 text-sm font-medium capitalize   flex items-center gap-4 `}
-                                                            >
-                                                                <span className={" font-medium items-center pl-2"}>Blog</span>
-                                                                <div className=" rounded-full p-1.5 bg-gray-200">
-                                                                    <Book className="w-4 h-4  rounded-full " />
-                                                                </div>
-                                
-                                
-                                                            </button>
+                                <button
+
+                                    onClick={() => handlerouter()}
+
+                                    className={`px-2.5  py-1.5 bg-white rounded-full transition-all duration-300 text-sm font-medium capitalize   flex items-center gap-4 `}
+                                >
+                                    <span className={" font-medium items-center pl-2"}>Blog</span>
+                                    <div className=" rounded-full p-1.5 bg-gray-200">
+                                        <Book className="w-4 h-4  rounded-full " />
+                                    </div>
+
+
+                                </button>
                             )}
                         </div>
                     ))}

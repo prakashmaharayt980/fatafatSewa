@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Star, ShoppingCart, CreditCard, Truck, Gift, Shield, Pin, Tag, Package2, Info, ArrowRight, Eye, ArrowLeftRight, Package, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductDetails } from "./page";
@@ -8,6 +8,9 @@ import IconWarrenty from '../../../../public/imgfile/warrenty.webp';
 import IconReturnPackage from '../../../../public/imgfile/returnpackage.webp';
 import IconHelpline247 from '../../../../public/imgfile/Helpline247.png';
 import { cn } from "@/lib/utils";
+import { useContextCart } from "@/app/checkout/CartContext";
+import CheckoutDrawer from "@/app/checkout/CheckoutDrawer";
+import { PaymentMethodsOptions } from "@/app/CommonVue/Payment";
 
 interface ProductInfoProps {
     product: ProductDetails;
@@ -51,13 +54,7 @@ const ServicesToClient = [
     },
 ];
 
-const PaymentMethodsOptions = [
-    { name: "PayPal", img: "/imgfile/paymentMethod3.png" },
-    { name: "Esewa", img: "/imgfile/paymentMethod4.png" },
-    { name: "Visa", img: "/imgfile/paymentMethod1.svg" },
-    { name: "Mastercard", img: "/imgfile/paymentMethod2.svg" },
-    { name: "Khalti", img: "/imgfile/paymentMethod6.png" },
-];
+
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
     product,
@@ -69,6 +66,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     setQuantity,
     renderRating,
 }) => {
+
+    const {addToCart,buyNow,items,setIsDrawerOpen}=useContextCart()
     const handleAddToCart = () => {
         // Add to cart logic
     };
@@ -76,7 +75,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     const handleBuyNow = () => {
         // Buy now logic
     };
-
+   console.log('Rendering ProductInfo with product:', items);
     const handleQuantityChange = (newQuantity: number) => {
         if (newQuantity > 0 && newQuantity <= product.quantity) {
             setQuantity(newQuantity);
@@ -90,6 +89,30 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             setSelectedImage(variant.attributes.image || product.image);
         }
     };
+
+    const AcctionButtons = useMemo(
+    () => [
+      {
+        name: 'Add to Cart',
+        Icon: ShoppingCart,
+        action: () => addToCart(product, quantity, true), // Function reference
+        className: 'bg-blue-700 hover:bg-blue-800 text-white',
+      },
+      {
+        name: 'Apply EMI',
+        Icon: CreditCard,
+        action: () => buyNow(product),
+        className: 'bg-yellow-600 hover:bg-yellow-700 text-white',
+      },
+      {
+        name: 'Compare',
+        Icon: ArrowLeftRight,
+        action: () => setIsDrawerOpen(true),
+        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300',
+      },
+    ],
+    [product, quantity, addToCart, buyNow] // Dependencies
+  );
 
     const currencyunit = "Rs. ";
     const originalPrice = product.price;
@@ -262,32 +285,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
 
 
             <div className="flex justify-start gap-3 my-6">
-                {[
-                    {
-                        name: "Add to Cart",
-                        Icon: ShoppingCart,
-                        action: handleAddToCart,
-                        className: "bg-blue-700 hover:bg-blue-700 text-white"
-                    },
-                    {
-                        name: "Apply EMI",
-                        Icon: CreditCard,
-                        action: handleBuyNow,
-                        className: "bg-yellow-600 hover:bg-green-700 text-white"
-                    },
-                    {
-                        name: "Compare",
-                        Icon: ArrowLeftRight,
-                        action: handleBuyNow,
-                        className: "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300"
-                    },
-                ].map((btn, idx) => {
+                {AcctionButtons.map((btn, idx) => {
                     const Icon = btn.Icon;
                     return (
                         <Button
                             key={`compact-btn-${idx}`}
                             onClick={btn.action}
-                            disabled={product.quantity === 0}
+                            // disabled={product.quantity === 0}
                             className={cn(
                                 "group px-4 py-3 rounded-lg transition-all duration-200 text-sm font-medium",
                                 "flex items-center gap-2",
@@ -357,6 +361,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                     ))}
                 </div>
             </div>
+
+
         </div>
     );
 };
