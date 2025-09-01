@@ -192,7 +192,7 @@ export default function ChatBot() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          'fixed z-[9999] w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group',
+          'fixed z-[9999] w-12 h-12 bg-[var(--colour-fsP2)] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group',
           'bottom-4 right-4',
           'sm:bottom-4 sm:right-4',
           isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100 hover:scale-110'
@@ -218,7 +218,7 @@ export default function ChatBot() {
           'h-full flex flex-col sm:h-auto sm:max-h-[700px] sm:block'
         )}>
           {/* Header */}
-          <div className="px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white flex-shrink-0">
+          <div className="px-4 py-3 bg-[var(--colour-fsP2)] text-white flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
