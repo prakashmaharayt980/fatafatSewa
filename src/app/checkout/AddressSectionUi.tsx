@@ -3,9 +3,21 @@
 
 import { useState } from 'react';
 import { Plus, MapPin, Check, X, Home, Briefcase, Heart, Loader2, AlertCircle, Edit2 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+// Define the Address interface
+interface Address {
+  id: number;
+  label: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  icon: LucideIcon; // Use LucideIcon type for icon
+}
 
 export default function AddressSelectionUI() {
-  const [savedAddresses, setSavedAddresses] = useState([
+  const [savedAddresses, setSavedAddresses] = useState<Address[]>([
     {
       id: 1,
       label: 'Home',
@@ -26,7 +38,7 @@ export default function AddressSelectionUI() {
     }
   ]);
 
-  const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(savedAddresses[0]);
   const [showDialog, setShowDialog] = useState(false);
   const [showLabelDialog, setShowLabelDialog] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -39,9 +51,9 @@ export default function AddressSelectionUI() {
     zipCode: ''
   });
   const [addressLabel, setAddressLabel] = useState('');
-  const [selectedLabelIcon, setSelectedLabelIcon] = useState("Home");
+  const [selectedLabelIcon, setSelectedLabelIcon] = useState<LucideIcon>(Home);
 
-  const labelOptions = [
+  const labelOptions: { name: string; icon: LucideIcon }[] = [
     { name: 'Home', icon: Home },
     { name: 'Work', icon: Briefcase },
     { name: 'Other', icon: Heart }
@@ -49,7 +61,7 @@ export default function AddressSelectionUI() {
 
   const isAddressComplete = newAddress.street && newAddress.city && newAddress.state && newAddress.zipCode;
 
-  const handleAddressSelect = (address) => {
+  const handleAddressSelect = (address: Address) => {
     setSelectedAddress(address);
     setShowDialog(false);
   };
@@ -108,11 +120,11 @@ export default function AddressSelectionUI() {
 
   const handleSaveWithLabel = () => {
     const newId = Math.max(...savedAddresses.map(a => a.id), 0) + 1;
-    const savedAddress = {
+    const savedAddress: Address = {
       id: newId,
       label: addressLabel || 'Address',
       ...newAddress,
-      icon: selectedLabelIcon
+      icon: selectedLabelIcon // Now guaranteed to be a LucideIcon
     };
     
     setSavedAddresses([...savedAddresses, savedAddress]);
@@ -122,7 +134,7 @@ export default function AddressSelectionUI() {
     setNewAddress({ street: '', city: '', state: '', zipCode: '' });
   };
 
-  const handleLabelSelect = (option) => {
+  const handleLabelSelect = (option: { name: string; icon: LucideIcon }) => {
     setAddressLabel(option.name);
     setSelectedLabelIcon(option.icon);
   };
@@ -131,7 +143,7 @@ export default function AddressSelectionUI() {
     <div className="">
       {/* Selected Address Display */}
       <div className="space-y-3">
-
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Delivery Address</h3>
         
         {selectedAddress && (
           <div className="p-4 rounded-lg border border-blue-500 bg-blue-50 shadow-md flex items-start justify-between">
@@ -163,9 +175,9 @@ export default function AddressSelectionUI() {
 
       {/* Address Management Dialog */}
       {showDialog && (
-        <div className="fixed inset-0 ">
-          <div className="bg-white rounded-xl p-6 w-full h-full ">
-            <div className="flex items-center justify-between ">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Manage Addresses</h3>
               <button
                 onClick={closeDialog}
@@ -300,7 +312,7 @@ export default function AddressSelectionUI() {
 
       {/* Label Dialog */}
       {showLabelDialog && (
-        <div className="fixed inset-0 ">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Label this address</h3>
             
