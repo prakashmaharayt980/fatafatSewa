@@ -26,7 +26,14 @@ const DeliverySection = () => {
         delivery: false
     });
     const [selectedMethod, setSelectedMethod] = useState(null);
+ const {
 
+    calculateSubtotal,
+
+  } = useContextCart();
+
+
+  const subtotal = calculateSubtotal();
 
     const handleMethodSelect = (methodId) => {
         setSelectedMethod(methodId);
@@ -94,16 +101,16 @@ const DeliverySection = () => {
         delivery: deliveryOption !== ''
     };
 
-    const { FinalCheckout, ProcessedToCheckout, } = useContextCart()
+    const { finalCheckout, processedToCheckout, handlesubmit } = useContextCart()
 
     const PaymentMethodsOption = [
         ...PaymentMethodsOptions,
         { name: "Cash on Delivery", img: "/imgfile/handshakeIcon.webp", id: 6, description: "Pay with cash upon delivery." },
     ]
     return (
-        <Drawer open={FinalCheckout} onOpenChange={ProcessedToCheckout} >
+        <Drawer open={finalCheckout} onOpenChange={()=>processedToCheckout} >
             <DrawerContent className="max-h-[40vh] max-w-5xl h-full mx-auto border px-2 border-gray-200 rounded-xl  bg-white shadow-sm ">
-                <div className='overflow-y-auto h-[80vh] space-y-6 py-4 px-2'>
+                <div className='overflow-y-auto h-[80vh] space-y-3 px-2'>
                     <div className="mb-6 ">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="font-semibold text-gray-900 text-lg">Delivery Information</h3>
@@ -112,152 +119,13 @@ const DeliverySection = () => {
                             </div>
                         </div>
 
-                        <div className=" overflow-hidden  bg-white shadow-sm">
+                        <div className=" overflow-hidden  bg-white ">
 
-                            {/* Address Section */}
-                            {/* <div className=" mx-auto bg-white border-b border-gray-200 ">
-                                <div className="border-b border-gray-100 last:border-b-0">
-                                    <button
-                                        onClick={() => toggleSection('address')}
-                                        className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${sectionStatus.address ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'
-                                                }`}>
-                                                {sectionStatus.address ? (
-                                                    <Check className="w-4 h-4" />
-                                                ) : (
-                                                    <MapPin className="w-4 h-4" />
-                                                )}
-                                            </div>
-                                            <div className="text-left">
-                                                <div className="font-medium text-gray-900">Delivery Address</div>
-                                                {sectionStatus.address && !openSections.address && (
-                                                    <div className="text-sm text-gray-600">
-                                                        {address.street}, {address.city}, {address.state}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                        {openSections.address ? (
-                                            <ChevronUp className="w-5 h-5 text-gray-400" />
-                                        ) : (
-                                            <ChevronDown className="w-5 h-5 text-gray-400" />
-                                        )}
-                                    </button>
-
-                                    {openSections.address && (
-                                        <div className="px-4">
-                                            {isEditing ? (
-                                                <div className="space-y-3">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Street Address"
-                                                        value={address.street}
-                                                        onChange={(e) => setAddress({ ...address, street: e.target.value })}
-                                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                    />
-                                                    <div className="grid grid-cols-2 gap-3">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="City"
-                                                            value={address.city}
-                                                            onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                                                            className="px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                        />
-                                                        <input
-                                                            type="text"
-                                                            placeholder="State"
-                                                            value={address.state}
-                                                            onChange={(e) => setAddress({ ...address, state: e.target.value })}
-                                                            className="px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                        />
-                                                    </div>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="ZIP Code"
-                                                        value={address.zipCode}
-                                                        onChange={(e) => setAddress({ ...address, zipCode: e.target.value })}
-                                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                    />
-                                                    <div className="flex gap-2 pt-2 mb-1">
-                                                        <button
-                                                            onClick={handleSaveAddress}
-                                                            disabled={!isAddressComplete}
-                                                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                                        >
-                                                            <Check className="w-4 h-4" />
-                                                            Save Address
-                                                        </button>
-                                                        <button
-                                                            onClick={() => setIsEditing(false)}
-                                                            className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
-                                                        >
-                                                            Cancel
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div>
-                                                    {isAddressComplete ? (
-                                                        <div className="flex items-start justify-between">
-                                                            <div className="text-sm text-gray-700 bg-gray-50 rounded-lg p-4 flex-1">
-                                                                <div className="font-medium text-gray-900">{address.street}</div>
-                                                                <div className="text-gray-600">{address.city}, {address.state} {address.zipCode}</div>
-                                                            </div>
-                                                            <button
-                                                                onClick={() => setIsEditing(true)}
-                                                                className="ml-3 flex items-center gap-1 text-blue-600 hover:text-blue-700 text-sm font-medium"
-                                                            >
-                                                                <Edit3 className="w-3 h-3" />
-                                                                Edit
-                                                            </button>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="w-full bg-white  ">
-                                                            <div className="flex items-center py-2 justify-center gap-6">
-                                                                <button
-                                                                    onClick={getCurrentLocation}
-                                                                    disabled={isLoadingLocation}
-                                                                    className="flex items-center gap-2   text-blue-700  font-medium disabled:opacity-50 transition-colors "
-                                                                >
-                                                                    {isLoadingLocation ? (
-                                                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                                                    ) : (
-                                                                        <MapPin className="w-5 h-5" />
-                                                                    )}
-                                                                    {isLoadingLocation ? 'Getting Location...' : 'Use My Location'}
-                                                                </button>
-
-                                                                <div className="text-sm text-gray-500">
-                                                                    Or{' '}
-                                                                    <button
-                                                                        onClick={() => setIsEditing(true)}
-                                                                        className="text-blue-600 hover:underline font-medium transition-colors"
-                                                                    >
-                                                                        enter address manually
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
-
-                                            {locationError && (
-                                                <div className="flex items-center gap-2 mt-3 p-3 bg-red-50 rounded-lg text-sm text-red-600">
-                                                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                                                    {locationError}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            </div> */}
+                         
                             <AddressSelectionUI/>
 
                             {/* Customer Section */}
-                            <div className="border-b border-gray-100 last:border-b-0">
+                            <div className=" border-none">
                                 <button
                                     onClick={() => toggleSection('customer')}
                                     className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
@@ -265,11 +133,7 @@ const DeliverySection = () => {
                                     <div className="flex items-center gap-3">
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${sectionStatus.customer ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'
                                             }`}>
-                                            {sectionStatus.customer ? (
-                                                <Check className="w-4 h-4" />
-                                            ) : (
-                                                <User className="w-4 h-4" />
-                                            )}
+                                          <User className="w-4 h-4" />
                                         </div>
                                         <div className="text-left">
                                             <div className="font-medium text-gray-900">Customer Contact No</div>
@@ -292,7 +156,7 @@ const DeliverySection = () => {
                                             placeholder=" Enter Your Contact Information"
                                             value={customerName}
                                             onChange={(e) => setCustomerName(e.target.value)}
-                                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-transparent"
                                         />
                                     </div>
                                 )}
@@ -305,7 +169,7 @@ const DeliverySection = () => {
                     </div>
                     <div className="space-y-4 ">
                         <h3 className="text-lg font-semibold text-gray-900">Payment Method</h3>
-                        <div className="space-y-3 h-full ">
+                        <div className="grid grid-cols-2 gap-3 mb-3 h-full ">
                             {PaymentMethodsOption.map((method) => {
 
                                 return (
@@ -344,30 +208,35 @@ const DeliverySection = () => {
                     </div>
 
                 </div>
-                <div className="w-full  border-t border-gray-200 px-6 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="text-left">
-                            <div className="text-sm text-gray-500">Total</div>
-                            <div className="text-xl font-bold text-gray-900">Rsv 22222</div>
-                        </div>
-                        <div className="flex gap-3">
-                            <button
+               
+
+                     <div className="w-full bg-white border-t border-gray-200 px-6 py-4">
+                          <div className="flex items-center justify-between">
+                            <div className="text-left flex flex-row gap-4  items-center">
+                              <div className="text-xl text-[var(--colour-fsP1)] font-medium">Total &nbsp; :</div>
+                              <div className="text-xl font-bold text-[var(--colour-fsP2)]">Rs. {subtotal.toFixed(2)}</div>
+                            </div>
+                            <div className="flex gap-3">
+                                              <button
                                 // onClick={handleContinueShopping}
                                 className="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                             >
                                 Cancel
                             </button>
-                            <button
-                                // onClick={handleCompletePurchase}
-                                // disabled={items.length === 0 || isPurchasing}
-                                className={`px-6 py-2 font-medium rounded-lg flex items-center gap-2 transition-colors bg-gray-300 text-gray-500 cursor-not-allowed `}
-                            >
-                                Checkout
+                
+                              <button
+                                onClick={handlesubmit}
+                                // onClick={processedToCheckout}
+                
+                                className={`px-6 py-2 font-medium rounded-lg flex items-center gap-2 transition-colors bg-[var(--colour-fsP1)] text-white hover:bg-blue-700 `}
+                              >
+                                  Checkout
                                 <Loader2 className="w-4 h-4 animate-spin" />
-                            </button>
+                              </button>
+                
+                            </div>
+                          </div>
                         </div>
-                    </div>
-                </div>
             </DrawerContent>
 
 

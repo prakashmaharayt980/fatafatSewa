@@ -9,6 +9,7 @@ import ChatBot from './chatbot';
 import { CartProvider } from './checkout/CartContext';
 import CheckoutDrawer from './checkout/CheckoutDrawer';
 import DeliverySection from './checkout/DeliverySection';
+import CheckoutSuccess from './checkout/CheckoutSucess';
 
 
 export const metadata = {
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Toaster richColors position="top-right" />
             <CheckoutDrawer />
             <DeliverySection/>
+            <CheckoutSuccess/>
           </CartProvider>
         </ContextStoreProvider>
       </body>

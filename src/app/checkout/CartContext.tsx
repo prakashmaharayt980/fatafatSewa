@@ -1,6 +1,5 @@
-
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, Dispatch, SetStateAction } from 'react';
 import { ProductDetails } from '../product/[slug]/page';
 
 interface CartContextType {
@@ -13,9 +12,13 @@ interface CartContextType {
   setIsDrawerOpen: (open: boolean) => void;
   toggleDrawer: () => void;
   calculateSubtotal: () => number;
-  setItems: (items: ProductDetails[]) => void; // Added for handleCompletePurchase
-   ProcessedToCheckout:()=>void;
-   FinalCheckout:boolean;
+  setItems: (items: ProductDetails[]) => void;
+  processedToCheckout: () => void;
+  handlesubmit: () => void;
+  finalCheckout: boolean;
+  setOrderSuccess: Dispatch<SetStateAction<boolean>>; // Fixed type
+  
+  orderSuccess: boolean; // Renamed for consistency
 }
 
 const CartContext = createContext<CartContextType>({
@@ -29,24 +32,26 @@ const CartContext = createContext<CartContextType>({
   toggleDrawer: () => {},
   calculateSubtotal: () => 0,
   setItems: () => {},
-  ProcessedToCheckout:()=>{},
-  FinalCheckout:false
+  processedToCheckout: () => {},
+  finalCheckout: false,
+  setOrderSuccess: () => {}, // Default to empty function
+  orderSuccess: false, 
+  handlesubmit: ()=>{}, 
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<Array<ProductDetails>>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const [FinalCheckout, setFinalCheckout] = useState(false)
+  const [finalCheckout, setFinalCheckout] = useState<boolean>(false);
+  const [orderSuccess, setOrderSuccess] = useState<boolean>(false); // Renamed for consistency
 
   const addToCart = (product: ProductDetails, quantity: number = 1, openDrawer: boolean = false) => {
-    console.log('addToCart called:', { product, quantity, openDrawer }); // Debug
-    // Input validation
+    console.log('addToCart called:', { product, quantity, openDrawer });
     if (!product?.id || !product?.name || !product?.price) {
       console.error('Invalid product data:', product);
       throw new Error('Product must have id, name, and price');
     }
 
-    // Validate quantity
     if (quantity <= 0) {
       console.warn('Invalid quantity:', quantity);
       return;
@@ -69,24 +74,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (openDrawer) {
-      console.log('Setting isDrawerOpen to true',openDrawer); // Debug
+    
       setIsDrawerOpen(true);
     }
   };
 
   const buyNow = (product: ProductDetails) => {
-    console.log('buyNow called:', product); // Debug
+    console.log('buyNow called:', product);
     if (!product?.id || !product?.name || !product?.price) {
       console.error('Invalid product data:', product);
       throw new Error('Product must have id, name, and price');
     }
     setItems([{ ...product, quantity: 1 }]);
-    console.log('Setting isDrawerOpen to true'); // Debug
+    console.log('Setting isDrawerOpen to true');
     setIsDrawerOpen(true);
   };
 
   const updateQuantity = (id: number, change: number) => {
-    console.log('updateQuantity called:', { id, change }); // Debug
+    console.log('updateQuantity called:', { id, change });
     setItems((prev) => {
       const item = prev.find((i) => i.id === id);
       if (!item) return prev;
@@ -99,7 +104,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const removeFromCart = (id: number) => {
-    console.log('removeFromCart called:', id); // Debug
+    console.log('removeFromCart called:', id);
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
@@ -108,15 +113,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const toggleDrawer = () => {
-    console.log('toggleDrawer called, current isDrawerOpen:', isDrawerOpen); // Debug
+    console.log('toggleDrawer called, current isDrawerOpen:', isDrawerOpen);
     setIsDrawerOpen((prev) => !prev);
   };
 
+  const processedToCheckout = () => {
+    setFinalCheckout((prev) => !prev);
+    setIsDrawerOpen(false);
 
-  const ProcessedToCheckout=()=>{
-    setFinalCheckout(pre=>!pre)
-    setIsDrawerOpen(false)
+  };
+
+  const handlesubmit=() =>{
+        setFinalCheckout(false);
+    setIsDrawerOpen(false);
+    setOrderSuccess((prev) => !prev);
   }
+
+const EMICalacultor =()=>{
+  
+}
 
   return (
     <CartContext.Provider
@@ -131,9 +146,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         toggleDrawer,
         calculateSubtotal,
         setItems,
-        ProcessedToCheckout,
-        FinalCheckout
-
+        processedToCheckout, // Renamed for consistency
+        finalCheckout, // Renamed for consistency
+        setOrderSuccess, // Renamed and fixed
+        orderSuccess,
+      handlesubmit
+        // Renamed for consistency
       }}
     >
       {children}

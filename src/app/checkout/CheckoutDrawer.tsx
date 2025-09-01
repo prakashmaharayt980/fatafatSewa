@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-import { ShoppingCart, Plus, Minus,  Trash2, Loader2, ArrowRight } from 'lucide-react';
+import React from 'react';
+import { ShoppingCart, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import {
   Drawer,
 
@@ -22,31 +22,21 @@ const CheckoutDrawer = () => {
     setIsDrawerOpen,
     calculateSubtotal,
     removeFromCart,
-    setItems,
-    ProcessedToCheckout
+
+ processedToCheckout
   } = useContextCart();
-  const [isPurchasing, setIsPurchasing] = useState(false);
+
 
   const subtotal = calculateSubtotal();
-  const tax = subtotal * 0.08;
-  const shipping = subtotal > 100 ? 0 : 9.99;
-  const total = subtotal + tax + shipping;
 
-  const handleCompletePurchase = () => {
-    setIsPurchasing(true);
-    setTimeout(() => {
-      setItems([]);
-      setIsDrawerOpen(false);
-      setIsPurchasing(false);
-    }, 1000);
-  };
+
 
   return (
     <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}  >
       <DrawerContent className="max-h-[40vh] max-w-5xl mx-auto border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
         <DrawerHeader className="text-center border-b border-gray-200 m-0 p-0 items-center py-1">
-          <DrawerTitle className="flex items-center justify-center gap-2 text-xl font-semibold">
-            <ShoppingCart className="w-5 h-5" />
+          <DrawerTitle className="flex items-center justify-center gap-2 text-xl text-[var(--colour-fsP2)] font-semibold">
+            <ShoppingCart className="w-5 h-5 text-[var(--colour-fsP1)]" />
             Cart
           </DrawerTitle>
         </DrawerHeader>
@@ -79,8 +69,8 @@ const CheckoutDrawer = () => {
                         <p className="text-xs text-gray-500">${item.price.toFixed(2)} each</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center border rounded-md">
+                    <div className="flex items-center gap-2 ">
+                      <div className="flex items-center border rounded-md overflow-hidden border-gray-200">
                         <button
                           onClick={() => updateQuantity(item.id, -1)}
                           className="w-7 h-7 flex items-center justify-center hover:bg-gray-50"
@@ -109,40 +99,25 @@ const CheckoutDrawer = () => {
             )}
           </div>
 
-        
+
         </div>
 
-   <div className="w-full bg-white border-t border-gray-200 px-6 py-4">
+        <div className="w-full bg-white border-t border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-left">
-              <div className="text-sm text-gray-500">Total</div>
-              <div className="text-xl font-bold text-gray-900">Rs. {total.toFixed(2)}</div>
+            <div className="text-left flex flex-row gap-4  items-center">
+              <div className="text-xl text-[var(--colour-fsP1)] font-medium">Total &nbsp; :</div>
+              <div className="text-xl font-bold text-[var(--colour-fsP2)]">Rs. {subtotal.toFixed(2)}</div>
             </div>
             <div className="flex gap-3">
-    
+
               <button
-                onClick={ProcessedToCheckout}
-   
-                className={`px-6 py-2 font-medium rounded-lg flex items-center gap-2 transition-colors bg-blue-600 text-white hover:bg-blue-700`}
+                onClick={processedToCheckout}
+
+                className={`px-6 py-2 font-medium rounded-lg flex items-center gap-2 transition-colors bg-[var(--colour-fsP1)] text-white hover:bg-blue-700 `}
               >
-CheckOut      <ArrowRight className="w-4 h-4" />
+                Proced To Checkout     <ArrowRight className="w-4 h-4" />
               </button>
-              {/* <button
-                onClick={handleCompletePurchase}
-                disabled={items.length === 0 || isPurchasing}
-                className={`px-6 py-2 font-medium rounded-lg flex items-center gap-2 transition-colors ${
-                  items.length === 0 || isPurchasing
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-              >
-                {isPurchasing ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <ArrowRight className="w-4 h-4" />
-                )}
-                {isPurchasing ? 'Processing...' : 'Checkout'}
-              </button> */}
+
             </div>
           </div>
         </div>
