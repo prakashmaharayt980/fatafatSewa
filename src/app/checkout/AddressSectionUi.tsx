@@ -39,7 +39,7 @@ export default function AddressSelectionUI() {
     zipCode: ''
   });
   const [addressLabel, setAddressLabel] = useState('');
-  const [selectedLabelIcon, setSelectedLabelIcon] = useState(Home);
+  const [selectedLabelIcon, setSelectedLabelIcon] = useState("Home");
 
   const labelOptions = [
     { name: 'Home', icon: Home },
