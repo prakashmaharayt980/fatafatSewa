@@ -2,6 +2,43 @@
 import React, { createContext, useContext, useState, Dispatch, SetStateAction } from 'react';
 import { ProductDetails } from '../product/[slug]/page';
 
+
+
+interface UserInfo {
+  name: string;
+  email: string;
+  phone: string;
+  occupation: string,
+  gender: string,
+  dob: string,
+  address: string
+}
+
+export interface EmiContextInfoIF {
+  userInfo: UserInfo;
+  isDrawerOpen: boolean;
+  files: {
+    citizenshipFile: File | null;
+    photoFiles: File[] | null;
+    creditCardStatement: null,
+    bankStatement: null
+  };
+  emiTenure: string;
+  product: ProductDetails | null; // Made nullable to match default
+  downPayment: number | null; // Added for EMI calculator
+  monthlyEMI: number | null; // Added for displaying calculated EMI
+  hasCreditCard: string;
+  bankinfo: {
+    expiryDate: string;
+    cardHolderName: string;
+    creditCardNumber: string;
+    accountHolderName: string;
+    accountNumber: string;
+    bankname: string
+  }
+
+}
+
 interface CartContextType {
   items: Array<ProductDetails>;
   addToCart: (product: ProductDetails, quantity?: number, openDrawer?: boolean) => void;
@@ -16,34 +53,105 @@ interface CartContextType {
   processedToCheckout: () => void;
   handlesubmit: () => void;
   finalCheckout: boolean;
-  setOrderSuccess: Dispatch<SetStateAction<boolean>>; // Fixed type
-  
-  orderSuccess: boolean; // Renamed for consistency
+  setOrderSuccess: Dispatch<SetStateAction<boolean>>;
+  orderSuccess: boolean;
+  emiContextInfo: EmiContextInfoIF;
+  setEmiContextInfo: Dispatch<SetStateAction<EmiContextInfoIF>>;
+  EMICalculator: (price: number, tenure: string, downPayment?: number) => number;
 }
 
 const CartContext = createContext<CartContextType>({
   items: [],
-  addToCart: () => {},
-  buyNow: () => {},
-  updateQuantity: () => {},
-  removeFromCart: () => {},
+  addToCart: () => { },
+  buyNow: () => { },
+  updateQuantity: () => { },
+  removeFromCart: () => { },
   isDrawerOpen: false,
-  setIsDrawerOpen: () => {},
-  toggleDrawer: () => {},
+  setIsDrawerOpen: () => { },
+  toggleDrawer: () => { },
   calculateSubtotal: () => 0,
-  setItems: () => {},
-  processedToCheckout: () => {},
+  setItems: () => { },
+  processedToCheckout: () => { },
   finalCheckout: false,
-  setOrderSuccess: () => {}, // Default to empty function
-  orderSuccess: false, 
-  handlesubmit: ()=>{}, 
+  setOrderSuccess: () => { },
+  orderSuccess: false,
+  handlesubmit: () => { },
+  emiContextInfo: {
+    userInfo: {
+      name: '',
+      email: '',
+      phone: '',
+      occupation: '',
+      gender: '',
+      dob: null,
+      address: ''
+    },
+    isDrawerOpen: false,
+    files: {
+      citizenshipFile: null,
+      photoFiles: null,
+      creditCardStatement: null,
+      bankStatement: null
+    },
+    emiTenure: '',
+    product: null,
+    downPayment: null,
+    monthlyEMI: null,
+    hasCreditCard: '',
+    bankinfo: {
+      expiryDate: '',
+      cardHolderName: '',
+      creditCardNumber: '',
+      accountHolderName: '',
+      accountNumber: '',
+      bankname: ''
+    }
+
+  },
+  setEmiContextInfo: () => { },
+  EMICalculator: () => 0,
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<Array<ProductDetails>>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [finalCheckout, setFinalCheckout] = useState<boolean>(false);
-  const [orderSuccess, setOrderSuccess] = useState<boolean>(false); // Renamed for consistency
+  const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
+  const [emiContextInfo, setEmiContextInfo] = useState<EmiContextInfoIF>({
+
+    userInfo: {
+      name: '',
+      email: '',
+      phone: '',
+      occupation: '',
+      gender: '',
+      dob: null,
+      address: ''
+    },
+    isDrawerOpen: false,
+    files: {
+      citizenshipFile: null,
+      photoFiles: null,
+      creditCardStatement: null,
+      bankStatement: null
+    },
+    emiTenure: '',
+    product: null,
+    downPayment: null,
+    monthlyEMI: null,
+    hasCreditCard: 'no',
+
+
+    bankinfo: {
+      expiryDate: '',
+      cardHolderName: '',
+      creditCardNumber: '',
+      accountHolderName: '',
+      accountNumber: '',
+      bankname: ''
+    }
+
+  });
 
   const addToCart = (product: ProductDetails, quantity: number = 1, openDrawer: boolean = false) => {
     console.log('addToCart called:', { product, quantity, openDrawer });
@@ -74,7 +182,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     if (openDrawer) {
-    
       setIsDrawerOpen(true);
     }
   };
@@ -113,25 +220,30 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const toggleDrawer = () => {
-    console.log('toggleDrawer called, current isDrawerOpen:', isDrawerOpen);
+
     setIsDrawerOpen((prev) => !prev);
   };
 
   const processedToCheckout = () => {
     setFinalCheckout((prev) => !prev);
     setIsDrawerOpen(false);
-
   };
 
-  const handlesubmit=() =>{
-        setFinalCheckout(false);
+  const handlesubmit = () => {
+    setFinalCheckout(false);
     setIsDrawerOpen(false);
-    setOrderSuccess((prev) => !prev);
-  }
+    setOrderSuccess(true);
+  };
 
-const EMICalacultor =()=>{
-  
-}
+  const EMICalculator = (price: number, tenure: string, downPayment: number = 0): number => {
+    const tenureMonths = parseInt(tenure, 10);
+    if (!price || isNaN(tenureMonths) || ![6, 9, 12, 18].includes(tenureMonths)) {
+      console.warn('Invalid EMI inputs:', { price, tenure, downPayment });
+      return 0;
+    }
+    const remainingAmount = price - downPayment;
+    return remainingAmount > 0 ? Math.round(remainingAmount / tenureMonths) : 0;
+  };
 
   return (
     <CartContext.Provider
@@ -146,12 +258,14 @@ const EMICalacultor =()=>{
         toggleDrawer,
         calculateSubtotal,
         setItems,
-        processedToCheckout, // Renamed for consistency
-        finalCheckout, // Renamed for consistency
-        setOrderSuccess, // Renamed and fixed
+        processedToCheckout,
+        finalCheckout,
+        setOrderSuccess,
         orderSuccess,
-      handlesubmit
-        // Renamed for consistency
+        handlesubmit,
+        emiContextInfo,
+        setEmiContextInfo,
+        EMICalculator,
       }}
     >
       {children}

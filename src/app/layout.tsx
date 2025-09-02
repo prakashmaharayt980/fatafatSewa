@@ -10,6 +10,8 @@ import { CartProvider } from './checkout/CartContext';
 import CheckoutDrawer from './checkout/CheckoutDrawer';
 import DeliverySection from './checkout/DeliverySection';
 import CheckoutSuccess from './checkout/CheckoutSucess';
+import ApplyForEMI from './checkout/ApplyEmi';
+
 
 
 export const metadata = {
@@ -31,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <CheckoutDrawer />
             <DeliverySection/>
             <CheckoutSuccess/>
+            <ApplyForEMI/>
           </CartProvider>
         </ContextStoreProvider>
       </body>

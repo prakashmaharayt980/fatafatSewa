@@ -67,15 +67,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     renderRating,
 }) => {
 
-    const {addToCart,buyNow,items,setIsDrawerOpen}=useContextCart()
-    const handleAddToCart = () => {
-        // Add to cart logic
-    };
+    const { addToCart, buyNow, items, setIsDrawerOpen, setEmiContextInfo } = useContextCart()
 
-    const handleBuyNow = () => {
-        // Buy now logic
-    };
-   console.log('Rendering ProductInfo with product:', items);
+    console.log('Rendering ProductInfo with product:', items);
     const handleQuantityChange = (newQuantity: number) => {
         if (newQuantity > 0 && newQuantity <= product.quantity) {
             setQuantity(newQuantity);
@@ -91,28 +85,32 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     };
 
     const AcctionButtons = useMemo(
-    () => [
-      {
-        name: 'Add to Cart',
-        Icon: ShoppingCart,
-        action: () => addToCart(product, quantity, true), // Function reference
-        className: 'bg-blue-700 hover:bg-blue-800 text-white',
-      },
-      {
-        name: 'Apply EMI',
-        Icon: CreditCard,
-        action: () => buyNow(product),
-        className: 'bg-yellow-600 hover:bg-yellow-700 text-white',
-      },
-      {
-        name: 'Compare',
-        Icon: ArrowLeftRight,
-        action: () => setIsDrawerOpen(true),
-        className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300',
-      },
-    ],
-    [product, quantity, addToCart, buyNow] // Dependencies
-  );
+        () => [
+            {
+                name: 'Add to Cart',
+                Icon: ShoppingCart,
+                action: () => addToCart(product, quantity, true), // Function reference
+                className: 'bg-blue-700 hover:bg-blue-800 text-white',
+            },
+            {
+                name: 'Apply EMI',
+                Icon: CreditCard,
+                action: () => setEmiContextInfo(prev => ({
+                    ...prev,
+                    isDrawerOpen: true,
+                    product:product
+                })),
+                className: 'bg-yellow-600 hover:bg-yellow-700 text-white',
+            },
+            {
+                name: 'Compare',
+                Icon: ArrowLeftRight,
+                action: () => setIsDrawerOpen(true),
+                className: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300',
+            },
+        ],
+        [product, quantity, addToCart, setEmiContextInfo,setIsDrawerOpen] // Dependencies
+    );
 
     const currencyunit = "Rs. ";
     const originalPrice = product.price;

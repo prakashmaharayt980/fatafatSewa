@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { CheckCircle, Package, MapPin, Clock, Phone, Star, X, ShoppingBag } from 'lucide-react';
+import { useContextCart } from './CartContext';
 
 const CheckoutSuccess = () => {
-  const [orderSuccess, setOrderSuccess] = React.useState(true);
+  const {orderSuccess, setOrderSuccess} = useContextCart()
 
   const orderDetails = {
     orderId: "#ELEC-2025-001234",
