@@ -10,9 +10,10 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 import NavBar from './NavBar';
+import { useContextStore } from '../api/ContextStore';
 
 const HeaderComponent = () => {
-
+   const {IsUserLogin,loginNeed}=useContextStore()
 
     const router = useRouter();
     const searchRef = useRef(null);
@@ -243,13 +244,15 @@ const HeaderComponent = () => {
 
 
                               {
-                                true ?  ( <button
-                                    onClick={() => handleroute('/login')}
+                                !IsUserLogin ?  ( <button
+                                    onClick={loginNeed}
                                     className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
                                 >
                                     Login
 
-                                </button>) : (<>
+                                </button>) :
+                                
+                                (<>
                                    <div className="relative account-menu">
                                     <button
                                         onClick={toggleAccountMenu}

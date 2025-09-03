@@ -245,6 +245,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return remainingAmount > 0 ? Math.round(remainingAmount / tenureMonths) : 0;
   };
 
+  
+
   return (
     <CartContext.Provider
       value={{

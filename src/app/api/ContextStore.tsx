@@ -53,7 +53,7 @@ export interface CategorySlug {
       price: string;
       average_rating: number;
       name: string;
-      
+
     }>;
   };
 }
@@ -93,9 +93,9 @@ export interface HomePageData {
     created_at: Date;
     id: number
   }]>
-    homeappliance: CategorySlug[],
-      laptopitem: CategorySlug[],
-          droneitem: CategorySlug[]
+  homeappliance: CategorySlug[],
+  laptopitem: CategorySlug[],
+  droneitem: CategorySlug[]
 
 }
 
@@ -103,18 +103,27 @@ interface ContextStoreContextType {
   loading: boolean;
   error: string | null;
   homePageData: HomePageData | null;
+  loginNeed: () => void;
+  IsUserLogin: boolean;
+  loginDailog: boolean;
+
 }
 
 const ContextStoreContext = createContext<ContextStoreContextType>({
   loading: true,
   error: null,
   homePageData: null,
+  loginNeed: () => { },
+  IsUserLogin: false,
+  loginDailog: false
 });
 
 export const ContextStoreProvider = ({ children }: { children: React.ReactNode }) => {
   const [homePageData, setHomePageData] = useState<HomePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [IsUserLogin, setIsUserLogin] = useState(false)
+  const [loginDailog, setloginDailog] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -139,8 +148,8 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           RemoteServices.CategoriesSlug('macbook-price-in-nepal'),
           RemoteServices.ProductTranding(),
           RemoteServices.BlogsAll(),
-            RemoteServices.CategoriesSlug('laptop-price-in-nepal'),
-            RemoteServices.CategoriesSlug('drone-price-in-nepal'),
+          RemoteServices.CategoriesSlug('laptop-price-in-nepal'),
+          RemoteServices.CategoriesSlug('drone-price-in-nepal'),
         ]);
 
         setHomePageData({
@@ -150,9 +159,9 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           accessories: [accessoriesRes],
           waterPumps: [waterPumpRes],
           blogContent: [blogsRes],
-          homeappliance:[homeappliance],
-          laptopitem:[laptopitem],
-          droneitem:[droneitem]
+          homeappliance: [homeappliance],
+          laptopitem: [laptopitem],
+          droneitem: [droneitem]
 
         });
 
@@ -171,8 +180,12 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
     };
   }, []);
 
+  const loginNeed = () => {
+    setloginDailog(prev => !prev)
+  }
+
   return (
-    <ContextStoreContext.Provider value={{ loading, error, homePageData }}>
+    <ContextStoreContext.Provider value={{ loading, error, homePageData, IsUserLogin, loginNeed, loginDailog }}>
       {children}
     </ContextStoreContext.Provider>
   );

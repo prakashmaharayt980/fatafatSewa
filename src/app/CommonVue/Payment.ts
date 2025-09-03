@@ -5,3 +5,8 @@ export const PaymentMethodsOptions = [
     { name: "Mastercard", img:"/imgfile/paymentMethod3.png", id:4  ,description:"You will be redirected to Mastercard to complete your purchase." },
     { name: "Khalti", img:  "/imgfile/paymentMethod2.svg"  , id:5  ,description:"You will be redirected to Khalti to complete your purchase." },
 ];
+
+export const  CompanyLogo="/imgfile/logoimg.png"
+export const  offerbannerloginimg="/imgfile/welcomebanner.png"
+
+
