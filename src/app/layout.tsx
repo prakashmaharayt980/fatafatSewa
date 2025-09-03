@@ -11,6 +11,8 @@ import CheckoutDrawer from './checkout/CheckoutDrawer';
 import DeliverySection from './checkout/DeliverySection';
 import CheckoutSuccess from './checkout/CheckoutSucess';
 import ApplyForEMI from './checkout/ApplyEmi';
+
+import EMICalculator from './checkout/EmiCalacutor';
 import LoginPage from './login/page';
 
 
@@ -36,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <CheckoutSuccess/>
             <ApplyForEMI/>
             <LoginPage/>
+            <EMICalculator/>
           </CartProvider>
         </ContextStoreProvider>
       </body>

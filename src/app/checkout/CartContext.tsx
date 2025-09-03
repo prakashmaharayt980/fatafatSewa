@@ -39,6 +39,23 @@ export interface EmiContextInfoIF {
 
 }
 
+interface EmiCalacutorinter {
+  productselected: ProductDetails;
+  emirequiredinfo: {
+    bank: string;
+    eachCollectionDuration: number;
+    Downpayment: number;
+    cardmethodOptions: {
+      visa: number;
+      master: number;
+      esewa: number;
+    }
+
+  };
+  isEmiCalcltorOpen: boolean
+
+}
+
 interface CartContextType {
   items: Array<ProductDetails>;
   addToCart: (product: ProductDetails, quantity?: number, openDrawer?: boolean) => void;
@@ -58,6 +75,9 @@ interface CartContextType {
   emiContextInfo: EmiContextInfoIF;
   setEmiContextInfo: Dispatch<SetStateAction<EmiContextInfoIF>>;
   EMICalculator: (price: number, tenure: string, downPayment?: number) => number;
+  emicalclatorinfo: EmiCalacutorinter,
+  setemicalclatorinfo: Dispatch<SetStateAction<EmiCalacutorinter>>;
+
 }
 
 const CartContext = createContext<CartContextType>({
@@ -110,6 +130,22 @@ const CartContext = createContext<CartContextType>({
   },
   setEmiContextInfo: () => { },
   EMICalculator: () => 0,
+  emicalclatorinfo:{
+    productselected: null,
+    emirequiredinfo: {
+      bank: '',
+      eachCollectionDuration: 0,
+      Downpayment: 0,
+      cardmethodOptions: {
+        visa: 10,
+        master: 10,
+        esewa: 10,
+      }
+
+    },
+    isEmiCalcltorOpen: false
+  } ,
+  setemicalclatorinfo: () => { },
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -152,6 +188,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
   });
+
+  const [emicalclatorinfo, setemicalclatorinfo] = useState<EmiCalacutorinter>({
+    productselected: null,
+    emirequiredinfo: {
+      bank: '',
+      eachCollectionDuration: 0,
+      Downpayment: 0,
+      cardmethodOptions: {
+        visa: 10,
+        master: 10,
+        esewa: 10,
+      }
+
+    },
+    isEmiCalcltorOpen: false
+  })
+
 
   const addToCart = (product: ProductDetails, quantity: number = 1, openDrawer: boolean = false) => {
     console.log('addToCart called:', { product, quantity, openDrawer });
@@ -245,7 +298,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return remainingAmount > 0 ? Math.round(remainingAmount / tenureMonths) : 0;
   };
 
-  
+
 
   return (
     <CartContext.Provider
@@ -268,6 +321,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         emiContextInfo,
         setEmiContextInfo,
         EMICalculator,
+        emicalclatorinfo, setemicalclatorinfo
       }}
     >
       {children}

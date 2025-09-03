@@ -1,6 +1,6 @@
 'use client'
 import React, { useMemo } from 'react';
-import { Book, BookOpen, ChevronDown } from 'lucide-react';
+import { Book, BookOpen, ChevronDown, CreditCard } from 'lucide-react';
 import Link from 'next/link';
 import nvaitemlist from './navitem.json';
 import {
@@ -8,8 +8,10 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useContextCart } from '../checkout/CartContext';
 
 const NavBar = () => {
+    const {setemicalclatorinfo}=useContextCart()
     // Memoize and validate navigation data to prevent unnecessary re-renders
     const validatedNavItems = useMemo(() => {
         if (!Array.isArray(nvaitemlist)) {
@@ -149,6 +151,7 @@ const NavBar = () => {
                                 //     <Book className='h-5 w-5 mr-1 text-[var(--colour-fsP2)] '   />
                                 //     <span className="truncate max-w-[160px] text-sm text-black font-semibold">{category.title}</span>
                                 // </Link>
+                           <div className='flex flex-row gap-2'>
                                 <button
 
                                     onClick={() => handlerouter()}
@@ -162,6 +165,20 @@ const NavBar = () => {
 
 
                                 </button>
+                                <button
+
+                                    onClick={()=>setemicalclatorinfo(prev=>({...prev, isEmiCalcltorOpen:true }))}
+
+                                    className={`px-2.5  py-1.5 bg-white rounded-full transition-all duration-300 text-sm font-medium capitalize   flex items-center gap-4 `}
+                                >
+                                    <span className={" font-medium items-center pl-2"}>Emi Calcultor</span>
+                                    <div className=" rounded-full p-1.5 bg-gray-200">
+                                        <CreditCard className="w-4 h-4  rounded-full " />
+                                    </div>
+
+
+                                </button>
+                           </div>
                             )}
                         </div>
                     ))}

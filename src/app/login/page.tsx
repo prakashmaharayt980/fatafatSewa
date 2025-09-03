@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { useContextStore } from "../api/ContextStore";
 import { useState } from 'react';
 import { CompanyLogo, PaymentMethodsOptions } from "../CommonVue/Payment";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 const MaterialInput = ({
   id,
@@ -462,6 +463,7 @@ export default function LoginPage() {
     <Dialog open={loginDailog} onOpenChange={loginNeed} aria-label="Fatafatsewa Login Dialog">
       <DialogContent className="sm:mx-auto sm:w-full sm:max-w-lg min-h-[60vh] max-h-[93vh] bg-white px-4 sm:px-8 py-6 shadow-md sm:rounded-2xl border border-gray-200 flex flex-col gap-6 overflow-y-auto ">
         <DialogHeader className="flex flex-col items-center">
+          <DialogTitle hidden>login</DialogTitle>
           <Image
             src={CompanyLogo}
             alt="Fatafatsewa Company Logo"

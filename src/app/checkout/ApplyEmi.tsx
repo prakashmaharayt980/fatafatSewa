@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Upload, User, Building2, FileText, Check, ChevronRight, CreditCard, ChevronLeft, Send } from 'lucide-react';
+import { Upload, User, Building2, FileText,  ChevronRight, CreditCard, ChevronLeft, Send } from 'lucide-react';
 import { EmiContextInfoIF, useContextCart } from './CartContext';
 
 
@@ -17,7 +17,7 @@ export default function EmiDrawer() {
   const [currentStep, setCurrentStep] = useState(1);
 
 
-
+           
 
 
 
@@ -365,7 +365,7 @@ export default function EmiDrawer() {
         <DrawerHeader className="text-center  m-0 p-0 items-center ">
           <DrawerTitle className="flex items-center justify-center gap-2 m-0 p-0 text-xl text-[var(--colour-fsP2)] font-semibold">
             <CreditCard className="w-5 h-5 text-[var(--colour-fsP1)]" />
-            <span className=' items-center'>       Apply for EMI </span> : {product.name.slice(0, 40).concat('.....')}
+            <span className=' items-center'>       Apply for EMI </span> : {product.name.length > 0 ? product.name.slice(0, 40).concat('.....') :product.name}
           </DrawerTitle>
         </DrawerHeader>
         <div className="bg-white rounded-lg shadow-sm">

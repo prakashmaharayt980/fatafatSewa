@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, User, Heart, Menu, X, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, User, Heart, Menu, X, ChevronDown, User2Icon } from 'lucide-react';
 import Image from 'next/image';
 import imglogo from '../assets/logoimg.png';
 
@@ -13,7 +13,7 @@ import NavBar from './NavBar';
 import { useContextStore } from '../api/ContextStore';
 
 const HeaderComponent = () => {
-   const {IsUserLogin,loginNeed}=useContextStore()
+    const { IsUserLogin, loginNeed } = useContextStore()
 
     const router = useRouter();
     const searchRef = useRef(null);
@@ -243,66 +243,74 @@ const HeaderComponent = () => {
                                 </button>
 
 
-                              {
-                                !IsUserLogin ?  ( <button
-                                    onClick={loginNeed}
-                                    className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
-                                >
-                                    Login
+                                {
+                                    !IsUserLogin ? (
+                                        <button
 
-                                </button>) :
-                                
-                                (<>
-                                   <div className="relative account-menu">
-                                    <button
-                                        onClick={toggleAccountMenu}
-                                        className="hidden sm:flex items-center space-x-1 p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
-                                    >
-                                        <User className="h-4 w-4" />
-                                        <ChevronDown className="h-3 w-3" />
-                                    </button>
+                                            onClick={loginNeed}
 
-                                    {/* Account Dropdown */}
-                                    {state.showAccountMenu && (
-                                        <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                                            <div className="py-2">
-                                                <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
-                                                <Link href="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Orders</Link>
-                                                <Link href="/wishlist" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Wishlist</Link>
-                                                <hr className="my-1" />
-                                                <button className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
+                                            className={`px-2.5  py-1.5 bg-[var(--colour-fsP2)] rounded-full transition-all duration-300 text-sm font-semibold capitalize text-white flex items-center gap-4 shadow-sm `}
+                                        >
+                                            <span className={" font-medium  items-center pl-2"}>Login</span>
+                                            <div className=" rounded-full p-1.5 bg-gray-200">
+                                                <User2Icon className="w-4 h-4  rounded-full text-[var(--colour-fsP1)]   " />
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
 
 
-                                <button
-                                    onClick={() => handleroute('/cart')}
-                                    className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
-                                >
-                                    <ShoppingCart className="h-4 w-4" />
-                                    {/* Cart badge */}
-                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                                        3
-                                    </span>
-                                </button>
+                                        </button>
+                                    ) :
 
-                                <button
-                                    onClick={() => handleroute('/wishlist')}
-                                    className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
-                                >
-                                    <Heart className="h-4 w-4" />
+                                        (<>
+                                            <div className="relative account-menu">
+                                                <button
+                                                    onClick={toggleAccountMenu}
+                                                    className="hidden sm:flex items-center space-x-1 p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
+                                                >
+                                                    <User className="h-4 w-4" />
+                                                    <ChevronDown className="h-3 w-3" />
+                                                </button>
 
-                                </button>
-                                </>)
-                              }
+                                                {/* Account Dropdown */}
+                                                {state.showAccountMenu && (
+                                                    <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                                                        <div className="py-2">
+                                                            <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
+                                                            <Link href="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Orders</Link>
+                                                            <Link href="/wishlist" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Wishlist</Link>
+                                                            <hr className="my-1" />
+                                                            <button className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+
+                                            <button
+                                                onClick={() => handleroute('/cart')}
+                                                className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
+                                            >
+                                                <ShoppingCart className="h-4 w-4" />
+                                                {/* Cart badge */}
+                                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                                    3
+                                                </span>
+                                            </button>
+
+                                            <button
+                                                onClick={() => handleroute('/wishlist')}
+                                                className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
+                                            >
+                                                <Heart className="h-4 w-4" />
+
+                                            </button>
+                                        </>)
+                                }
 
 
 
 
 
-                             
+
 
                                 {/* Mobile Menu Toggle */}
                                 <button
