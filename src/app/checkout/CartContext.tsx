@@ -35,7 +35,7 @@ export interface EmiContextInfoIF {
     accountHolderName: string;
     accountNumber: string;
     bankname: string;
-    creditCardProvider:string;
+    creditCardProvider: string;
   }
 
 }
@@ -78,9 +78,14 @@ interface CartContextType {
   EMICalculator: (price: number, tenure: string, downPayment?: number) => number;
   emicalclatorinfo: EmiCalacutorinter,
   setemicalclatorinfo: Dispatch<SetStateAction<EmiCalacutorinter>>;
-    IsUserLogin: boolean;
+  IsUserLogin: boolean;
   loginDailog: boolean;
-   loginNeed: () => void;
+  loginNeed: () => void;
+  WishListInfo: {
+    isDrawerOpen: boolean,
+    productList: ProductDetails[],
+  };
+  setWishListInfo:Dispatch<SetStateAction<CartContextType['WishListInfo']>>;
 
 }
 
@@ -129,13 +134,13 @@ const CartContext = createContext<CartContextType>({
       accountHolderName: '',
       accountNumber: '',
       bankname: '',
-      creditCardProvider:''
+      creditCardProvider: ''
     }
 
   },
   setEmiContextInfo: () => { },
   EMICalculator: () => 0,
-  emicalclatorinfo:{
+  emicalclatorinfo: {
     productselected: null,
     emirequiredinfo: {
       bank: '',
@@ -149,11 +154,16 @@ const CartContext = createContext<CartContextType>({
 
     },
     isEmiCalcltorOpen: false
-  } ,
+  },
   setemicalclatorinfo: () => { },
-    IsUserLogin: false,
-    loginDailog: false,
-      loginNeed: () => { },
+  IsUserLogin: false,
+  loginDailog: false,
+  loginNeed: () => { },
+  WishListInfo: {
+    isDrawerOpen: false,
+    productList: null
+  },
+  setWishListInfo:()=>{}
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -193,12 +203,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       accountHolderName: '',
       accountNumber: '',
       bankname: '',
-      creditCardProvider:''
+      creditCardProvider: ''
     }
 
   });
-    const [IsUserLogin, setIsUserLogin] = useState(false)
-    const [loginDailog, setloginDailog] = useState(false)
+  const [IsUserLogin, setIsUserLogin] = useState(false)
+  const [loginDailog, setloginDailog] = useState(false)
 
   const [emicalclatorinfo, setemicalclatorinfo] = useState<EmiCalacutorinter>({
     productselected: null,
@@ -214,6 +224,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     },
     isEmiCalcltorOpen: false
+  })
+
+  const [WishListInfo, setWishListInfo] = useState<CartContextType['WishListInfo']>({
+    isDrawerOpen: false,
+    productList: null,
+
   })
 
 
@@ -310,7 +326,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
 
-    const loginNeed = () => {
+  const loginNeed = () => {
     setloginDailog(prev => !prev)
   }
 
@@ -337,7 +353,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setEmiContextInfo,
         EMICalculator,
         emicalclatorinfo, setemicalclatorinfo,
-        IsUserLogin, loginNeed, loginDailog
+        IsUserLogin, loginNeed, loginDailog,WishListInfo,setWishListInfo
       }}
     >
       {children}

@@ -14,6 +14,8 @@ import ApplyForEMI from './emi/ApplyEmi';
 
 import EMICalculator from './checkout/EmiCalacutor';
 import LoginPage from './login/page';
+import WishList from './emi/Wishlist';
+
 
 
 
@@ -39,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ApplyForEMI />
           <LoginPage />
           <EMICalculator />
+          <WishList/>
         </CartProvider>
       </body>
     </html>
