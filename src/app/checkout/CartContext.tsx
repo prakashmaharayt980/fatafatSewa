@@ -34,7 +34,8 @@ export interface EmiContextInfoIF {
     creditCardNumber: string;
     accountHolderName: string;
     accountNumber: string;
-    bankname: string
+    bankname: string;
+    creditCardProvider:string;
   }
 
 }
@@ -124,7 +125,8 @@ const CartContext = createContext<CartContextType>({
       creditCardNumber: '',
       accountHolderName: '',
       accountNumber: '',
-      bankname: ''
+      bankname: '',
+      creditCardProvider:''
     }
 
   },
@@ -184,7 +186,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       creditCardNumber: '',
       accountHolderName: '',
       accountNumber: '',
-      bankname: ''
+      bankname: '',
+      creditCardProvider:''
     }
 
   });

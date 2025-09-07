@@ -170,7 +170,7 @@ const NavBar = () => {
                                     </button>
                                     <button
 
-                                        onClick={() => setemicalclatorinfo(prev => ({ ...prev, isEmiCalcltorOpen: true }))}
+                                        onClick={() => handlerouter('/emi')}
 
                                                                               className={`px-3 py-2 gap-1 rounded-full text-sm items-center font-medium flex flex-row transition-all bg-white text-gray-700 border border-gray-300 hover:bg-gray-50`}
                                     >

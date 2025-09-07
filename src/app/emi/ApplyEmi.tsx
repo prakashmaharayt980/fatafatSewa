@@ -1,37 +1,50 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Upload, User, Building2, FileText,  ChevronRight, CreditCard, ChevronLeft, Send } from 'lucide-react';
-import { EmiContextInfoIF, useContextCart } from './CartContext';
+import { Upload, User, Building2, FileText, ChevronRight, CreditCard, ChevronLeft, Send, Search, ArrowLeft } from 'lucide-react';
+import { useContextCart } from '../checkout/CartContext';
+import RemoteServices from '../api/remoteservice';
+import { Button } from '@/components/ui/button';
 
 
 export default function EmiDrawer() {
   const { emiContextInfo, setEmiContextInfo, EMICalculator } = useContextCart();
   const { product } = emiContextInfo
   const [currentStep, setCurrentStep] = useState(1);
+  const [selectItems, setselectItems] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
 
 
-           
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      RemoteServices.SerachProducts(searchQuery.trim()).then(res => {
+        setselectItems(res.data);
+      }).catch(e => console.log('error', e));
+    } else {
+      setselectItems([]);
+    }
+  }, [searchQuery]);
 
-
-
-  if (product === null) return;
-
-
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileKey: keyof EmiContextInfoIF['files']) => {
-    const file = e.target.files?.[0] || null;
+  const handleProductSelect = (product) => {
     setEmiContextInfo((prev) => ({
       ...prev,
-      files: { ...prev.files, [fileKey]: file },
+      product: product,
     }));
+    setSearchQuery('');
+    setselectItems([]);
   };
+
+
+
+
+
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +69,16 @@ export default function EmiDrawer() {
     setEmiContextInfo(prev => ({ ...prev, [field]: value }));
   };
 
+  const handdleInputChages=(field, value)=>{
+     setEmiContextInfo(prev => ({ ...prev, userInfo:{...prev.userInfo,[field]:value}}));
+  }
+  const handdleInputChagesBanks=(field, value)=>{
+     setEmiContextInfo(prev => ({ ...prev, bankinfo:{...prev.bankinfo,[field]:value}}));
+  }
+  const handdleInputChagesFiles=(field, value)=>{
+     setEmiContextInfo(prev => ({ ...prev, files:{...prev.files,[field]:value}}));
+  }
+
 
 
   const nextStep = () => {
@@ -77,8 +100,8 @@ export default function EmiDrawer() {
               <Label className="text-sm font-medium text-gray-700 mb-2 block ">Full Name</Label>
               <Input
                 value={emiContextInfo.userInfo.name}
-                onChange={(e) => handleInputChange('fullName', e.target.value)}
-                className="border-gray-300 focus:ring-gray-200 focus:border-none  focus:outline-none outline-none"
+                onChange={(e) => handdleInputChages('name', e.target.value)}
+                className="border-gray-300 focus:ring-blue-200 focus:border-none  focus:outline-none outline-none"
                 placeholder="Enter your full name "
               />
             </div>
@@ -87,8 +110,8 @@ export default function EmiDrawer() {
               <Input
                 type="tel"
                 value={emiContextInfo.userInfo.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="border-gray-300 focus:ring-gray-200 focus:border-none  focus:outline-none outline-none"
+                onChange={(e) => handdleInputChages('phone', e.target.value)}
+                className="border-gray-300 focus:ring-blue-200 focus:border-none  focus:outline-none outline-none"
                 placeholder="Phone number"
               />
             </div>
@@ -97,8 +120,8 @@ export default function EmiDrawer() {
               <Input
                 type="email"
                 value={emiContextInfo.userInfo.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                className="border-gray-300 focus:ring-gray-200 focus:border-none  focus:outline-none outline-none"
+                onChange={(e) => handdleInputChages('email', e.target.value)}
+                className="border-gray-300 focus:ring-blue-200 focus:border-none  focus:outline-none outline-none"
                 placeholder="Enter your email"
               />
             </div>
@@ -107,21 +130,21 @@ export default function EmiDrawer() {
 
               <Input
                 value={emiContextInfo.userInfo.occupation}
-                onChange={(value) => handleInputChange('occupation', value)}
-                className="border-gray-300 focus:ring-gray-200 focus:border-none  focus:outline-none outline-none"
+                onChange={(e) => handdleInputChages('occupation', e.target.value)}
+                className="border-gray-300 focus:ring-blue-200 focus:border-none  focus:outline-none outline-none"
                 placeholder="Occuptions"
               />
             </div>
             <div className="col-span-6 ga">
 
               <Label className="text-sm font-medium text-gray-700">Gender</Label>
-              <Select onValueChange={(value) => handleInputChange('occupation', value)}
+              <Select onValueChange={(value) => handdleInputChages('gender', value)}
 
               >
-                <SelectTrigger className="border-gray-300 focus:ring-gray-200 focus:border-none w-full mt-2  focus:outline-none outline-none">
+                <SelectTrigger className="border-gray-300 focus:ring-blue-200 focus:border-none w-full mt-2  focus:outline-none outline-none">
                   <SelectValue placeholder="Select your GEnder" />
                 </SelectTrigger>
-                <SelectContent className="border-gray-300 bg-blue-50 focus:ring-gray-200 focus:border-none w-full  ">
+                <SelectContent className="border-gray-300 bg-blue-50 focus:ring-blue-200 focus:border-none w-full  ">
                   <SelectItem value="Male">Male</SelectItem>
                   <SelectItem value="FeMale">FeMale</SelectItem>
 
@@ -132,8 +155,8 @@ export default function EmiDrawer() {
               <Label className="text-sm font-medium text-gray-700 mb-2 block">{`DOB (B.S)`}</Label>
               <Input
                 value={emiContextInfo.userInfo.dob}
-                onChange={(e) => handleInputChange('dob', e.target.value)}
-                className="border-gray-300 w-full focus:ring-gray-200 focus:border-none  focus:outline-none outline-none"
+                onChange={(e) => handdleInputChages('dob', e.target.value)}
+                className="border-gray-300 w-full focus:ring-blue-200 focus:border-none  focus:outline-none outline-none"
                 placeholder="Enter.dob name"
                 type='date'
               />
@@ -142,8 +165,8 @@ export default function EmiDrawer() {
               <Label className="text-sm font-medium text-gray-700 mb-2 block">Address</Label>
               <Textarea
                 value={emiContextInfo.userInfo.address}
-                onChange={(e) => handleInputChange('address', e.target.value)}
-                className="border-gray-300 focus:ring-gray-200 focus:border-none  focus:outline-none outline-none"
+                onChange={(e) => handdleInputChages('address', e.target.value)}
+                className="border-gray-300 focus:ring-blue-200 focus:border-none  focus:outline-none outline-none"
                 placeholder="Enter your full address"
                 rows={3}
               />
@@ -158,10 +181,10 @@ export default function EmiDrawer() {
             <div>
               <Label className="text-sm font-medium text-gray-700">Do you have a credit card?</Label>
               <Select onValueChange={(value) => handleInputChange('hasCreditCard', value)}>
-                <SelectTrigger className="border-gray-300 w-full focus:ring-gray-200 focus:border-none focus:outline-none outline-none">
+                <SelectTrigger className="border-gray-300 w-full focus:ring-blue-200 focus:border-none focus:outline-none outline-none">
                   <SelectValue placeholder="Select an option" />
                 </SelectTrigger>
-                <SelectContent className="border-gray-300 bg-blue-50 focus:ring-gray-200 focus:border-none w-full">
+                <SelectContent className="border-gray-300 bg-blue-50 focus:ring-blue-200 focus:border-none w-full">
                   <SelectItem value="yes">Yes</SelectItem>
                   <SelectItem value="no">No</SelectItem>
                 </SelectContent>
@@ -173,11 +196,11 @@ export default function EmiDrawer() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label className="text-sm font-medium text-gray-700">Credit Card Provider</Label>
-                  <Select onValueChange={(value) => handleInputChange('creditCardProvider', value)}>
-                    <SelectTrigger className="border-gray-300 w-full focus:ring-gray-200 focus:border-none focus:outline-none outline-none">
+                  <Select onValueChange={(value) => handdleInputChagesBanks('creditCardProvider', value)}>
+                    <SelectTrigger className="border-gray-300 w-full focus:ring-blue-200 focus:border-none focus:outline-none outline-none">
                       <SelectValue placeholder="Select your card provider" />
                     </SelectTrigger>
-                    <SelectContent className="border-gray-300 bg-blue-50 focus:ring-gray-200 focus:border-none w-full">
+                    <SelectContent className="border-gray-300 bg-blue-50 focus:ring-blue-200 focus:border-none w-full">
                       <SelectItem value="visa">Visa</SelectItem>
                       <SelectItem value="mastercard">Mastercard</SelectItem>
                       <SelectItem value="amex">American Express</SelectItem>
@@ -189,8 +212,8 @@ export default function EmiDrawer() {
                   <Label className="text-sm font-medium text-gray-700">Credit Card Number</Label>
                   <Input
                     value={emiContextInfo.bankinfo.creditCardNumber}
-                    onChange={(e) => handleInputChange('creditCardNumber', e.target.value)}
-                    className="border-gray-300 focus:ring-gray-200 focus:border-none focus:outline-none outline-none"
+                    onChange={(e) => handdleInputChagesBanks('creditCardNumber', e.target.value)}
+                    className="border-gray-300 focus:ring-blue-200 focus:border-none focus:outline-none outline-none"
                     placeholder="Enter credit card number"
                   />
                 </div>
@@ -198,8 +221,8 @@ export default function EmiDrawer() {
                   <Label className="text-sm font-medium text-gray-700">Card Holder Name</Label>
                   <Input
                     value={emiContextInfo.bankinfo.cardHolderName}
-                    onChange={(e) => handleInputChange('cardHolderName', e.target.value)}
-                    className="border-gray-300 focus:ring-gray-200 focus:border-none focus:outline-none outline-none"
+                    onChange={(e) => handdleInputChagesBanks('cardHolderName', e.target.value)}
+                    className="border-gray-300 focus:ring-blue-200 focus:border-none focus:outline-none outline-none"
                     placeholder="Name as per credit card"
                   />
                 </div>
@@ -207,8 +230,8 @@ export default function EmiDrawer() {
                   <Label className="text-sm font-medium text-gray-700">Expiry Date</Label>
                   <Input
                     value={emiContextInfo.bankinfo.expiryDate}
-                    onChange={(e) => handleInputChange('expiryDate', e.target.value)}
-                    className="border-gray-300 focus:ring-gray-200 focus:border-none focus:outline-none outline-none"
+                    onChange={(e) => handdleInputChagesBanks('expiryDate', e.target.value)}
+                    className="border-gray-300 focus:ring-blue-200 focus:border-none focus:outline-none outline-none"
                     placeholder="MM/YY"
                   />
                 </div>
@@ -218,7 +241,7 @@ export default function EmiDrawer() {
                     <input
                       type="file"
                       accept="image/*,application/pdf"
-                      onChange={(e) => handleFileChange(e, 'creditCardStatement')}
+                      onChange={(e) => handdleInputChagesFiles(e, 'creditCardStatement')}
                       className="hidden"
                       id="creditCardStatement"
                     />
@@ -234,11 +257,11 @@ export default function EmiDrawer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label className="text-sm font-medium text-gray-700">Bank Name</Label>
-                    <Select onValueChange={(value) => handleInputChange('bankName', value)}>
-                      <SelectTrigger className="border-gray-300 w-full focus:ring-gray-200 focus:border-none focus:outline-none outline-none">
+                    <Select onValueChange={(value) => handdleInputChagesBanks('bankName', value)}>
+                      <SelectTrigger className="border-gray-300 w-full focus:ring-blue-200 focus:border-none focus:outline-none outline-none">
                         <SelectValue placeholder="Select your bank" />
                       </SelectTrigger>
-                      <SelectContent className="border-gray-300 bg-blue-50 focus:ring-gray-200 focus:border-none w-full">
+                      <SelectContent className="border-gray-300 bg-blue-50 focus:ring-blue-200 focus:border-none w-full">
                         <SelectItem value="nabil">Nabil Bank</SelectItem>
                         <SelectItem value="nica">NIC Asia Bank</SelectItem>
                         <SelectItem value="everest">Everest Bank</SelectItem>
@@ -253,8 +276,8 @@ export default function EmiDrawer() {
                     <Label className="text-sm font-medium text-gray-700">Account Number</Label>
                     <Input
                       value={emiContextInfo.bankinfo.accountNumber}
-                      onChange={(e) => handleInputChange('accountNumber', e.target.value)}
-                      className="border-gray-300 focus:ring-gray-200 focus:border-none focus:outline-none outline-none"
+                      onChange={(e) => handdleInputChagesBanks('accountNumber', e.target.value)}
+                      className="border-gray-300 focus:ring-blue-200 focus:border-none focus:outline-none outline-none"
                       placeholder="Enter account number"
                     />
                   </div>
@@ -262,12 +285,12 @@ export default function EmiDrawer() {
                     <Label className="text-sm font-medium text-gray-700">Account Holder Name</Label>
                     <Input
                       value={emiContextInfo.bankinfo.accountHolderName}
-                      onChange={(e) => handleInputChange('accountHolderName', e.target.value)}
-                      className="border-gray-300 focus:ring-gray-200 focus:border-none focus:outline-none outline-none"
+                      onChange={(e) => handdleInputChagesBanks('accountHolderName', e.target.value)}
+                      className="border-gray-300 focus:ring-blue-200 focus:border-none focus:outline-none outline-none"
                       placeholder="Name as per bank account"
                     />
                   </div>
-                  
+
                 </div>
                 <div className="space-y-4">
 
@@ -277,13 +300,13 @@ export default function EmiDrawer() {
                       <input
                         type="file"
                         accept="image/*,application/pdf"
-                        onChange={(e) => handleFileChange(e, 'bankStatement')}
+                        onChange={(e) => handdleInputChagesFiles(e, 'bankStatement')}
                         className="hidden"
                         id="bankStatement"
                       />
                       <label htmlFor="bankStatement" className="cursor-pointer flex items-center justify-center gap-2 text-gray-600">
                         <Upload className="h-5 w-5 text-yellow-500" />
-                       
+
                       </label>
                     </div>
                   </div>
@@ -299,7 +322,7 @@ export default function EmiDrawer() {
 
             <div className="bg-blue-50 flex felx-cols justify-between px-4 py-2 rounded-lg border border-blue-200">
 
-              <p className="text-blue-700 text-sm">Original Price: NPR 1,89,900</p>
+              <p className="text-blue-700 text-sm">Original Price: NPR {emiContextInfo.product.price}</p>
               <p className="text-gray-700 text-sm">Pay Per Month: NPR 1,000</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
@@ -308,10 +331,10 @@ export default function EmiDrawer() {
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-2">EMI Tenure</Label>
                 <Select onValueChange={(value) => handleInputChange('emiTenure', value)}>
-                  <SelectTrigger className="border-gray-300 w-full focus:ring-gray-200 focus:border-none focus:outline-none outline-none">
+                  <SelectTrigger className="border-gray-300 w-full focus:ring-blue-200 focus:border-none focus:outline-none outline-none">
                     <SelectValue placeholder="Select  Duration " />
                   </SelectTrigger>
-                  <SelectContent className="border-gray-300 bg-blue-50 focus:ring-gray-200 focus:border-none w-full">
+                  <SelectContent className="border-gray-300 bg-blue-50 focus:ring-blue-200 focus:border-none w-full">
                     <SelectItem value="6">6 Months</SelectItem>
                     <SelectItem value="9">9 Months</SelectItem>
                     <SelectItem value="12">12 Months</SelectItem>
@@ -326,7 +349,7 @@ export default function EmiDrawer() {
                 <Input
                   value={emiContextInfo.downPayment}
                   onChange={(e) => handleInputChange('downPayment', e.target.value)}
-                  className="border-gray-300 focus:ring-gray-200 focus:border-none  focus:outline-none outline-none"
+                  className="border-gray-300 focus:ring-blue-200 focus:border-none  focus:outline-none outline-none"
                   placeholder="Enter down payment amount"
                 />
               </div>
@@ -341,7 +364,7 @@ export default function EmiDrawer() {
               </ul>
             </div>
             <div className="flex items-center space-x-2">
-              <input type="checkbox" id="terms" className="border-gray-300 focus:ring-gray-200 focus:border-none  focus:outline-none outline-none" />
+              <input type="checkbox" id="terms" className="border-gray-300 focus:ring-blue-200 focus:border-none  focus:outline-none outline-none" />
               <label htmlFor="terms" className="text-sm text-gray-600">
                 I agree to the terms and conditions. I understand that this is a legally binding agreement and all information provided is accurate.
               </label>
@@ -356,77 +379,143 @@ export default function EmiDrawer() {
 
 
 
+  const handleBackToSearch = () => {
+    setEmiContextInfo((prev) => ({
+      ...prev,
+      product: null,
+    }));
+    setSearchQuery('');
+    setselectItems([]);
+  };
 
   return (
     <Drawer open={emiContextInfo.isDrawerOpen}
       onOpenChange={(open) => setEmiContextInfo(prev => ({ ...prev, isDrawerOpen: open }))}>
-      <DrawerContent className="max-h-[50vh] max-w-5xl mx-auto border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      {emiContextInfo.product !== null &&
+        <DrawerContent className="max-h-[50vh] max-w-5xl mx-auto border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
 
-        <DrawerHeader className="text-center  m-0 p-0 items-center ">
-          <DrawerTitle className="flex items-center justify-center gap-2 m-0 p-0 text-xl text-[var(--colour-fsP2)] font-semibold">
-            <CreditCard className="w-5 h-5 text-[var(--colour-fsP1)]" />
-            <span className=' items-center'>       Apply for EMI </span> : {product.name.length > 0 ? product.name.slice(0, 40).concat('.....') :product.name}
-          </DrawerTitle>
-        </DrawerHeader>
-        <div className="bg-white rounded-lg shadow-sm">
-          <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
-            <div className="flex items-center justify-center space-x-1 text-sm">
-              {steps.map((step, index) => {
-                const isActive = currentStep === step.id;
-                const isCompleted = currentStep > step.id;
+          <DrawerHeader className="text-center  m-0 p-0 items-center ">
+            <DrawerTitle className="flex items-center justify-center gap-2 m-0 p-0 text-xl text-[var(--colour-fsP2)] font-semibold">
+              <CreditCard className="w-5 h-5 text-[var(--colour-fsP1)]" />
+              <span className=' items-center'>       Apply for EMI </span> : {product.name.length > 0 ? product.name.slice(0, 40).concat('.....') : product.name}
 
-                return (
-                  <div key={step.id} className="flex items-center">
-                    <span className={`${isCompleted ? 'text-green-600 font-medium' :
-                      isActive ? 'text-blue-600 font-semibold' :
-                        'text-gray-500'
-                      }`}>
-                      {step.title}
-                    </span>
-                    {index < steps.length - 1 && (
-                      <span className="text-gray-400 mx-2">/</span>
-                    )}
-                  </div>
-                );
-              })}
+              <Button
+                variant="ghost"
+                onClick={handleBackToSearch}
+                className=" m-0  h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50 text-xs p-2"
+              >
+                Change Product
+                <ArrowLeft className="w-3 h-3 mr-1" />
+
+              </Button>
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
+              <div className="flex items-center justify-center space-x-1 text-sm">
+                {steps.map((step, index) => {
+                  const isActive = currentStep === step.id;
+                  const isCompleted = currentStep > step.id;
+
+                  return (
+                    <div key={step.id} className="flex items-center">
+                      <span className={`${isCompleted ? 'text-green-600 font-medium' :
+                        isActive ? 'text-blue-600 font-semibold' :
+                          'text-gray-500'
+                        }`}>
+                        {step.title}
+                      </span>
+                      {index < steps.length - 1 && (
+                        <span className="text-gray-400 mx-2">/</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="px-6 py-6 overflow-y-auto flex-1">
-          {renderStepContent()}
-        </div>
-        <div className="bg-white rounded-lg shadow-sm px-6">
-
-          <div className="flex justify-between items-center">
-            <button
-              onClick={prevStep}
-              disabled={currentStep === 1}
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors">
-              <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
-                <ChevronLeft className="w-4 h-4" />
-              </div>
-              Previous
-            </button>
-            {currentStep < 3 ? (
-              <button
-                onClick={nextStep}
-                className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 font-medium shadow-lg hover:shadow-xl transition-all duration-200">
-                Next Step
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                  <ChevronRight className="w-3 h-3" />
-                </div>
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                className="flex items-center  gap-3 px-4 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 font-medium shadow-lg hover:shadow-xl transition-all duration-200">
-                Submit Application
-                <Send className="w-4 h-4" />
-              </button>
-            )}
+          <div className="px-6 py-6 overflow-y-auto flex-1">
+            {renderStepContent()}
           </div>
-        </div>
-      </DrawerContent>
+          <div className="bg-white rounded-lg shadow-sm px-6">
+
+            <div className="flex justify-between items-center">
+              <button
+                onClick={prevStep}
+                disabled={currentStep === 1}
+                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors">
+                <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50">
+                  <ChevronLeft className="w-4 h-4" />
+                </div>
+                Previous
+              </button>
+              {currentStep < 3 ? (
+                <button
+                  onClick={nextStep}
+                  className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 font-medium shadow-lg hover:shadow-xl transition-all duration-200">
+                  Next Step
+                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                    <ChevronRight className="w-3 h-3" />
+                  </div>
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  className="flex items-center  gap-3 px-4 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 font-medium shadow-lg hover:shadow-xl transition-all duration-200">
+                  Submit Application
+                  <Send className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        </DrawerContent>
+      }
+      {emiContextInfo.product === null &&
+
+        <DrawerContent className="max-h-[85vh] min-h-[60vh] max-w-6xl mx-auto bg-white border-0 shadow-xl">
+          <div className="p-4 overflow-y-auto">
+            <div className="mb-4">
+
+
+              <div className="flex rounded-full border border-gray-300 bg-gray-50 hover:bg-white hover:border-blue-300 transition-all duration-200 overflow-hidden focus-within:ring-2 focus-within:ring-blue-200">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for a product..."
+                  className="w-full px-4 py-2 bg-transparent border-none focus:outline-none text-sm placeholder-gray-500"
+                />
+                <button className="bg-blue-600 text-white px-3 py-1.5 m-0.5 hover:bg-blue-700 transition-colors rounded-full duration-200 flex items-center justify-center">
+                  <Search className="w-4 h-4" />
+                </button>
+              </div>
+              {selectItems.length > 0 && (
+                <div className="mt-2 max-h-56 overflow-auto bg-white border border-gray-200 rounded-md shadow-sm">
+                  {selectItems.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex items-center p-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0"
+                      onClick={() => handleProductSelect(product)}
+                    >
+                      {product.image && (
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-8 h-8 object-contain rounded mr-3 border border-gray-100"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900 text-sm">{product.name}</p>
+                        <p className="text-xs text-gray-600">  Rs .{product.price}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </DrawerContent>
+      }
     </Drawer>
   );
 }

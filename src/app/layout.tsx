@@ -10,7 +10,7 @@ import { CartProvider } from './checkout/CartContext';
 import CheckoutDrawer from './checkout/CheckoutDrawer';
 import DeliverySection from './checkout/DeliverySection';
 import CheckoutSuccess from './checkout/CheckoutSucess';
-import ApplyForEMI from './checkout/ApplyEmi';
+import ApplyForEMI from './emi/ApplyEmi';
 
 import EMICalculator from './checkout/EmiCalacutor';
 import LoginPage from './login/page';
