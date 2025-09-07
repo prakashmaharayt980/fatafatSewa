@@ -11,7 +11,7 @@ import {
 import { useContextCart } from '../checkout/CartContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { blogIvon } from '../CommonVue/Payment';
+import { blogIvon, emiCalcultorIocn } from '../CommonVue/Payment';
 
 const NavBar = () => {
     const { setemicalclatorinfo } = useContextCart()
@@ -172,12 +172,16 @@ const NavBar = () => {
 
                                         onClick={() => setemicalclatorinfo(prev => ({ ...prev, isEmiCalcltorOpen: true }))}
 
-                                        className={`px-2.5  py-1.5 bg-white rounded-full transition-all duration-300 text-sm font-medium capitalize   flex items-center gap-4 `}
+                                                                              className={`px-3 py-2 gap-1 rounded-full text-sm items-center font-medium flex flex-row transition-all bg-white text-gray-700 border border-gray-300 hover:bg-gray-50`}
                                     >
-                                        <span className={" font-medium items-center pl-2"}>Emi Calcultor</span>
-                                        <div className=" rounded-full p-1.5 bg-gray-200">
-                                            <CreditCard className="w-4 h-4  rounded-full " />
-                                        </div>
+                                           <Image
+                                                src={emiCalcultorIocn}
+                                                alt='blog icon'
+                                                height={20}
+                                                width={20}
+                                            />
+                                        <span className={" font-medium items-center "}>Emi Calcultor</span>
+                               
 
 
                                     </button>

@@ -9,5 +9,6 @@ export const PaymentMethodsOptions = [
 export const  CompanyLogo="/imgfile/logoimg.png"
 export const  offerbannerloginimg="/imgfile/welcomebanner.png"
 export const  blogIvon="/imgfile/blogicon.png"
+export const  emiCalcultorIocn="/imgfile/emiicon.jpg"
 
 
