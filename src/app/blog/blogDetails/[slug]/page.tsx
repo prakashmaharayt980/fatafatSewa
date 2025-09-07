@@ -95,8 +95,8 @@ export default function BlogDetail({ params }: SlugProps) {
         </div>
 
         {/* Articles Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4  cursor-pointer">
-          {blogInfo.data?.slice(0,6).map((article) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4  cursor-pointer">
+          {blogInfo.data?.slice(0,5).map((article) => (
             <div
               key={article.id}
               onClick={()=>handleblogdetails(article.slug)}
