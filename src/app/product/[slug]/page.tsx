@@ -13,6 +13,7 @@ import MoreDetailsProduct from "./MoreDetailsProduct";
 import BasketCard from "@/app/homepage/BasketCard";
 import { CategorySlug, useContextStore } from "@/app/api/ContextStore";
 import { cn } from "@/lib/utils";
+import { SlugProps } from "@/app/types/PropSlug";
 
 // ProductDetails interface based on API response
 export interface ProductDetails {
@@ -84,14 +85,10 @@ export interface ProductDetails {
   } | null;
 }
 
-interface Props {
-  params: Promise<{
-    slug: string;
-  }>;
-}
 
 
-export default function ProductDetailsPage({ params }: Props) {
+
+export default function ProductDetailsPage({ params }: SlugProps) {
   const [productDetails, setProductDetails] = useState<ProductDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

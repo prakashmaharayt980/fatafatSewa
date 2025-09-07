@@ -40,7 +40,7 @@ export default function Page() {
   }
 
   const { laptops, accessories, waterPumps ,categories,   laptopitem,
-          droneitem ,homeappliance} = homePageData;
+          droneitem ,homeappliance } = homePageData;
 
   return (
     <div className="mx-auto m-0 p-0 sm:py-3 sm:px-2 md:px-4 space-y-4 sm:space-y-12">

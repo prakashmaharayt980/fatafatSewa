@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import RemoteServices from './remoteservice';
+import { usePathname } from 'next/navigation';
 
 // Define interfaces
 export interface imagesArray {
@@ -124,6 +125,7 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
   const [error, setError] = useState<string | null>(null);
   const [IsUserLogin, setIsUserLogin] = useState(false)
   const [loginDailog, setloginDailog] = useState(false)
+  const pathname=usePathname()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -147,7 +149,7 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           RemoteServices.CategoriesSlug('water-pump-price-in-nepal'),
           RemoteServices.CategoriesSlug('macbook-price-in-nepal'),
           RemoteServices.ProductTranding(),
-          RemoteServices.BlogsAll(),
+          RemoteServices.BlogsAll().then(res=>res.data),
           RemoteServices.CategoriesSlug('laptop-price-in-nepal'),
           RemoteServices.CategoriesSlug('drone-price-in-nepal'),
         ]);
@@ -172,8 +174,11 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
         setLoading(false);
       }
     };
-
-    fetchData();
+   
+    if(pathname ==='/'){
+  fetchData();
+    }
+  
 
     return () => {
       // Cleanup if RemoteServices supports cancellation

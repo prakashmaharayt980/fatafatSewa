@@ -57,7 +57,9 @@ const RemoteServices = {
     getRequest(`/v1/product-detail/${slug}`).then(res => res.data.data),
 
   BlogsAll: () =>
-    getRequest(`/v1/blogs`).then(res => res.data.data),
+    getRequest(`/v1/blogs`).then(res => res.data),
+  BlogSlug: (slug:string) =>
+    getRequest(`/v1/blogs/${slug}`).then(res => res.data),
 
   Login: (data: { email: string; password: string }) =>
     postRequest(`/v1/login`, data).then(res => res.data.data),

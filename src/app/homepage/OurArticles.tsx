@@ -5,31 +5,17 @@ import { useContextStore } from '../api/ContextStore';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import imglogo from '../assets/logoimg.png';
+import { formatDate, stripHtml } from '../CommonVue/datetime';
+
 
 const OurArticles = () => {
   const { homePageData } = useContextStore();
   const { blogContent } = homePageData;
   const router = useRouter();
   const allArticles = blogContent && blogContent.length > 0 ? blogContent[0] : [];
-  const visibleArticles = allArticles.slice(0, 8); // Fixed to 8 articles
+  const visibleArticles = allArticles.slice(0, 8); 
 
-  const stripHtml = (html) => {
-    if (!html) return '';
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    const images = tempDiv.querySelectorAll('img');
-    images.forEach(img => img.remove());
-    return tempDiv.textContent || tempDiv.innerText || '';
-  };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
 
   return (
     <div className="mx-auto px-4 py-8 ">

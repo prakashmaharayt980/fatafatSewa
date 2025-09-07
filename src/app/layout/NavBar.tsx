@@ -9,9 +9,13 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { useContextCart } from '../checkout/CartContext';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { blogIvon } from '../CommonVue/Payment';
 
 const NavBar = () => {
-    const {setemicalclatorinfo}=useContextCart()
+    const { setemicalclatorinfo } = useContextCart()
+    const router = useRouter()
     // Memoize and validate navigation data to prevent unnecessary re-renders
     const validatedNavItems = useMemo(() => {
         if (!Array.isArray(nvaitemlist)) {
@@ -72,6 +76,8 @@ const NavBar = () => {
         });
     }, []);
 
+
+
     const getGridColumns = useMemo(() => (contentLength: number) => {
         if (contentLength <= 2) return 'grid-cols-2';
         if (contentLength <= 3) return 'grid-cols-3';
@@ -96,8 +102,8 @@ const NavBar = () => {
         );
     }
 
-    const handlerouter = () => {
-
+    const handlerouter = (path: string) => {
+        router.push(path)
     }
 
     return (
@@ -144,41 +150,38 @@ const NavBar = () => {
                                     </HoverCardContent>
                                 </HoverCard>
                             ) : (
-                                // <Link
-                                //     href={ '#'}
-                                //     className="flex items-center text-[var(--colour-fsP1)] rounded-full px-2 py-1.5 text-sm font-medium bg-white   transition-all duration-200"
-                                // >
-                                //     <Book className='h-5 w-5 mr-1 text-[var(--colour-fsP2)] '   />
-                                //     <span className="truncate max-w-[160px] text-sm text-black font-semibold">{category.title}</span>
-                                // </Link>
-                           <div className='flex flex-row gap-2'>
-                                <button
 
-                                    onClick={() => handlerouter()}
-
-                                    className={`px-2.5  py-1.5 bg-white rounded-full transition-all duration-300 text-sm font-medium capitalize   flex items-center gap-4 `}
-                                >
-                                    <span className={" font-medium items-center pl-2"}>Blog</span>
-                                    <div className=" rounded-full p-1.5 bg-gray-200">
-                                        <Book className="w-4 h-4  rounded-full " />
-                                    </div>
+                                <div className='flex flex-row gap-2'>
 
 
-                                </button>
-                                <button
+                                    <button
 
-                                    onClick={()=>setemicalclatorinfo(prev=>({...prev, isEmiCalcltorOpen:true }))}
+                                        onClick={() => handlerouter('/blog')}
+                                        className={`px-3 py-2 gap-1 rounded-full text-sm items-center font-medium flex flex-row transition-all bg-white text-gray-700 border border-gray-300 hover:bg-gray-50`}
+                                    >
+                                        
+                                            <Image
+                                                src={blogIvon}
+                                                alt='blog icon'
+                                                height={20}
+                                                width={20}
+                                            />
+                                            <span className={" font-medium items-center "}>Blog</span>
+                                    </button>
+                                    <button
 
-                                    className={`px-2.5  py-1.5 bg-white rounded-full transition-all duration-300 text-sm font-medium capitalize   flex items-center gap-4 `}
-                                >
-                                    <span className={" font-medium items-center pl-2"}>Emi Calcultor</span>
-                                    <div className=" rounded-full p-1.5 bg-gray-200">
-                                        <CreditCard className="w-4 h-4  rounded-full " />
-                                    </div>
+                                        onClick={() => setemicalclatorinfo(prev => ({ ...prev, isEmiCalcltorOpen: true }))}
+
+                                        className={`px-2.5  py-1.5 bg-white rounded-full transition-all duration-300 text-sm font-medium capitalize   flex items-center gap-4 `}
+                                    >
+                                        <span className={" font-medium items-center pl-2"}>Emi Calcultor</span>
+                                        <div className=" rounded-full p-1.5 bg-gray-200">
+                                            <CreditCard className="w-4 h-4  rounded-full " />
+                                        </div>
 
 
-                                </button>
-                           </div>
+                                    </button>
+                                </div>
                             )}
                         </div>
                     ))}
