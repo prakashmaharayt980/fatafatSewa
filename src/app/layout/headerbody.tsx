@@ -10,10 +10,11 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 import NavBar from './NavBar';
-import { useContextStore } from '../api/ContextStore';
+
+import { useContextCart } from '../checkout/CartContext';
 
 const HeaderComponent = () => {
-    const { IsUserLogin, loginNeed } = useContextStore()
+    const { IsUserLogin, loginNeed,setIsDrawerOpen } = useContextCart()
 
     const router = useRouter();
     const searchRef = useRef(null);
@@ -286,7 +287,7 @@ const HeaderComponent = () => {
 
 
                                             <button
-                                                onClick={() => handleroute('/cart')}
+                                                onClick={() => setIsDrawerOpen(true)}
                                                 className="relative p-1.5 rounded-full border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
                                             >
                                                 <ShoppingCart className="h-4 w-4" />

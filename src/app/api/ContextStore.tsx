@@ -104,9 +104,8 @@ interface ContextStoreContextType {
   loading: boolean;
   error: string | null;
   homePageData: HomePageData | null;
-  loginNeed: () => void;
-  IsUserLogin: boolean;
-  loginDailog: boolean;
+ 
+
 
 }
 
@@ -114,17 +113,15 @@ const ContextStoreContext = createContext<ContextStoreContextType>({
   loading: true,
   error: null,
   homePageData: null,
-  loginNeed: () => { },
-  IsUserLogin: false,
-  loginDailog: false
+
+
 });
 
 export const ContextStoreProvider = ({ children }: { children: React.ReactNode }) => {
   const [homePageData, setHomePageData] = useState<HomePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [IsUserLogin, setIsUserLogin] = useState(false)
-  const [loginDailog, setloginDailog] = useState(false)
+
   const pathname=usePathname()
 
   useEffect(() => {
@@ -175,7 +172,7 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
       }
     };
    
-    if(pathname ==='/'){
+    if(pathname ==='/' && homePageData ===null){
   fetchData();
     }
   
@@ -183,14 +180,12 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
     return () => {
       // Cleanup if RemoteServices supports cancellation
     };
-  }, []);
+  }, [homePageData,pathname]);
 
-  const loginNeed = () => {
-    setloginDailog(prev => !prev)
-  }
+
 
   return (
-    <ContextStoreContext.Provider value={{ loading, error, homePageData, IsUserLogin, loginNeed, loginDailog }}>
+    <ContextStoreContext.Provider value={{ loading, error, homePageData,  }}>
       {children}
     </ContextStoreContext.Provider>
   );

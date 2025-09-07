@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-
 import Image from 'next/image';
-import { useContextStore } from './api/ContextStore';
+import { ContextStoreProvider, useContextStore } from './api/ContextStore';
 import Imgbanner from './homepage/Imgbanner';
 import BasketCard from './homepage/BasketCard';
 import PopularCategories from './homepage/PopularCategories';
@@ -12,20 +11,20 @@ import OurArticles from './homepage/OurArticles';
 import SkeletonHomepage from './homepage/skeletonHomepage';
 import CategoryProductSection from './homepage/BasketCardwithImage';
 import TwoImageBanner from './homepage/Banner2';
-import img1 from '../../public/imgfile/banner3.png'
+import img1 from '../../public/imgfile/banner3.png';
 import MetaTagData from './homepage/MetaTagData';
-export default function Page() {
+
+// Child component to consume the context
+const HomePageContent = () => {
   const { homePageData, loading, error } = useContextStore();
 
   if (loading) {
-    return (
-   <SkeletonHomepage/>
-    );
+    return <SkeletonHomepage />;
   }
 
   if (error) {
     return (
-      <div className="max-w-6xl mx-auto py-8 px-4  md:px-4 text-center text-red-600 m-0 p-0 sm:py-8 sm:px-4">
+      <div className="max-w-6xl mx-auto py-8 px-4 md:px-4 text-center text-red-600 m-0 p-0 sm:py-8 sm:px-4">
         Error: {error}
       </div>
     );
@@ -33,14 +32,13 @@ export default function Page() {
 
   if (!homePageData) {
     return (
-      <div className="max-w-6xl mx-auto py-8 px-4  md:px-4 text-center text-gray-500 m-0 p-0 sm:py-8 sm:px-4">
+      <div className="max-w-6xl mx-auto py-8 px-4 md:px-4 text-center text-gray-500 m-0 p-0 sm:py-8 sm:px-4">
         No data available
       </div>
     );
   }
 
-  const { laptops, accessories, waterPumps ,categories,   laptopitem,
-          droneitem ,homeappliance } = homePageData;
+  const { laptops, accessories, waterPumps, categories, laptopitem, droneitem, homeappliance } = homePageData;
 
   return (
     <div className="mx-auto m-0 p-0 sm:py-3 sm:px-2 md:px-4 space-y-4 sm:space-y-12">
@@ -68,7 +66,7 @@ export default function Page() {
           <div className="relative w-full md:w-1/4 min-h-[300px] sm:min-h-[400px] m-0 p-0">
             <Image
               src={img1}
-              alt={'img 1'}
+              alt="img 1"
               className="object-contain rounded-none sm:rounded"
               fill
               quality={100}
@@ -76,14 +74,10 @@ export default function Page() {
             />
           </div>
           <div className="w-full md:w-3/4 m-0 p-0">
-                 <CategoryProductSection 
-     title="Accessories" items={accessories}
-      />
+            <CategoryProductSection title="Accessories" items={accessories} />
           </div>
         </div>
       )}
-
- 
 
       <div className="m-0 p-0 sm:mx-0 sm:px-0">
         <OfferBanner />
@@ -101,9 +95,8 @@ export default function Page() {
         </div>
       )}
       <div className="m-0 p-0 sm:mx-0 sm:px-0">
-        <TwoImageBanner/>
+        <TwoImageBanner />
       </div>
-
 
       {waterPumps?.[0] && (
         <div className="m-0 p-0 sm:mx-0 sm:px-0">
@@ -117,5 +110,14 @@ export default function Page() {
 
       <MetaTagData />
     </div>
+  );
+};
+
+// Main Page component with ContextStoreProvider
+export default function Page() {
+  return (
+    <ContextStoreProvider>
+      <HomePageContent />
+    </ContextStoreProvider>
   );
 }

@@ -78,6 +78,9 @@ interface CartContextType {
   EMICalculator: (price: number, tenure: string, downPayment?: number) => number;
   emicalclatorinfo: EmiCalacutorinter,
   setemicalclatorinfo: Dispatch<SetStateAction<EmiCalacutorinter>>;
+    IsUserLogin: boolean;
+  loginDailog: boolean;
+   loginNeed: () => void;
 
 }
 
@@ -148,6 +151,9 @@ const CartContext = createContext<CartContextType>({
     isEmiCalcltorOpen: false
   } ,
   setemicalclatorinfo: () => { },
+    IsUserLogin: false,
+    loginDailog: false,
+      loginNeed: () => { },
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -191,6 +197,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
   });
+    const [IsUserLogin, setIsUserLogin] = useState(false)
+    const [loginDailog, setloginDailog] = useState(false)
 
   const [emicalclatorinfo, setemicalclatorinfo] = useState<EmiCalacutorinter>({
     productselected: null,
@@ -302,6 +310,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
 
+    const loginNeed = () => {
+    setloginDailog(prev => !prev)
+  }
+
 
   return (
     <CartContext.Provider
@@ -324,7 +336,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         emiContextInfo,
         setEmiContextInfo,
         EMICalculator,
-        emicalclatorinfo, setemicalclatorinfo
+        emicalclatorinfo, setemicalclatorinfo,
+        IsUserLogin, loginNeed, loginDailog
       }}
     >
       {children}
