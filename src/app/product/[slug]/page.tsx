@@ -1,18 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
-import { Star, ShoppingCart, CreditCard, ChevronRight, Shield, Truck, Package2, Gift } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Star, ChevronRight } from "lucide-react";
 import RemoteServices from "@/app/api/remoteservice";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+
 import Link from "next/link";
 
 import ImageGallery from "./ImageGallery";
 import ProductInfo from "./ProductInfo";
 import MoreDetailsProduct from "./MoreDetailsProduct";
 import BasketCard from "@/app/homepage/BasketCard";
-import { CategorySlug, useContextStore } from "@/app/api/ContextStore";
-import { cn } from "@/lib/utils";
+import { CategorySlug } from "@/app/api/ContextStore";
+
 import { SlugProps } from "@/app/types/PropSlug";
 
 // ProductDetails interface based on API response

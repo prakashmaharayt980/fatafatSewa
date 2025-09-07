@@ -473,6 +473,14 @@ export default function EmiDrawer() {
       {emiContextInfo.product === null &&
 
         <DrawerContent className="max-h-[85vh] min-h-[60vh] max-w-6xl mx-auto bg-white border-0 shadow-xl">
+                  <DrawerHeader className="text-center  m-0 p-0 items-center border-b-gray-200 border-b  ">
+          <DrawerTitle className="flex items-center justify-center gap-2 m-0 p-0 text-xl text-[var(--colour-fsP2)] font-semibold">
+            <CreditCard className="w-5 h-5 text-[var(--colour-fsP1)] mb-2" />
+            <span className=' items-center mb-2'>         EMI Calculator - Select Product
+
+            </span>
+          </DrawerTitle>
+        </DrawerHeader>
           <div className="p-4 overflow-y-auto">
             <div className="mb-4">
 
