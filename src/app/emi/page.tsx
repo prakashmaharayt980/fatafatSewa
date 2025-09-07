@@ -42,8 +42,11 @@ const EMICalculator = () => {
 
     // Memoize EMI calculation
     const emiData = useMemo(() => {
-        const downPaymentAmount = downPaymentOption === '40%' ? parseInt(productPrice) * 0.4 : 0;
-        const loanAmount = parseInt(productPrice) - downPaymentAmount;
+        if(productPrice===''){
+            
+        }
+        const downPaymentAmount = downPaymentOption === '40%' ? productPrice===''?0: parseInt(productPrice) * 0.4 : 0;
+        const loanAmount = productPrice===''?0: parseInt(productPrice) - downPaymentAmount;
         const bank = banks.find(b => b.id === selectedBank);
         const monthlyRate = bank.rate / 100 / 12;
         const numberOfPayments = tenure;
