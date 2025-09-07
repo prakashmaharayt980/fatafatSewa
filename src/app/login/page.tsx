@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { AlertCircle, CheckCircle, Eye, EyeOff, Facebook, Mail, User, Phone, Home, Lock, Key, GoalIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useContextStore } from "../api/ContextStore";
+
 import { useState } from 'react';
 import { CompanyLogo, PaymentMethodsOptions } from "../CommonVue/Payment";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { useContextCart } from "../checkout/CartContext";
 
 const MaterialInput = ({
   id,
@@ -94,7 +95,7 @@ const MaterialInput = ({
 };
 
 export default function LoginPage() {
-  const { loginDailog, loginNeed } = useContextStore();
+  const { loginDailog, loginNeed } = useContextCart();
   const [activeSection, setActiveSection] = useState('login');
   const [formData, setFormData] = useState({
     login: { email: '', password: '' },
