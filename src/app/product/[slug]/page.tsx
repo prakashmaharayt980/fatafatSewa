@@ -10,9 +10,10 @@ import ImageGallery from "./ImageGallery";
 import ProductInfo from "./ProductInfo";
 import MoreDetailsProduct from "./MoreDetailsProduct";
 import BasketCard from "@/app/homepage/BasketCard";
-import { CategorySlug } from "@/app/api/ContextStore";
+
 
 import { SlugProps } from "@/app/types/PropSlug";
+import { CategorySlug } from "@/app/types/CategoryTypes";
 
 // ProductDetails interface based on API response
 export interface ProductDetails {

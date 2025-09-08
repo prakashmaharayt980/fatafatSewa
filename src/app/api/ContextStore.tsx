@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import RemoteServices from './remoteservice';
 import { usePathname } from 'next/navigation';
+import { CategorySlug } from '../types/CategoryTypes';
 
 // Define interfaces
 export interface imagesArray {
@@ -39,25 +40,7 @@ export interface ProductTrending {
   highlights: string;
 }
 
-export interface CategorySlug {
-  category: {
-    slug: string;
-    parent_tree: string | null;
-  };
-  products: {
-    data: Array<{
-      slug: string;
-      highlights: string;
-      emi_enabled: number;
-      image: string;
-      discounted_price: number;
-      price: string;
-      average_rating: number;
-      name: string;
 
-    }>;
-  };
-}
 
 
 
