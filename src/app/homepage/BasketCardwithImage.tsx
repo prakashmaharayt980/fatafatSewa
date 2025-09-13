@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { CategorySlug } from '../api/ContextStore';
+
 import { ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import ProductCard from '../product/ProductCard';
 import { cn } from '@/lib/utils'; // Assuming cn is a utility like clsx or cva
+import { CategorySlug } from '../types/CategoryTypes';
 
 interface BasketCardProps {
     title?: string;
