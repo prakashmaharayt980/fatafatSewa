@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <CartProvider>
           <HeaderBody />
-          <main className="flex-1 w-full  mx-auto p-2">{children}</main>
+          <main className="flex-1 w-full  mx-auto ">{children}</main>
           <FooterBody />
           <ChatBot />
           <Toaster richColors position="top-right" />

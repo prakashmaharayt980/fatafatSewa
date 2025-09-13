@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { FileText, Star, Truck, MessageCircle, Send, X } from 'lucide-react';
+import { FileText, Star, Truck, MessageCircle, Send, X, Key } from 'lucide-react';
 import { ProductDetails } from './page';
 
 
@@ -106,7 +106,7 @@ export default function MoreDetailsProduct({
   const tabs = [
     { id: 'description', label: 'Description', icon: <FileText className="w-4 h-4" /> },
     { id: 'reviews', label: 'Reviews', icon: <Star className="w-4 h-4" /> },
-    { id: 'KeyFeatures', label: 'Key Features', icon: <Truck className="w-4 h-4" /> },
+    { id: 'KeyFeatures', label: 'Key Features', icon: <Key className="w-4 h-4" /> },
   ];
 
   return (

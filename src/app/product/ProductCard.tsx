@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { CheckCheck, Heart, Truck } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
-const ProductCard = ({ product, index }: { product: any, index: number }) => {
+const ProductCard = ({ product, index: _index }: { product: any, index: number }) => {
     const router = useRouter();
 
     // Early return if product or ID is missing
@@ -27,53 +27,22 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
     return (
         <div
             onClick={handleProductClick}
-            className="group relative cursor-pointer rounded-xl bg-white 
-                       transition-all duration-300 overflow-hidden
-                       hover:translate-y-3 mb-4 "
+            className="group relative cursor-pointer rounded-lg sm:rounded-xl bg-white transition-all duration-300 overflow-hidden hover:translate-y-2 hover:shadow-xl mb-2 sm:mb-4 border border-gray-100 hover:border-gray-200"
             style={{
-                
                 boxShadow: `
-                    0 -2px 8px rgba(107, 114, 128, 0.06),
-                    0 4px 12px rgba(107, 114, 128, 0.08),
-                    0 2px 6px rgba(107, 114, 128, 0.06),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-                    inset 0 -1px 0 rgba(107, 114, 128, 0.1)
+                    0 1px 3px rgba(0, 0, 0, 0.1),
+                    0 1px 2px rgba(0, 0, 0, 0.06)
                 `,
                 background: `
-                    linear-gradient(145deg, #ffffff 0%, #f9fafb 100%),
-                    linear-gradient(45deg, transparent 49%, rgba(107, 114, 128, 0.02) 50%, transparent 51%),
-                    linear-gradient(-45deg, transparent 49%, rgba(107, 114, 128, 0.02) 50%, transparent 51%)
-                `,
-                backgroundSize: 'cover, 12px 12px, 12px 12px'
-            }}
-            onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = `
-                    0 -4px 15px rgba(107, 114, 128, 0.1),
-                    0 12px 30px rgba(107, 114, 128, 0.15),
-                    0 6px 20px rgba(107, 114, 128, 0.1),
-                    inset 0 2px 0 rgba(255, 255, 255, 0.8),
-                    inset 0 -2px 0 rgba(107, 114, 128, 0.15)
-                `;
-            }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = `
-                    0 -2px 8px rgba(107, 114, 128, 0.06),
-                    0 4px 12px rgba(107, 114, 128, 0.08),
-                    0 2px 6px rgba(107, 114, 128, 0.06),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-                    inset 0 -1px 0 rgba(107, 114, 128, 0.1)
-                `;
+                    linear-gradient(145deg, #ffffff 0%, #f9fafb 100%)
+                `
             }}
         >
             {/* Wishlist Heart */}
             <button
-                className="absolute right-2 top-2 z-20 rounded-full p-1.5 
-                          transition-all duration-200 hover:scale-110"
-                style={{
-                    background: 'linear-gradient(145deg, #ffffff, #f3f4f6)',
-                    boxShadow: '0 2px 6px rgba(107, 114, 128, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
-                }}
-
+                className="absolute right-2 top-2 z-20 rounded-full p-1.5 sm:p-2
+                          transition-all duration-200 hover:scale-110 bg-white/80 backdrop-blur-sm
+                          shadow-sm hover:shadow-md"
             >
                 <Heart
                     className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${true
@@ -86,33 +55,23 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
             {/* Product Image Container */}
             <div className="relative p-2 sm:p-3">
                 {/* Badges */}
-                <div className="absolute left-2 top-2 pb-2 sm:left-3 sm:top-3 flex gap-1 text-[10px] sm:text-xs font-medium z-10">
+                <div className="absolute left-2 top-2 sm:left-3 sm:top-3 flex gap-1 text-[10px] sm:text-xs font-medium z-10">
                     <span 
-                        className="rounded-lg px-2 py-0.5 text-white shadow-sm bg-[var(--colour-fsP2)]"
-      
+                        className="rounded-md px-1.5 py-0.5 text-white shadow-sm bg-[var(--colour-fsP2)]"
                     >
                         New
                     </span>
-                    {true
-                    
-                    // discountPercent > 0 
-                    && (
+                    {discountPercent > 0 && (
                         <span 
-                            className="rounded-lg px-2 py-0.5 text-white bg-green-700 shadow-sm"
-         
+                            className="rounded-md px-1.5 py-0.5 text-white bg-green-600 shadow-sm"
                         >
                             {discountPercent}% OFF
                         </span>
                     )}
                 </div>
 
-  
                 <div 
-                    className="relative aspect-square w-full rounded-lg overflow-hidden"
-                    style={{
-                        background: 'linear-gradient(145deg, #f9fafb, #f3f4f6)',
-                 
-                    }}
+                    className="relative aspect-square w-full rounded-lg overflow-hidden bg-gray-50"
                 >
                     {product.image && (
                         <Image
@@ -127,25 +86,18 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
             </div>
 
 
-            <div className="p-2 sm:p-3 pt-1  font-family-all">
-  
+            <div className="p-2 sm:p-3 pt-1 font-family-all">
                 <h3 className={cn(
-                     
-                    " line-clamp-2 text-xs sm:text-sm font-medium text-[var(--colour-text2)] transition-colors duration-200 group-hover:text-[var(--colour-fsP2)] leading-tight"
-                  
+                    "line-clamp-2 text-xs sm:text-sm font-medium text-[var(--colour-text2)]",
+                    "transition-colors duration-200 group-hover:text-[var(--colour-fsP2)]",
+                    "leading-tight mb-2"
                 )}>
                     {product.highlights !== null ? product.highlights : product.name}
-                
                 </h3>
 
                 {/* Price Section */}
                 <div className="mb-3">
-                    {
-                    // originalPrice > product.discounted_price 
-                    true
-                     && 
-                    
-                    (
+                    {originalPrice > product.discounted_price && (
                         <span className="text-xs sm:text-sm font-light text-[var(--colour-text3)] line-through">
                             Rs {originalPrice.toLocaleString()}
                         </span>
@@ -158,28 +110,27 @@ const ProductCard = ({ product, index }: { product: any, index: number }) => {
                 </div>
 
                 {/* Feature Badges */}
-                <div className="flex flex-wrap justify-between gap-1 sm:gap-1.5 mb-3">
+                <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-2">
                     {product.emi_enabled !== 0 && (
                         <span 
-                            className="inline-flex items-center border rounded-full px-1.5 sm:px-2 border-[var(--colour-fsP1)] bg-transparent py-0.5 sm:py-1 text-[9px] sm:text-xs text-white"
-
+                            className="inline-flex items-center border rounded-full px-1.5 sm:px-2 
+                                     border-[var(--colour-fsP1)] bg-transparent py-0.5 sm:py-1 
+                                     text-[9px] sm:text-xs text-gray-700"
                         >
-                            <CheckCheck className="mr-0.5 sm:mr-1 h-2.5 w-2.5 text-[var(--colour-fsP1)] sm:h-3  sm:w-3" />
-                            <p className="text-gray-700">EMI</p>
+                            <CheckCheck className="mr-0.5 sm:mr-1 h-2.5 w-2.5 text-[var(--colour-fsP1)] sm:h-3 sm:w-3" />
+                            <span>EMI</span>
                         </span>
                     )}
                     <span 
-                        className="inline-flex items-center border rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 text-[9px] sm:text-xs border-[var(--colour-fsP2)] bg-transparent"
-   
+                        className="inline-flex items-center border rounded-full px-1.5 sm:px-2 py-0.5 sm:py-1 
+                                 text-[9px] sm:text-xs border-[var(--colour-fsP2)] bg-transparent text-gray-700"
                     >
                         <Truck className="mr-0.5 sm:mr-1 h-2.5 w-2.5 sm:h-3 sm:w-3 text-[var(--colour-fsP2)]" />
-                          <p className="text-gray-700">Fatafat Delivery</p>
-         
+                        <span>Fatafat Delivery</span>
                     </span>
                 </div>
-
-
             </div>
+            
         </div>
     );
 };

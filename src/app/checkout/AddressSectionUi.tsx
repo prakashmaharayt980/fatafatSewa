@@ -18,72 +18,6 @@ export default function AddressSelectionUI() {
     const [savedAddresses, setSavedAddresses] = useState<Address[]>([])
 
 
-    // ([
-    //     {
-    //         id: 1,
-    //         label: "Home",
-    //         street: "123 Main Street",
-    //         city: "Kathmandu",
-    //         state: "Bagmati",
-    //         landmark: "Near Central Mall"
-    //     },
-    //     {
-    //         id: 2,
-    //         label: "Office",
-    //         street: "456 Business Ave",
-    //         city: "Lalitpur",
-    //         state: "Bagmati",
-    //         landmark: "Tech Park Building"
-    //     },
-    //     {
-    //         id: 3,
-    //         label: "Friend's Place",
-    //         street: "789 Garden Road",
-    //         city: "Bhaktapur",
-    //         state: "Bagmati",
-    //         landmark: "Near Temple Square"
-    //     },
-    //     {
-    //         id: 4,
-    //         label: "Gym",
-    //         street: "321 Fitness Street",
-    //         city: "Kathmandu",
-    //         state: "Bagmati",
-    //         landmark: "Sports Complex"
-    //     },
-    //     {
-    //         id: 5,
-    //         label: "Mall",
-    //         street: "555 Shopping Center",
-    //         city: "Lalitpur",
-    //         state: "Bagmati",
-    //         landmark: "City Mall"
-    //     },
-    //     {
-    //         id: 6,
-    //         label: "Restaurant",
-    //         street: "777 Food Lane",
-    //         city: "Kathmandu",
-    //         state: "Bagmati",
-    //         landmark: "Downtown Area"
-    //     },
-    //     {
-    //         id: 7,
-    //         label: "School",
-    //         street: "888 Education Ave",
-    //         city: "Bhaktapur",
-    //         state: "Bagmati",
-    //         landmark: "Academic Zone"
-    //     },
-    //     {
-    //         id: 8,
-    //         label: "Hospital",
-    //         street: "999 Medical Street",
-    //         city: "Kathmandu",
-    //         state: "Bagmati",
-    //         landmark: "Health District"
-    //     }
-    // ]);
 
     const [selectedAddress, setSelectedAddress] = useState<Address | null>(savedAddresses[0]);
     const [dialogState, setDialogState] = useState<'closed' | 'addressList' | 'addEditAddress' | 'labelSelection'>('closed');
@@ -169,8 +103,9 @@ export default function AddressSelectionUI() {
 
 
     // Render dialog content based on dialogState
-    const renderDialogContent = () => {
-        switch (dialogState) {
+    const renderDialogContent = (overrideState?:string) => {
+        const state = overrideState || dialogState;
+        switch (state) {
             case 'addressList':
                 return (
                     <div className=" flex flex-col justify-between  min-h-80  h-full ">
@@ -371,6 +306,12 @@ export default function AddressSelectionUI() {
 
     return (
         <div className="relative">
+  {/* {savedAddresses.length === 0 &&
+      <div className="px-4 py-1.5 rounded-2xl flex flex-row border-2 justify-between items-start border-gray-200  hover:bg-gray-50 ">
+{  renderDialogContent('addEditAddress')}
+  </div>
+  } */}
+
             {/* Selected Address Display */}
             {selectedAddress && (
                 <div className="px-4 py-1.5 rounded-2xl flex flex-row border-2 justify-between items-start border-gray-200  hover:bg-gray-50 ">
@@ -415,7 +356,7 @@ export default function AddressSelectionUI() {
                 </button>}
 
             {/* Unified Dialog */}
-            {dialogState !== 'closed' && (
+            {dialogState !== 'closed' && savedAddresses !==null && (
                 <div className="backdrop-blur-md  bg-opacity-60 fixed inset-0 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-xl  w-full max-w-4xl">
                         <div className="p-4">

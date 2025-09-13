@@ -53,9 +53,12 @@ const CategoryPage = ({ params }: SlugProps) => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <TopBanner />
-      <ParsedContent description={categorySlugData.category.descriptions} />
-      <SubCategoriesItems />
-      <ProductFilters categoryslug={categorySlugData} />
+
+      {/* <SubCategoriesItems /> */}
+
+      
+      <ProductFilters categoryslug={categorySlugData.products} />
+      <ParsedContent description={categorySlugData.category.description} />
     </div>
   );
 };

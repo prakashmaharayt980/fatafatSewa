@@ -3,9 +3,10 @@ import { ChevronDown, X, Heart, Cpu } from 'lucide-react';
 import { CategorySlug } from '@/app/types/CategoryTypes';
 import ProductCard from '../../ProductCard';
 import { cn } from '@/lib/utils';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
 const ProductFilters = ({ categoryslug }) => {
-  console.log('data', categoryslug[0])
+  console.log('data', categoryslug)
   const [filters, setFilters] = useState({
     processorType: '',
     brand: '',
@@ -14,6 +15,7 @@ const ProductFilters = ({ categoryslug }) => {
   });
 
   const [sortBy, setSortBy] = useState('Recommended');
+  const [currentPage, setCurrentPage] = useState(categoryslug.meta.current_page | 1);
   const [dropdownOpen, setDropdownOpen] = useState({
     processorType: false,
     brand: false,
@@ -55,49 +57,60 @@ const ProductFilters = ({ categoryslug }) => {
     }));
   };
 
-  const products = [
-    {
-      id: 1,
-      image: "https://via.placeholder.com/240x180/1e40af/ffffff?text=Gaming+Laptop",
-      title: "Gaming Laptop i7",
-      brand: "HP",
-      processor: "Core i7",
-      ram: "16GB",
-      price: "$1299"
-    },
-    {
-      id: 2,
-      image: "https://via.placeholder.com/240x180/0ea5e9/ffffff?text=Business+Laptop",
-      title: "Business Ultrabook",
-      brand: "Dell",
-      processor: "Core i5",
-      ram: "8GB",
-      price: "$899"
-    },
-    {
-      id: 3,
-      image: "https://via.placeholder.com/240x180/dc2626/ffffff?text=MacBook+Pro",
-      title: "MacBook Pro 14",
-      brand: "Apple",
-      processor: "M2 Pro",
-      ram: "16GB",
-      price: "$1999"
-    },
-    {
-      id: 4,
-      image: "https://via.placeholder.com/240x180/7c3aed/ffffff?text=ThinkPad",
-      title: "ThinkPad X1 Carbon",
-      brand: "Lenovo",
-      processor: "Core i7",
-      ram: "16GB",
-      price: "$1499"
-    }
-  ];
+ 
 
   if (categoryslug === null) {
     <p>loading</p>
   }
 
+  const totalPages =categoryslug.meta.total
+
+   const generatePaginationItems = () => {
+    const items = [];
+    const showPages = 3;
+    let startPage = Math.max(1, currentPage - Math.floor(showPages / 2));
+    const endPage = Math.min(totalPages, startPage + showPages - 1);
+
+    if (endPage - startPage < showPages - 1) {
+      startPage = Math.max(1, endPage - showPages + 1);
+    }
+
+    if (startPage > 1) {
+      items.push(
+        <PaginationItem key="start-ellipsis">
+          <PaginationEllipsis />
+        </PaginationItem>
+      );
+    }
+
+    for (let page = startPage; page <= endPage; page++) {
+      items.push(
+        <PaginationItem key={page}>
+          <PaginationLink
+            href="#"
+            isActive={currentPage === page}
+            onClick={(e) => {
+              e.preventDefault();
+              setCurrentPage(page);
+            }}
+            className={`border border-gray-300 transition-colors ${currentPage === page ? 'bg-[var(--colour-fsP2)] text-white' : 'text-black hover:bg-gray-100'}`}
+          >
+            {page}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    if (endPage < totalPages) {
+      items.push(
+        <PaginationItem key="end-ellipsis" >
+          <PaginationEllipsis />
+        </PaginationItem>
+      );
+    }
+
+    return items;
+  };
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-7xl mx-auto">
@@ -270,8 +283,8 @@ const ProductFilters = ({ categoryslug }) => {
         </div>
 
         {/* Products Grid */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 w-full">
-          {categoryslug.products !== null && categoryslug.products?.data.map((product, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 w-full">
+          {categoryslug.data && categoryslug.data.map((product, index) => (
             <div
               key={`${product.slug}-${index}`}
               className={cn(
@@ -283,7 +296,41 @@ const ProductFilters = ({ categoryslug }) => {
               <ProductCard product={product} index={index} />
             </div>
           ))}
-        </div> */}
+        </div>
+
+            {totalPages > 1 && (
+              <div className="mt-8 pt-6 border-t-2 border-gray-300">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(prev => Math.max(prev - 1, 1));
+                        }}
+                        className={`border border-gray-300 transition-colors ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'text-[var(--colour-fsP1)] hover:text-[var(--colour-fsP2)]'}`}
+                      >
+                        ← Previous
+                      </PaginationPrevious>
+                    </PaginationItem>
+                    {generatePaginationItems()}
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                        }}
+                        className={`border border-gray-300 transition-colors ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'text-[var(--colour-fsP1)] hover:text-[var(--colour-fsP2)]'}`}
+                      >
+                        Next →
+                      </PaginationNext>
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
       </div>
     </div>
   );

@@ -60,59 +60,50 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 
   return (
     <>
-      <div className="w-full h-full flex flex-col gap-3">
+      <div className="w-full h-full flex flex-col gap-3 sm:gap-1">
         {/* Main Image Container */}
-        {/* <div className="relative group">
-          <div className="relative w-full min-w-[400px] min-h-[400px] aspect-square bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+        <div className="relative group">
+          <div className="relative w-full h-80 sm:h-96 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-gray-50 to-white  overflow-hidden">
             <Image
-              src={selectedImage || currentImages[0]}
+              src={selectedImage}
               alt={product.name}
-              className="w-full h-full object-fill transition-transform duration-300 group-hover:scale-105"
-              width={500}
-              height={400}
+              className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
               priority
             />
             <button
               onClick={() => openZoom(currentSelectedIndex)}
-              className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-600 hover:text-gray-800 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100"
-            >
-              <ZoomIn size={16} />
-            </button>
-          </div>
-        </div> */}
-        <div className="relative group">
-          <div className="relative w-full min-w-[400px] h-[600px] bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-            <Image
-              src={selectedImage}
-              alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-102"
-              fill
-            />
-            <button
-              onClick={() => openZoom(currentSelectedIndex)}
-              className="absolute top-3 right-3 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-900 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-sm"
+              className="absolute top-3 right-3 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-900 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-lg backdrop-blur-sm"
             >
               <ZoomIn size={18} />
             </button>
+            {/* Image overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
         </div>
+        
         {/* Thumbnail Strip */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide items-center justify-center">
+        <div className="flex gap-2 my-2 sm:gap-3 overflow-x-auto scrollbar-hide items-center justify-center px-2">
           {currentImages.slice(0, 4).map((image, idx) => (
             <div
               key={`${selectedColor}-${idx}`}
-              className={`relative w-16 h-16 cursor-pointer overflow-hidden rounded-md border transition-all duration-200 flex-shrink-0 ${selectedImage === image
-                  ? "border-blue-500 ring-1 ring-blue-500/20"
-                  : "border-gray-200 hover:border-gray-300 hover:ring-1 hover:ring-gray-300/20"
-                }`}
+              className={`relative w-14 border-gray-200 h-14 sm:w-16 sm:h-16 cursor-pointer overflow-hidden rounded-lg border-2 transition-all duration-300 flex-shrink-0 group/thumb ${
+                selectedImage === image
+                  ? " "
+                  : " hover:border-blue-300 hover:ring-1 hover:ring-blue-300/20 "
+              }`}
               onClick={() => setSelectedImage(image)}
             >
               <Image
                 src={image}
                 alt={`${product.name} view ${idx + 1}`}
-                className="w-full h-full object-contain transition-transform duration-200 hover:scale-110"
+                className="w-full h-full object-cover transition-all duration-300 group-hover/thumb:scale-110"
                 fill
+                sizes="(max-width: 640px) 56px, 64px"
               />
+              {/* Thumbnail overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover/thumb:opacity-100 transition-opacity duration-300"></div>
             </div>
           ))}
         </div>

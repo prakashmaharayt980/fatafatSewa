@@ -2,7 +2,7 @@ export interface CategorySlug {
   category: {
     slug: string;
     parent_tree: string | null;
-    descriptions:string;
+    description:string;
     title:string;
     image:{
       default:string;

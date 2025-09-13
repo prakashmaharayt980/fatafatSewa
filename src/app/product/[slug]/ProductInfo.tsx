@@ -123,66 +123,63 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     const timeLeft = 24 - currentTime.getHours() - currentTime.getMinutes() / 60;
 
     return (
-        <div className="space-y-3 px-5 py-2 bg-white rounded-xl shadow-sm font-faily-blogcontent ">
-            <div className="">
-                <h1 className="text-2xl md:text-3xl text-gray-900 font-bold ">
-                    {product?.name} {selectedColor ? `- ${selectedColor}` : ""}
+        <div className="space-y-2 sm:space-y-2  bg-gradient-to-br from-white to-gray-50 font-faily-blogcontent">
+            <div className="space-y-2">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl text-gray-900 font-bold leading-tight">
+                    {product?.name} {selectedColor ? `- ${selectedColor}` : ""}{product?.brand ? `- ${product?.brand.name}` :""}
                 </h1>
 
-                <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <span>SKU: 12_abc</span>
-                    <span>•</span>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
+                    <span className="px-2 py-1 bg-gray-100 rounded-md text-xs">SKU: 12_abc</span>
+                    <span className=" sm:inline">|</span>
                     <div className="flex items-center gap-1">
-                        {renderRating(product?.average_rating || 3)}
+                        {renderRating(product?.average_rating || 3, 14)}
                         <span className="text-blue-600 font-medium">4.5</span>
                     </div>
-                    <span>•</span>
-                    <span>234 reviews</span>
+                    <span className=" sm:inline">|</span>
+                    <span className="text-xs sm:text-sm">234 reviews</span>
                 </div>
             </div>
 
 
-            <div className="flex items-center gap-2 py-1.5">
-                <div className="flex  gap-3 items-center">
-                    <span className="text-3xl font-bold text-gray-900">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 py-2">
+                <div className="flex flex-wrap gap-2 sm:gap-3 items-center">
+                    <span className="text-2xl sm:text-3xl font-bold text-gray-900">
                         {currencyunit}{product?.discounted_price.toLocaleString()}
                     </span>
                     {true && (
                         <>
-                            <span className="text-lg text-gray-400 line-through">
+                            <span className="text-lg sm:text-xl text-gray-400 line-through">
                                 {currencyunit}{originalPrice.toLocaleString()}
                             </span>
-                            <span className="text-sm bg-green-100 text-green-700 py-1 px-2 rounded font-medium">
+                            <span className="text-xs sm:text-sm bg-[var(--colour-fsP2)] text-white py-1 px-2 rounded-lg font-medium shadow-sm">
                                 {discountPercentage}% OFF
                             </span>
                         </>
                     )}
                 </div>
-                <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium">
-                    <Tag className="w-3 h-3" />
-                    {product.brand.name}
-                </div>
+               
             </div>
 
             {/* EMI Option */}
-            <div className="flex items-center gap-4 py-2 px-3 border-b border-gray-200">
+            <div className="flex  flex-row sm:items-center gap-2 sm:gap-5 py-1 px-2 ">
                 <div className="text-sm text-gray-700">
-                    EMI starting from <span className="font-semibold text-blue-600">₹0/month</span>
+                    EMI starting from <span className="font-semibold text-blue-600">RS 0/month</span>
                 </div>
-                <button className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors duration-200 hover:scale-105">
                     Apply now →
                 </button>
             </div>
 
 
             {/* Delivery Info */}
-            <div className="flex items-center gap-3 py-2">
-                <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
-                    <Truck className="w-4 h-4 text-blue-600" />
+            <div className="flex items-start gap-3 py-3 px-4 bg-[var(--colour-fsP2)]/70 rounded-lg ">
+                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-full shadow-sm">
+                    <Truck className="w-4 h-4 text-[var(--colour-fsP1)]" />
                 </div>
-                <div className="text-sm">
-                    <div className="text-gray-700">
-                        Estimated delivery: <span className="font-semibold text-gray-900">
+                <div className="text-sm flex-col sm:flex-row  flex items-baseline gap-3">
+                    <div className="text-gray-900">
+                        Estimated delivery: <span className="font-semibold text-white">
                             {deliveryDate.toLocaleDateString(undefined, {
                                 weekday: "short",
                                 month: "short",
@@ -191,9 +188,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                         </span>
                     </div>
                     {timeLeft > 0 && (
-                        <div className="flex items-center gap-1 mt-1">
-                            <Clock className="w-3 h-3 text-orange-500" />
-                            <span className="text-xs text-orange-600 font-medium">
+                        <div className="flex items-center gap-1 ">
+                            <Clock className="w-3 h-3 text-white" />
+                            <span className="text-xs text-gray-900 font-medium">
                                 Order within {Math.floor(timeLeft)}h {Math.round((timeLeft % 1) * 60)}m for this date
                             </span>
                         </div>
@@ -202,17 +199,17 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             </div>
 
             {/* View and Stock Info */}
-            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 shadow-sm">
-                <div className="flex items-center justify-between">
+            <div className=" p-4  ">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                        <Eye className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm font-medium text-blue-800">256 recent views</span>
+                        <Eye className="h-4 w-4 text-[var(--colour-fsP2)]" />
+                        <span className="text-sm font-medium text-[var(--colour-fsP1)]">256 recent views</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Package className="h-4 w-4 text-orange-500" />
-                        <span className="text-sm font-semibold text-orange-700">
+                        <Package className="h-4 w-4 text-[var(--colour-fsP2)]" />
+                        <span className="text-sm font-semibold text-[var(--colour-fsP1)]">
                             {/* {product.quantity} */}
-                            10 left
+                            {product.quantity} left
                         </span>
                     </div>
                 </div>
@@ -221,9 +218,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
 
             {/* Color Selector */}
             {product.variants.length > 0 && (
-                <div className="mt-3">
-                    <h3 className="text-md font-medium text-gray-700 mb-2">Select Color:</h3>
-                    <div className="flex gap-2 flex-wrap">
+                <div className="mt-4">
+                    <h3 className="text-sm sm:text-md font-medium text-gray-700 mb-3">Select Color:</h3>
+                    <div className="flex gap-2 sm:gap-3 flex-wrap">
                         {product.variants
                             .filter((variant) => variant.quantity > 0)
                             .map((variant, index) => (
@@ -231,9 +228,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                                     key={index}
                                     onClick={() => handleColourSelect(variant.attributes.Color)}
                                     className={cn(
-                                        "px-4 py-2 rounded-lg transition-all duration-200 text-sm",
+                                        "px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium",
+                                        "hover:scale-105 hover:shadow-md",
                                         selectedColor === variant.attributes.Color
-                                            ? "bg-blue-600 text-white border-blue-600 shadow-md"
+                                            ? "bg-blue-600 text-white border-blue-600 shadow-lg scale-105"
                                             : "bg-gray-100 text-gray-700 border-gray-100 hover:bg-blue-100 hover:border-blue-200"
                                     )}
                                 >
@@ -246,15 +244,15 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
 
             {/* Quantity Selector */}
             {true && (
-                <div className="flex items-center gap-4">
-                    <label htmlFor="quantity" className="text-[16px] font-medium text-gray-700">
-                        Quantity :
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mt-2 sm:gap-4">
+                    <label htmlFor="quantity" className="text-sm sm:text-base font-medium text-gray-700">
+                        Quantity:
                     </label>
-                    <div className="flex items-center border border-gray-200 rounded-lg mt-1 bg-white shadow-sm">
+                    <div className="flex items-center border border-gray-200 rounded-lg bg-white shadow-sm">
                         <Button
                             onClick={() => handleQuantityChange(quantity - 1)}
                             disabled={quantity <= 1}
-                            className="px-4 py-1 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50 rounded-l-full"
+                            className="px-3 sm:px-4 py-2 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50 rounded-l-lg transition-all duration-200 hover:scale-105"
                             aria-label="Decrease quantity"
                         >
                             -
@@ -266,13 +264,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                             max={product.quantity || 0}
                             value={quantity}
                             onChange={(e) => handleQuantityChange(parseInt(e.target.value, 10) || 1)}
-                            className="w-16 text-center border-x border-gray-200 py-2 text-lg text-gray-800 focus:outline-none"
+                            className="w-16 text-center border-x border-gray-200 py-2 text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             aria-label="Product quantity"
                         />
                         <Button
                             onClick={() => handleQuantityChange(quantity + 1)}
                             disabled={quantity >= (product.quantity || 0)}
-                            className="px-4 py-2 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50 rounded-r-full"
+                            className="px-3 sm:px-4 py-2 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50 rounded-r-lg transition-all duration-200 hover:scale-105"
                             aria-label="Increase quantity"
                         >
                             +
@@ -282,7 +280,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             )}
 
 
-            <div className="flex justify-start gap-3 my-6">
+            <div className="flex flex-col sm:flex-row gap-3 my-6">
                 {AcctionButtons.map((btn, idx) => {
                     const Icon = btn.Icon;
                     return (
@@ -292,9 +290,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                             // disabled={product.quantity === 0}
                             className={cn(
                                 "group px-4 py-3 rounded-lg transition-all duration-200 text-sm font-medium",
-                                "flex items-center gap-2",
+                                "flex items-center justify-center gap-2",
                                 "focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1",
-                                "hover:shadow-sm",
+                                "hover:shadow-lg hover:scale-105",
                                 btn.className
                             )}
                         >
@@ -308,7 +306,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             {/* Express Delivery */}
             <div className="flex flex-col gap-3">
                 {product.highlights && (
-                    <div className="grid grid-cols-2 gap-4 p-4 ">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
                         {product.highlights.split('|').map((highlight, index) => (
                             <div key={`highlight-${index}`} className="flex items-start gap-2">
                                 <span className="text-yellow-600 text-lg leading-none">•</span>
@@ -322,9 +320,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             </div>
 
             {/* Services to Client */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-6">
                 {ServicesToClient.map((item, idx) => (
-                    <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg shadow-sm" key={`service-to-client-${item.title}-${idx}`}>
+                    <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-gray-50 to-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105" key={`service-to-client-${item.title}-${idx}`}>
                         <Image
                             src={item.img}
                             alt={item.alt}
@@ -334,7 +332,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                             quality={100}
                         />
                         <div>
-                            <p className="text-sm font-medium text-gray-800">{item.title}</p>
+                            <p className="text-xs sm:text-sm font-medium text-gray-800">{item.title}</p>
                             <p className="text-xs text-gray-600">{item.desc}</p>
                         </div>
                     </div>
@@ -342,19 +340,18 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             </div>
 
             {/* Payment Methods */}
-            <div className="mt-6 flex flex-row gap-3 items-center">
-                <h3 className="text-md font-medium text-gray-700 mb-3">Payment Methods:</h3>
+            <div className="mt-6">
+                <h3 className="text-sm sm:text-md font-medium text-gray-700 mb-3">Payment Methods:</h3>
                 <div className="flex flex-wrap gap-3">
                     {PaymentMethodsOptions.map((method) => (
-                        <div key={method.name} className="flex flex-col items-center">
+                        <div key={method.name} className="flex flex-col items-center p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105">
                             <Image
                                 src={method.img}
                                 alt={method.name}
                                 width={50}
                                 height={30}
-                                className="object-center "
+                                className="object-center"
                             />
-
                         </div>
                     ))}
                 </div>
