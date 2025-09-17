@@ -13,6 +13,7 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
 }
 
 :root{
@@ -66,6 +67,8 @@ body {
     --font-family-all: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     --font-faily-blogcontent: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
+
+  --font-family-math:'math'
 
 
 
@@ -214,3 +217,5 @@ body {
         display: none !important;
     }
 }
+
+

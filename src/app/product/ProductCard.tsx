@@ -79,6 +79,7 @@ const ProductCard = ({ product, index: _index }: { product: any, index: number }
                             alt={product.name}
                             className="rounded-lg object-cover group-hover:scale-105 transition-transform duration-500"
                             fill
+                            priority
                             sizes="(max-width: 640px) 150px, (max-width: 768px) 200px, (max-width: 1024px) 250px, (max-width: 1280px) 200px, 180px"
                         />
                     )}

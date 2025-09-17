@@ -11,6 +11,10 @@ import { cn } from "@/lib/utils";
 import { useContextCart } from "@/app/checkout/CartContext";
 import CheckoutDrawer from "@/app/checkout/CheckoutDrawer";
 import { PaymentMethodsOptions } from "@/app/CommonVue/Payment";
+import { useRouter } from "next/navigation";
+import { json } from "stream/consumers";
+import { stringify } from "querystring";
+import { useContextEmi } from "@/app/emi/emiContext";
 
 interface ProductInfoProps {
     product: ProductDetails;
@@ -67,9 +71,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     renderRating,
 }) => {
 
-    const { addToCart, buyNow, items, setIsDrawerOpen, setEmiContextInfo } = useContextCart()
+    const { addToCart, buyNow, items, setIsDrawerOpen } = useContextCart()
+    const {setEmiContextInfo}=useContextEmi()
+const router =useRouter()
+    const handlerouter=(path:string)=>{
+router.push(path)
+    }
 
-    console.log('Rendering ProductInfo with product:', items);
     const handleQuantityChange = (newQuantity: number) => {
         if (newQuantity > 0 && newQuantity <= product.quantity) {
             setQuantity(newQuantity);
@@ -95,11 +103,15 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             {
                 name: 'Apply EMI',
                 Icon: CreditCard,
-                action: () => setEmiContextInfo(prev => ({
+                action: () => {
+                    setEmiContextInfo(prev => ({
                     ...prev,
-                    isDrawerOpen: true,
+                    
                     product:product
-                })),
+                }))
+                localStorage.setItem('recent emi',JSON.stringify(product))
+                handlerouter('/emi/applyemi')
+                },
                 className: 'bg-yellow-600 hover:bg-yellow-700 text-white',
             },
             {

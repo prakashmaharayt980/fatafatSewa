@@ -100,6 +100,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
                 alt={`${product.name} view ${idx + 1}`}
                 className="w-full h-full object-cover transition-all duration-300 group-hover/thumb:scale-110"
                 fill
+                priority
                 sizes="(max-width: 640px) 56px, 64px"
               />
               {/* Thumbnail overlay */}

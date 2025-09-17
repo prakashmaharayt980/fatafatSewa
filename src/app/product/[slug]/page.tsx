@@ -63,6 +63,7 @@ export interface ProductDetails {
     };
     created_at: string;
     updated_at: string;
+    storage?:string;
   }>;
   discountcampaign: {
     id: number;

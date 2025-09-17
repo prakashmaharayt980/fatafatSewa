@@ -165,6 +165,7 @@ const NavBar = () => {
                                                 alt='blog icon'
                                                 height={20}
                                                 width={20}
+                                                priority
                                             />
                                             <span className={" font-medium items-center "}>Blog</span>
                                     </button>
@@ -179,6 +180,7 @@ const NavBar = () => {
                                                 alt='blog icon'
                                                 height={20}
                                                 width={20}
+                                                        priority
                                             />
                                         <span className={" font-medium items-center "}>Emi Calcultor</span>
                                
@@ -196,6 +198,7 @@ const NavBar = () => {
                                                 alt='blog icon'
                                                 height={20}
                                                 width={20}
+                                                        priority
                                             />
                                         <span className={" font-medium items-center "}>working on category</span>
                                

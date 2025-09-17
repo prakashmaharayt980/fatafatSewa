@@ -1,17 +1,15 @@
 'use client';
-import React, { createContext, useContext, useState, Dispatch, SetStateAction } from 'react';
+import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { ProductDetails } from '../product/[slug]/page';
-
-
 
 interface UserInfo {
   name: string;
   email: string;
   phone: string;
-  occupation: string,
-  gender: string,
-  dob: string,
-  address: string
+  occupation: string;
+  gender: string;
+  dob: string; // Ensure dob is a string
+  address: string;
 }
 
 export interface EmiContextInfoIF {
@@ -19,14 +17,14 @@ export interface EmiContextInfoIF {
   isDrawerOpen: boolean;
   files: {
     citizenshipFile: File | null;
-    photoFiles: File[] | null;
-    creditCardStatement: null,
-    bankStatement: null
+    photoFiles: File[]; // Initialize as empty array for consistency
+    creditCardStatement: File | null; // Explicitly allow File or null
+    bankStatement: File | null; // Explicitly allow File or null
   };
   emiTenure: string;
-  product: ProductDetails | null; // Made nullable to match default
-  downPayment: number | null; // Added for EMI calculator
-  monthlyEMI: number | null; // Added for displaying calculated EMI
+  product: ProductDetails | null;
+  downPayment: number | null;
+  monthlyEMI: number | null;
   hasCreditCard: string;
   bankinfo: {
     expiryDate: string;
@@ -36,12 +34,11 @@ export interface EmiContextInfoIF {
     accountNumber: string;
     bankname: string;
     creditCardProvider: string;
-  }
-
+  };
 }
 
-interface EmiCalacutorinter {
-  productselected: ProductDetails;
+interface EmiCalculatorInter {
+  productselected: ProductDetails | null; // Allow null
   emirequiredinfo: {
     bank: string;
     eachCollectionDuration: number;
@@ -50,11 +47,9 @@ interface EmiCalacutorinter {
       visa: number;
       master: number;
       esewa: number;
-    }
-
+    };
   };
-  isEmiCalcltorOpen: boolean
-
+  isEmiCalcltorOpen: boolean;
 }
 
 interface CartContextType {
@@ -76,35 +71,35 @@ interface CartContextType {
   emiContextInfo: EmiContextInfoIF;
   setEmiContextInfo: Dispatch<SetStateAction<EmiContextInfoIF>>;
   EMICalculator: (price: number, tenure: string, downPayment?: number) => number;
-  emicalclatorinfo: EmiCalacutorinter,
-  setemicalclatorinfo: Dispatch<SetStateAction<EmiCalacutorinter>>;
+  emicalclatorinfo: EmiCalculatorInter;
+  setemicalclatorinfo: Dispatch<SetStateAction<EmiCalculatorInter>>;
   IsUserLogin: boolean;
   loginDailog: boolean;
   loginNeed: () => void;
   WishListInfo: {
-    isDrawerOpen: boolean,
-    productList: ProductDetails[],
+    isDrawerOpen: boolean;
+    productList: ProductDetails[]; // Initialize as empty array
   };
-  setWishListInfo:Dispatch<SetStateAction<CartContextType['WishListInfo']>>;
-
+  setWishListInfo: Dispatch<SetStateAction<CartContextType['WishListInfo']>>;
+  getRecentEmiProduct: () => ProductDetails | null;
 }
 
 const CartContext = createContext<CartContextType>({
   items: [],
-  addToCart: () => { },
-  buyNow: () => { },
-  updateQuantity: () => { },
-  removeFromCart: () => { },
+  addToCart: () => {},
+  buyNow: () => {},
+  updateQuantity: () => {},
+  removeFromCart: () => {},
   isDrawerOpen: false,
-  setIsDrawerOpen: () => { },
-  toggleDrawer: () => { },
+  setIsDrawerOpen: () => {},
+  toggleDrawer: () => {},
   calculateSubtotal: () => 0,
-  setItems: () => { },
-  processedToCheckout: () => { },
+  setItems: () => {},
+  processedToCheckout: () => {},
   finalCheckout: false,
-  setOrderSuccess: () => { },
+  setOrderSuccess: () => {},
   orderSuccess: false,
-  handlesubmit: () => { },
+  handlesubmit: () => {},
   emiContextInfo: {
     userInfo: {
       name: '',
@@ -112,21 +107,21 @@ const CartContext = createContext<CartContextType>({
       phone: '',
       occupation: '',
       gender: '',
-      dob: null,
-      address: ''
+      dob: '', // Initialize as empty string
+      address: '',
     },
     isDrawerOpen: false,
     files: {
       citizenshipFile: null,
-      photoFiles: null,
+      photoFiles: [], // Initialize as empty array
       creditCardStatement: null,
-      bankStatement: null
+      bankStatement: null,
     },
     emiTenure: '',
     product: null,
     downPayment: null,
     monthlyEMI: null,
-    hasCreditCard: '',
+    hasCreditCard: 'no',
     bankinfo: {
       expiryDate: '',
       cardHolderName: '',
@@ -134,11 +129,10 @@ const CartContext = createContext<CartContextType>({
       accountHolderName: '',
       accountNumber: '',
       bankname: '',
-      creditCardProvider: ''
-    }
-
+      creditCardProvider: '',
+    },
   },
-  setEmiContextInfo: () => { },
+  setEmiContextInfo: () => {},
   EMICalculator: () => 0,
   emicalclatorinfo: {
     productselected: null,
@@ -150,52 +144,63 @@ const CartContext = createContext<CartContextType>({
         visa: 10,
         master: 10,
         esewa: 10,
-      }
-
+      },
     },
-    isEmiCalcltorOpen: false
+    isEmiCalcltorOpen: false,
   },
-  setemicalclatorinfo: () => { },
+  setemicalclatorinfo: () => {},
   IsUserLogin: false,
   loginDailog: false,
-  loginNeed: () => { },
+  loginNeed: () => {},
   WishListInfo: {
     isDrawerOpen: false,
-    productList: null
+    productList: [], // Initialize as empty array
   },
-  setWishListInfo:()=>{}
+  setWishListInfo: () => {},
+  getRecentEmiProduct: () => null,
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const getRecentEmiProduct = (): ProductDetails | null => {
+    if (typeof window === 'undefined') return null; // Avoid localStorage on server
+    try {
+      const storedProduct = localStorage.getItem('recent emi');
+      return storedProduct ? JSON.parse(storedProduct) : null;
+    } catch (error) {
+      console.error('Error parsing recentEmi from localStorage:', error);
+      return null;
+    }
+  };
+
   const [items, setItems] = useState<Array<ProductDetails>>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [finalCheckout, setFinalCheckout] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-  const [emiContextInfo, setEmiContextInfo] = useState<EmiContextInfoIF>({
+  const [IsUserLogin, setIsUserLogin] = useState(false);
+  const [loginDailog, setloginDailog] = useState(false);
 
+  const [emiContextInfo, setEmiContextInfo] = useState<EmiContextInfoIF>({
     userInfo: {
       name: '',
       email: '',
       phone: '',
       occupation: '',
       gender: '',
-      dob: null,
-      address: ''
+      dob: '', // Initialize as empty string
+      address: '',
     },
     isDrawerOpen: false,
     files: {
       citizenshipFile: null,
-      photoFiles: null,
+      photoFiles: [], // Initialize as empty array
       creditCardStatement: null,
-      bankStatement: null
+      bankStatement: null,
     },
     emiTenure: '',
-    product: null,
+    product: null, // Initialize as null, set in useEffect
     downPayment: null,
     monthlyEMI: null,
     hasCreditCard: 'no',
-
-
     bankinfo: {
       expiryDate: '',
       cardHolderName: '',
@@ -203,14 +208,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       accountHolderName: '',
       accountNumber: '',
       bankname: '',
-      creditCardProvider: ''
-    }
-
+      creditCardProvider: '',
+    },
   });
-  const [IsUserLogin, setIsUserLogin] = useState(false)
-  const [loginDailog, setloginDailog] = useState(false)
 
-  const [emicalclatorinfo, setemicalclatorinfo] = useState<EmiCalacutorinter>({
+  const [emicalclatorinfo, setemicalclatorinfo] = useState<EmiCalculatorInter>({
     productselected: null,
     emirequiredinfo: {
       bank: '',
@@ -220,18 +222,26 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         visa: 10,
         master: 10,
         esewa: 10,
-      }
-
+      },
     },
-    isEmiCalcltorOpen: false
-  })
+    isEmiCalcltorOpen: false,
+  });
 
   const [WishListInfo, setWishListInfo] = useState<CartContextType['WishListInfo']>({
     isDrawerOpen: false,
-    productList: null,
+    productList: [], // Initialize as empty array
+  });
 
-  })
-
+  // Use useEffect to load recent EMI product on client side
+  useEffect(() => {
+    const recentProduct = getRecentEmiProduct();
+    if (recentProduct) {
+      setEmiContextInfo((prev) => ({
+        ...prev,
+        product: recentProduct,
+      }));
+    }
+  }, []);
 
   const addToCart = (product: ProductDetails, quantity: number = 1, openDrawer: boolean = false) => {
     console.log('addToCart called:', { product, quantity, openDrawer });
@@ -300,7 +310,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const toggleDrawer = () => {
-
     setIsDrawerOpen((prev) => !prev);
   };
 
@@ -325,11 +334,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return remainingAmount > 0 ? Math.round(remainingAmount / tenureMonths) : 0;
   };
 
-
   const loginNeed = () => {
-    setloginDailog(prev => !prev)
-  }
-
+    setloginDailog((prev) => !prev);
+  };
 
   return (
     <CartContext.Provider
@@ -352,8 +359,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         emiContextInfo,
         setEmiContextInfo,
         EMICalculator,
-        emicalclatorinfo, setemicalclatorinfo,
-        IsUserLogin, loginNeed, loginDailog,WishListInfo,setWishListInfo
+        emicalclatorinfo,
+        setemicalclatorinfo,
+        IsUserLogin,
+        loginNeed,
+        loginDailog,
+        WishListInfo,
+        setWishListInfo,
+        getRecentEmiProduct,
       }}
     >
       {children}

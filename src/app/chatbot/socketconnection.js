@@ -1,78 +1,90 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-export default function useWebSocket() {
-  const [messages, setMessages] = useState([]);
-  const [ws, setWs] = useState(null);
-  const username = 'user_' + Math.random().toString(36).substr(2, 9);
-  const url = 'wss://echo.websocket.org'; // Replace with your WebSocket server URL
+export default function useWebhook() {
+  const [messages, setMessages] = useState<any[]>([]);
+  const username = "user_" + Math.random().toString(36).substr(2, 9);
+
+  // Replace with your backend API that receives webhook events
+  const webhookUrl = "https://gadgetcity.app.n8n.cloud/webhook-test/gadgetcity";
+
   useEffect(() => {
-    const websocket = new WebSocket(url);
-    setWs(websocket);
+    setMessages((prev) => [
+      ...prev,
+      {
+        user: "System",
+        message: "Listening for webhook events...",
+        pathaction: "",
+        actionButton: "",
+        msgType: "text",
+      },
+    ]);
 
-    websocket.onopen = () => {
-      setMessages((prev) => [...prev, { user: 'System', message: 'Connected to WebSocket server', pathaction: '', actionButton: '', msgType: 'text' }]);
-    };
-
-    websocket.onmessage = (event) => {
-      let response;
+    const interval = setInterval(async () => {
       try {
-        response = JSON.parse(event.data);
-        response = response.customer ? {
-          user: response.customer.user,
-          message: response.customer.message,
-          pathaction: response.customer.cmd || '',
-          actionButton: response.customer.cmd ? `trigger_${response.customer.cmd.replace('/', '')}` : '',
-          msgType: 'text'
-        } : response;
-      } catch (e) {
-        response = { user: 'Server', message: event.data, pathaction: '', actionButton: '', msgType: 'text' };
+        const res = await fetch(webhookUrl);
+        if (!res.ok) return;
+        const newEvents = await res.json();
+
+        // append webhook events
+        newEvents.forEach((event: any) => {
+          setMessages((prev) => [...prev, event]);
+
+          // simulate bot-like actions
+          if (event.pathaction === "/productpage") {
+            sendBotResponse("Bot", "Navigating to product page...", "/productpage", "viewProducts");
+          } else if (event.pathaction === "/login") {
+            sendBotResponse("Bot", "Please log in to continue.", "/login", "openLogin");
+          }
+        });
+      } catch (err) {
+        setMessages((prev) => [
+          ...prev,
+          { user: "System", message: `Error fetching webhook events: ${err}`, pathaction: "", actionButton: "", msgType: "text" },
+        ]);
       }
+    }, 3000); // poll every 3s
 
-      setMessages((prev) => [...prev, response]);
+    return () => clearInterval(interval);
+  }, []);
 
-      // Simulate bot responses
-      if (response.pathaction === '/productpage') {
-        sendBotResponse(websocket, 'Bot', 'Navigating to product page...', '/productpage', 'viewProducts');
-      } else if (response.pathaction === '/login') {
-        sendBotResponse(websocket, 'Bot', 'Please log in to continue.', '/login', 'openLogin');
-      } else {
-        sendBotResponse(websocket, 'Bot', `Echo: ${response.message}`, '', '');
-      }
-    };
-
-    websocket.onclose = () => {
-      setMessages((prev) => [...prev, { user: 'System', message: 'Disconnected from WebSocket server', pathaction: '', actionButton: '', msgType: 'text' }]);
-    };
-
-    websocket.onerror = (error) => {
-      setMessages((prev) => [...prev, { user: 'System', message: `WebSocket error: ${error}`, pathaction: '', actionButton: '', msgType: 'text' }]);
-    };
-
-    return () => websocket.close();
-  }, [url]);
-
-  const sendMessage = (message) => {
-    if (message.trim() && ws) {
-      const isCommand = message.startsWith('/');
+  const sendMessage = async (message: string) => {
+    if (message.trim()) {
+      const isCommand = message.startsWith("/");
       const customerMessage = {
         customer: {
           user: username,
           message,
-          cmd: isCommand ? message : undefined
-        }
+          cmd: isCommand ? message : undefined,
+        },
       };
-      ws.send(JSON.stringify(customerMessage));
-      setMessages((prev) => [...prev, { user: username, message, pathaction: isCommand ? message : '', actionButton: '', msgType: 'text' }]);
+
+      // POST to backend (instead of ws.send)
+      await fetch(webhookUrl, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(customerMessage),
+      });
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          user: username,
+          message,
+          pathaction: isCommand ? message : "",
+          actionButton: "",
+          msgType: "text",
+        },
+      ]);
     }
   };
 
-  const sendBotResponse = (websocket, user, message, pathaction, actionButton) => {
+  const sendBotResponse = (user: string, message: string, pathaction: string, actionButton: string) => {
     const botMessage = {
       user,
       message,
       pathaction,
       actionButton,
-      msgType: 'text'
+      msgType: "text",
     };
     setMessages((prev) => [...prev, botMessage]);
   };
