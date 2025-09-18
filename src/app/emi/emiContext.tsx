@@ -8,6 +8,7 @@ import {
   useState,
   Dispatch,
   SetStateAction,
+  useMemo,
 } from "react";
 import { ProductDetails } from "../product/[slug]/page";
 
@@ -20,6 +21,8 @@ interface UserInfo {
   dob: string;
   address: string;
   nationalID: number;
+  marriageStatus:string;
+   userpartnerName:string;
 }
 
 interface DocumentFiles {
@@ -33,6 +36,7 @@ interface EmiFiles {
   creditCardStatement: File | null;
   bankStatement: File | null;
   granterDocument: DocumentFiles;
+  userSignature:File | null
 }
 
 interface BankInfo {
@@ -44,6 +48,7 @@ interface BankInfo {
   bankname: string;
   creditCardProvider: string;
   cardLimit: number;
+  salaryAmount: number;
 }
 
 interface GranterPersonalDetails extends UserInfo {
@@ -63,11 +68,18 @@ export interface EmiContextState {
   hasCreditCard: string;
   bankinfo: BankInfo;
   granterPersonalDetails: GranterPersonalDetails;
+
 }
 
 interface EmiContextType {
   emiContextInfo: EmiContextState;
   setEmiContextInfo: Dispatch<SetStateAction<EmiContextState>>;
+    AvailablebankProvider:Array<{
+    id:string;
+     name:string;
+      rate: number;
+       img:string;
+  }>
 }
 
 const STORAGE_KEY = "emiContextInfo";
@@ -78,10 +90,12 @@ const defaultState: EmiContextState = {
     email: "",
     phone: "",
     occupation: "",
-    gender: "",
+    gender: "Male",
     dob: "",
     address: "",
     nationalID: 0,
+    marriageStatus:'Single',
+    userpartnerName:''
   },
   isDrawerOpen: false,
   files: {
@@ -97,6 +111,7 @@ const defaultState: EmiContextState = {
       back: null,
       ppphoto: null,
     },
+    userSignature:null
   },
   product: null,
   emiCalculation: {
@@ -114,18 +129,22 @@ const defaultState: EmiContextState = {
     bankname: "",
     creditCardProvider: "",
     cardLimit: 0,
+    salaryAmount:0
   },
   granterPersonalDetails: {
     name: "",
     email: "",
     phone: "",
     occupation: "",
-    gender: "",
+      gender: "Male",
     dob: "",
     address: "",
     grandfathername: "",
     nationalID: 0,
+   marriageStatus:'Single',
+     userpartnerName:''
   },
+
 };
 
 const EmiContext = createContext<EmiContextType | undefined>(undefined);
@@ -147,6 +166,20 @@ export const EmiProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return defaultState;
   });
 
+      const AvailablebankProvider = useMemo(
+          () => [
+              { id: 'nabil', name: 'Nabil Bank', rate: 11.5, img: '/imgfile/bankingPartners7.png' },
+              { id: 'global', name: 'Global IME Bank', rate: 12, img: '/imgfile/bankingPartners1.png' },
+              { id: 'nmb', name: 'NMB Bank', rate: 11.75, img: '/imgfile/bankingPartners3.png' },
+              { id: 'siddhartha', name: 'Siddhartha Bank', rate: 12.25, img: '/imgfile/bankingPartners9.png' },
+              { id: 'NicAsia', name: 'Nic Asia Bank', rate: 12.25, img: '/imgfile/bankingPartners11.png' },
+              { id: 'hbl', name: 'Himalayan Bank', rate: 12.25, img: '/imgfile/bankingPartners10.png' },
+              { id: 'sanimabank', name: 'Sanima Bank', rate: 12.25, img: '/imgfile/bankingPartners8.png' },
+              { id: 'kumari', name: 'Kumari Bank', rate: 12.25, img: '/imgfile/bankingPartners6.png' },
+          ],
+          []
+      );
+
   // Save to localStorage whenever state changes (excluding files)
   useEffect(() => {
     const { files, ...rest } = emiContextInfo; // omit File objects
@@ -154,7 +187,7 @@ export const EmiProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [emiContextInfo]);
 
   return (
-    <EmiContext.Provider value={{ emiContextInfo, setEmiContextInfo }}>
+    <EmiContext.Provider value={{ emiContextInfo, setEmiContextInfo,AvailablebankProvider }}>
       {children}
     </EmiContext.Provider>
   );
