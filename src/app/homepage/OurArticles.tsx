@@ -44,6 +44,7 @@ const OurArticles = () => {
                   width={300}
                   height={180}
                   className="w-full h-44 object-cover"
+                  loading='lazy'
                   
                 />
               ) : (
@@ -53,6 +54,7 @@ const OurArticles = () => {
                   width={300}
                   height={180}
                   className="w-full h-44 object-contain bg-gray-50"
+                    loading='lazy'
                 />
               )}
             </div>

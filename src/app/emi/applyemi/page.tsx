@@ -2,22 +2,28 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Upload, Eye, Pencil, Trash } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+
 import creditcardicon from '../../../../public/svgfile/creditcardicon.svg';
 import downpaymenticon from '../../../../public/svgfile/payementiconcash.svg';
 import addcreditcard from '../../../../public/svgfile/creditcardplus.svg';
-import chnagecreditcard from '../../../../public/svgfile/creditcardchnage.png';
+// import chnagecreditcard from '../../../../public/svgfile/creditcardchnage.png';
 
 import { useContextEmi } from '../emiContext';
 
 import CreditCardComponent from './CreditCardform';
 import BuyerPersonalInfo from './BuyerPersonalInfo';
-import { Label } from '@/components/ui/label';
+
+
 import RenderReview from './ReviewApplyEmiDoc';
-// import CreditCard from './RenderCreditCard';
+import ProgressBar from './ProgressBar';
+import EmiProductDetails from './EmiProductDetails';
+import DocumentUpload from './DocumentUpload';
+
+
+
 
 const ApplyEmiProcess = () => {
   const { emiContextInfo, setEmiContextInfo, AvailablebankProvider } = useContextEmi();
@@ -38,8 +44,8 @@ const ApplyEmiProcess = () => {
         }
       });
     });
-    if (files.bankStatement) newPreviews.bankStatement = URL.createObjectURL(files.bankStatement);
-    if (files.userSignature) newPreviews.userSignature = URL.createObjectURL(files.userSignature);
+    // if (files.bankStatement) newPreviews.bankStatement = URL.createObjectURL(files.bankStatement);
+    // if (files.userSignature) newPreviews.userSignature = URL.createObjectURL(files.userSignature);
     setPreviews(newPreviews);
 
     return () => {
@@ -165,7 +171,7 @@ const ApplyEmiProcess = () => {
   };
 
   const handleContinue = () => {
-    setcurrentstep((prev) => Math.min(prev + 1, 3));
+    setcurrentstep((prev) => Math.min(prev + 1, 4));
   };
 
   const handleBack = () => {
@@ -178,298 +184,371 @@ const ApplyEmiProcess = () => {
       hasCreditCard: option === 'creditCard' ? 'yes' : option === 'makeCard' ? 'make' : 'no',
       emiCalculation: {
         ...prev.emiCalculation,
-        downPayment: option === 'downPayment' ? 40 : 0,
+        downPayment: option === 'downPayment' ? 40 : prev.emiCalculation.downPayment,
+
       },
     }));
     setcurrentstep(1);
   };
 
+  
+
   const emiData = useMemo(() => {
-    if (!product?.price || product.price <= 0) {
-      return {
-        downPayment: 0,
-        loanAmount: 0,
-        monthlyEMI: 0,
-        totalInterest: 0,
-        totalPayment: 0,
-      };
-    }
-
-    const downPaymentAmount = emiContextInfo.emiCalculation.downPayment === 40 ? product.price * 0.4 : 0;
-    const loanAmount = product.price - downPaymentAmount;
-    const monthlyRate = (emiContextInfo.interestRate || 10) / 100 / 12;
-    const numberOfPayments = 9;
-
-    const emi =
-      (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-
-    const totalPayment = emi * numberOfPayments;
-    const totalInterest = totalPayment - loanAmount;
-
+  if (!product?.price || product.price <= 0) {
     return {
-      downPayment: downPaymentAmount,
-      loanAmount,
-      monthlyEMI: emi,
-      totalInterest,
-      totalPayment,
+      downPayment: 0,
+      loanAmount: 0,
+      monthlyEMI: 0,
+      totalInterest: 0,
+      totalPayment: 0,
+      duration: 12,
     };
-  }, [product?.price, emiContextInfo.emiCalculation.downPayment, emiContextInfo.interestRate]);
+  }
+
+  // Use downPaymentPercent from emiCalculation
+  const downPaymentPercent = emiContextInfo.emiCalculation.downPayment || 0;
+  const downPaymentAmount = product.price * (downPaymentPercent / 100);
+  const loanAmount = product.price - downPaymentAmount;
+  // Use interestRate from emiContextInfo root
+  const monthlyRate = (emiContextInfo.emiCalculation.interestRate || 10) / 100 / 12;
+  // Use duration from emiCalculation
+  const numberOfPayments = emiContextInfo.emiCalculation.duration || 12;
+
+  const emi =
+    loanAmount > 0
+      ? (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
+        (Math.pow(1 + monthlyRate, numberOfPayments) - 1)
+      : 0;
+
+  const totalPayment = emi * numberOfPayments + downPaymentAmount;
+  const totalInterest = totalPayment - product.price;
+
+  return {
+    downPayment: downPaymentAmount,
+    loanAmount,
+    monthlyEMI: emi,
+    totalInterest,
+    totalPayment,
+    duration: numberOfPayments,
+  };
+}, [
+  product?.price,
+  emiContextInfo.emiCalculation.downPayment,
+  emiContextInfo.emiCalculation.duration,
+  emiContextInfo.emiCalculation.interestRate,
+]);
+  const emiConditionFields = [
+    {
+      label: "Down Payment (%)",
+      name: "downPayment",
+      value: emiContextInfo.emiCalculation.downPayment,
+      onChange: (e) => handleInputChange(e, "emiCalculation"),
+      svgicon: '/svgfile/moneycashicon.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "Duration (months)",
+      name: "duration",
+      value: emiContextInfo.emiCalculation.duration,
+      onChange: (e) => handleInputChange(e, "emiCalculation"),
+      type: "select",
+      options: ['6', '9', '12'],
+      svgicon: '/svgfile/monthicon.png',
+      extenduserinfo: '',
+    },
+    {
+      label: " Total payment",
+      name: "downPaymentPercent",
+      value: emiData.totalPayment.toFixed(2),
+      onChange: () => { },
+      svgicon: '/svgfile/moneycashicon.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "Emi intrest Amount ",
+      name: "downPaymentPercent",
+      value: emiData.totalInterest.toFixed(2),
+      onChange: () => { },
+      svgicon: '/svgfile/moneycashicon.png',
+      extenduserinfo: '',
+    }
+  ];
+
+  const personalDetailsInfolist = [
+    {
+      label: "User Name",
+      name: "name",
+      value: emiContextInfo.userInfo.name,
+      onChange: (e) => handleInputChange(e, "userInfo"),
+      placeholder: "Enter user name",
+      maxLength: 50,
+      svgicon: '/svgfile/menperson.svg',
+      extenduserinfo: '',
+    },
+
+    {
+      label: "Email",
+      name: "email",
+      value: emiContextInfo.userInfo.email,
+      onChange: (e) => handleInputChange(e, "userInfo"),
+      placeholder: "Enter email",
+      svgicon: '/svgfile/emailsvg.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: "Gender",
+      name: "gender",
+      value: emiContextInfo.userInfo.gender,
+      onChange: (e) => handleInputChange(e, "userInfo"),
+      type: "select",
+      options: ['Male', 'Female', 'Other'],
+      svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: "Marriage Status",
+      name: "marriageStatus",
+      value: emiContextInfo.userInfo.marriageStatus,
+      onChange: (e) => handleInputChange(e, "userInfo"),
+      type: "select",
+      options: ['Single', 'Married'],
+      svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: emiContextInfo.userInfo.gender === "Male" ? "Wife Name" : "Husband Name",
+      name: "userpartnerName",
+      value: emiContextInfo.userInfo.userpartnerName,
+      onChange: (e) => handleInputChange(e, "userInfo"),
+      extenduserinfo: emiContextInfo.userInfo.marriageStatus === 'Single' ? 'hidden' : '',
+
+      svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
+    },
+    {
+      label: "Phone Number",
+      name: "phone",
+      value: emiContextInfo.userInfo.phone,
+      onChange: (e) => handleInputChange(e, "userInfo"),
+      placeholder: "Enter phone number",
+      svgicon: '/svgfile/phoneIcon.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "National ID Number",
+      name: "nationalID",
+      value: emiContextInfo.userInfo.nationalID,
+      onChange: (e) => handleInputChange(e, "userInfo"),
+      placeholder: "Enter national ID number",
+      svgicon: '/svgfile/idcardicon2.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "Address",
+      name: "address",
+      value: emiContextInfo.userInfo.address,
+      onChange: (e) => handleInputChange(e, "userInfo"),
+      placeholder: "Enter address",
+      maxLength: 100,
+      svgicon: '/svgfile/homeaddressicon.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "Salary Amount",
+      name: "salaryAmount",
+      value: emiContextInfo.bankinfo.salaryAmount,
+      onChange: (e) => handleInputChange(e, "bankinfo"),
+      placeholder: "Enter salary amount",
+      svgicon: '/svgfile/moneycashicon.png',
+      extenduserinfo: '',
+    },
+  ]
+
+  const creditCardDetailsInfo = [
+    // Standard order: Card Number first, then Expiry, then Name, then Provider, then Limit
+    {
+      label: "Bank Name",
+      name: "creditCardProvider",
+      value: emiContextInfo.bankinfo.creditCardProvider,
+      onChange: (e) => handleBankSelect("bankinfo", "creditCardProvider", e.target.value),
+      type: "select",
+      svgicon: '/svgfile/bank.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: "Card Holder Name",
+      name: "cardHolderName",
+      value: emiContextInfo.bankinfo.cardHolderName,
+      onChange: (e) => handleInputChange(e, "bankinfo"),
+      placeholder: "Card Holder Name",
+      svgicon: '/svgfile/menperson.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: "Card Number",
+      name: "creditCardNumber",
+      value: emiContextInfo.bankinfo.creditCardNumber,
+      onChange: handleCardNumberChange,
+      placeholder: "1234 5678 9012 3456",
+      maxLength: 19,
+      svgicon: '/svgfile/creditcardicon.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: "Expiry Date",
+      name: "expiryDate",
+      value: emiContextInfo.bankinfo.expiryDate,
+      onChange: handleExpiryChange,
+      placeholder: "MM/YY",
+      maxLength: 5,
+      svgicon: '/svgfile/creditcardicon.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: " Card Limit",
+      name: "cardLimit",
+      value: emiContextInfo.bankinfo.cardLimit,
+      onChange: (e) => handleInputChange(e, "bankinfo"),
+      placeholder: "Card Limit",
+      svgicon: '/svgfile/creditcardicon.svg',
+      extenduserinfo: '',
+    },
+  ]
+
+  const bankdetailsInfo = [
+    {
+      label: "Bank Name",
+      name: "bankname",
+      value: emiContextInfo.bankinfo.bankname,
+      onChange: (e) => handleBankSelect("bankinfo", "bankname", e.target.value),
+      type: "select",
+      svgicon: '/svgfile/bank.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: "Account Number",
+      name: "accountNumber",
+      value: emiContextInfo.bankinfo.accountNumber,
+      onChange: (e) => handleInputChange(e, "bankinfo"),
+      placeholder: "Enter account number",
+      svgicon: '/svgfile/idcardicon2.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "Salary Amount",
+      name: "salaryAmount",
+      value: emiContextInfo.bankinfo.salaryAmount,
+      onChange: (e) => handleInputChange(e, "bankinfo"),
+      placeholder: "Enter salary amount",
+      svgicon: '/svgfile/moneycashicon.png',
+      extenduserinfo: '',
+    },
+
+  ]
+  const granterPersonalDetails = [
+    // Standard order: Name, Gender, Marriage Status, DOB (if needed, but based on code), Phone, National ID, Address
+    {
+      label: "Guarantors Full Name",
+      name: "name",
+      value: emiContextInfo.granterPersonalDetails.name,
+      onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
+      placeholder: "Enter Guarantor name",
+      svgicon: '/svgfile/menperson.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: "Phone Number",
+      name: "phone",
+      value: emiContextInfo.granterPersonalDetails.phone,
+      onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
+      placeholder: "Enter Phone Number",
+      svgicon: '/svgfile/phoneIcon.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "Gender",
+      name: "gender",
+      value: emiContextInfo.granterPersonalDetails.gender,
+      onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
+      type: "select",
+      options: ['Male', 'Female'],
+      svgicon: emiContextInfo.granterPersonalDetails.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
+      extenduserinfo: '',
+    },
+    {
+      label: "Marriage Status",
+      name: "marriageStatus",
+      value: emiContextInfo.granterPersonalDetails.marriageStatus,
+      onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
+      type: "select",
+      options: ['Single', 'Married'],
+      svgicon: emiContextInfo.granterPersonalDetails.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
+      extenduserinfo: '',
+    },
+
+    {
+      label: emiContextInfo.granterPersonalDetails.gender === "Male" ? "Wife Name" : "Husband Name",
+      name: "userpartnerName",
+      value: emiContextInfo.granterPersonalDetails.userpartnerName,
+      onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
+      extenduserinfo: emiContextInfo.granterPersonalDetails.marriageStatus === 'Single' ? 'hidden' : '',
+
+      svgicon: emiContextInfo.granterPersonalDetails.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
+
+    },
+
+
+
+    {
+      label: "Citizenship Number",
+      name: "nationalID",
+      value: emiContextInfo.granterPersonalDetails.nationalID,
+      onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
+      placeholder: "Enter citizenship number",
+      svgicon: '/svgfile/idcardicon2.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "Address",
+      name: "address",
+      value: emiContextInfo.granterPersonalDetails.address,
+      onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
+      placeholder: "Enter Address",
+      maxLength: 100,
+      svgicon: '/svgfile/homeaddressicon.png',
+      extenduserinfo: '',
+    },
+  ]
+
 
   const formSections = {
     creditCard: [
+
       {
         title: "Credit Card Details",
         sectionKey: "bankinfo",
         step: 1,
-        fields: [
-          // Standard order: Card Number first, then Expiry, then Name, then Provider, then Limit
-          {
-            label: "Bank Name",
-            name: "creditCardProvider",
-            value: emiContextInfo.bankinfo.creditCardProvider,
-            onChange: (e) => handleBankSelect("bankinfo", "creditCardProvider", e.target.value),
-            type: "select",
-            svgicon: '/svgfile/bank.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Card Holder Name",
-            name: "cardHolderName",
-            value: emiContextInfo.bankinfo.cardHolderName,
-            onChange: (e) => handleInputChange(e, "bankinfo"),
-            placeholder: "Card Holder Name",
-            svgicon: '/svgfile/menperson.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Card Number",
-            name: "creditCardNumber",
-            value: emiContextInfo.bankinfo.creditCardNumber,
-            onChange: handleCardNumberChange,
-            placeholder: "1234 5678 9012 3456",
-            maxLength: 19,
-            svgicon: '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-
-
-
-          {
-            label: "Expiry Date",
-            name: "expiryDate",
-            value: emiContextInfo.bankinfo.expiryDate,
-            onChange: handleExpiryChange,
-            placeholder: "MM/YY",
-            maxLength: 5,
-            svgicon: '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: " Card Limit",
-            name: "cardLimit",
-            value: emiContextInfo.bankinfo.cardLimit,
-            onChange: (e) => handleInputChange(e, "bankinfo"),
-            placeholder: "Card Limit",
-            svgicon: '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-
-
-
-        ],
+        fields: creditCardDetailsInfo
       },
       {
         title: "Personal Details",
         sectionKey: "userInfo",
         step: 2,
-        fields: [
-          // Standard order: Name, DOB, Gender, Marriage Status, Email, Phone, National ID, Address, Salary
-          {
-            label: "User Name",
-            name: "name",
-            value: emiContextInfo.userInfo.name,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter user name",
-            maxLength: 50,
-            svgicon: '/svgfile/menperson.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Email",
-            name: "email",
-            value: emiContextInfo.userInfo.email,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter email",
-            svgicon: '/svgfile/emailsvg.svg',
-            extenduserinfo: '',
-          },
-
-          {
-            label: "Gender",
-            name: "gender",
-            value: emiContextInfo.userInfo.gender,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            type: "select",
-            options: ['Male', 'Female', 'Other'],
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Marriage Status",
-            name: "marriageStatus",
-            value: emiContextInfo.userInfo.marriageStatus,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            type: "select",
-            options: ['Single', 'Married', 'Divorced', 'Widowed'],
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: emiContextInfo.userInfo.gender === "Male" ? "Wife Name" : "Husband Name",
-            name: "userpartnerName",
-            value: emiContextInfo.userInfo.userpartnerName,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            extenduserinfo: emiContextInfo.userInfo.marriageStatus === 'Single' ? 'hidden' : '',
-
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-          },
-
-          {
-            label: "Phone Number",
-            name: "phone",
-            value: emiContextInfo.userInfo.phone,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter phone number",
-            svgicon: '/svgfile/phoneIcon.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "National ID Number",
-            name: "nationalID",
-            value: emiContextInfo.userInfo.nationalID,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter national ID number",
-            svgicon: '/svgfile/idcardicon2.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "Address",
-            name: "address",
-            value: emiContextInfo.userInfo.address,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter address",
-            maxLength: 100,
-            svgicon: '/svgfile/homeaddressicon.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "Salary Amount",
-            name: "salaryAmount",
-            value: emiContextInfo.bankinfo.salaryAmount,
-            onChange: (e) => handleInputChange(e, "bankinfo"),
-            placeholder: "Enter salary amount",
-            svgicon: '/svgfile/moneycashicon.png',
-            extenduserinfo: '',
-          },
-        ],
+        fields: personalDetailsInfolist
+      },
+      {
+        title: "EMI Conditions",
+        sectionKey: "emiCalculation",
+        step: 3,
+        fields: emiConditionFields
       },
     ],
     downPayment: [
+
       {
         title: "Personal Details",
         sectionKey: "userInfo",
         step: 1,
-        fields: [
-          // Standard order: Name, DOB, Gender, Marriage Status, Email, Phone, National ID, Address, Salary
-          {
-            label: "User Name",
-            name: "name",
-            value: emiContextInfo.userInfo.name,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter user name",
-            maxLength: 50,
-            svgicon: '/svgfile/menperson.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Email",
-            name: "email",
-            value: emiContextInfo.userInfo.email,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter email",
-            svgicon: '/svgfile/emailsvg.svg',
-            extenduserinfo: '',
-          },
-
-          {
-            label: "Gender",
-            name: "gender",
-            value: emiContextInfo.userInfo.gender,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            type: "select",
-            options: ['Male', 'Female', 'Other'],
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Marriage Status",
-            name: "marriageStatus",
-            value: emiContextInfo.userInfo.marriageStatus,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            type: "select",
-            options: ['Single', 'Married', 'Divorced', 'Widowed'],
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: emiContextInfo.userInfo.gender === "Male" ? "Wife Name" : "Husband Name",
-            name: "userpartnerName",
-            value: emiContextInfo.userInfo.userpartnerName,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            extenduserinfo: emiContextInfo.userInfo.marriageStatus === 'Single' ? ' hidden ' : '',
-
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-          },
-
-          {
-            label: "Phone Number",
-            name: "phone",
-            value: emiContextInfo.userInfo.phone,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter phone number",
-            svgicon: '/svgfile/phoneIcon.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "National ID Number",
-            name: "nationalID",
-            value: emiContextInfo.userInfo.nationalID,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter national ID number",
-            svgicon: '/svgfile/idcardicon2.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "Address",
-            name: "address",
-            value: emiContextInfo.userInfo.address,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter address",
-            maxLength: 100,
-            svgicon: '/svgfile/homeaddressicon.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "Salary Amount",
-            name: "salaryAmount",
-            value: emiContextInfo.bankinfo.salaryAmount,
-            onChange: (e) => handleInputChange(e, "bankinfo"),
-            placeholder: "Enter salary amount",
-            svgicon: '/svgfile/moneycashicon.png',
-            extenduserinfo: '',
-          },
-        ],
+        fields: personalDetailsInfolist,
         additionalContent: (
           <div className="mt-6">
             <div className="mb-6 p-4 bg-blue-100 rounded-lg">
@@ -487,92 +566,14 @@ const ApplyEmiProcess = () => {
               </div>
             </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Required Documents</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {['ppphoto', 'front', 'back', 'bankStatement'].map((docType) => {
-                const isBankStatement = docType === 'bankStatement';
-                const file = isBankStatement ? emiContextInfo.files.bankStatement : emiContextInfo.files.citizenshipFile[docType];
-                const label = isBankStatement ? 'Bank Statement' : docType === 'ppphoto' ? 'Passport Photo' : `Citizenship ${docType.charAt(0).toUpperCase() + docType.slice(1)}`;
-                const previewKey = isBankStatement ? 'bankStatement' : `citizenship-${docType}`;
-                return (
-                  <div key={docType} className="relative group text-center">
-                    <input
-                      type="file"
-                      id={previewKey}
-                      onChange={(e) => handleFileChange(e, docType)}
-                      className="hidden"
-                    />
-                    <label htmlFor={previewKey} className="cursor-pointer block">
-                      {file ? (
-                        <div className="h-40 flex items-center  border-blue-950 rounded-lg shadow-sm shadow-gray-700/30  justify-center">
-                          <Image
-                            src={previews[previewKey]}
-                            alt={label}
-                            width={200}
-                            height={200}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="rounded  mx-auto group-hover:opacity-70 transition-opacity max-h-40 object-contain"
-                            priority={docType === 'ppphoto'}
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-40 flex items-center justify-center bg-gray-100 rounded border-2 border-dashed border-gray-300 mx-auto">
-                          <Image
-                            src={'/svgfile/uploaddocumenticon.svg'}
-                            className="h-14 w-14 text-[var(--colour-fsP2)]/60"
-                            alt={' upload document'}
-                            height={80}
-                            width={80}
-                            priority
-                          />
-                        </div>
-                      )}
-                    </label>
-                    {/* <p className="text-base font-medium text-gray-700 mt-2">{label}</p> */}
-                    <Label className="block text-sm font-medium text-gray-700 mt-1">
-                      {label}
-                    </Label>
-                    {file && (
-                      <div className="absolute w-full inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button className="text-blue-600 hover:text-blue-800 mr-4">
-                              <Eye size={24} />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-[80vw] lg:max-w-[70vw] p-0 border-none bg-transparent">
-                            <div className="relative w-full h-auto max-h-[80vh] rounded-lg overflow-hidden shadow-2xl">
-                              <Image
-                                src={previews[previewKey]}
-                                alt={label}
-                                width={1200}
-                                height={800}
-                                sizes="100vw"
-                                className="w-full h-auto object-contain rounded-lg"
-                                priority
-                                quality={100}
-                              />
-                            </div>
-                          </DialogContent>
-                          <Button
-                            onClick={() => document.getElementById(previewKey).click()}
-                            className="cursor-pointer text-blue-600 hover:text-blue-800 mr-2"
-                          >
-                            <Pencil size={20} />
-                          </Button>
-                          <Button
-                            onClick={() => handleFileDelete(docType, isBankStatement ? false : false)}
-                            className="cursor-pointer text-blue-600 hover:text-blue-800"
-                          >
-                            <Trash size={20} />
-                          </Button>
-
-                        </Dialog>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <DocumentUpload
+              docTypes={['ppphoto', 'front', 'back', 'bankStatement']}
+              isGranter={false}
+              files={emiContextInfo.files}
+              previews={previews}
+              handleFileChange={handleFileChange}
+              handleFileDelete={handleFileDelete}
+            />
           </div>
         )
       },
@@ -580,419 +581,90 @@ const ApplyEmiProcess = () => {
         title: "Guarantor Information",
         sectionKey: "granterPersonalDetails",
         step: 2,
-        fields: [
-          // Standard order: Name, Gender, Marriage Status, DOB (if needed, but based on code), Phone, National ID, Address
-          {
-            label: "Guarantors Full Name",
-            name: "name",
-            value: emiContextInfo.granterPersonalDetails.name,
-            onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
-            placeholder: "Enter Guarantor name",
-            svgicon: '/svgfile/menperson.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Phone Number",
-            name: "phone",
-            value: emiContextInfo.granterPersonalDetails.phone,
-            onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
-            placeholder: "Enter Phone Number",
-            svgicon: '/svgfile/phoneIcon.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "Gender",
-            name: "gender",
-            value: emiContextInfo.granterPersonalDetails.gender,
-            onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
-            type: "select",
-            options: ['Male', 'Female'],
-            svgicon: emiContextInfo.granterPersonalDetails.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Marriage Status",
-            name: "marriageStatus",
-            value: emiContextInfo.granterPersonalDetails.marriageStatus,
-            onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
-            type: "select",
-            options: ['Single', 'Married', 'Divorced', 'Widowed'],
-            svgicon: emiContextInfo.granterPersonalDetails.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-
-          {
-            label: emiContextInfo.granterPersonalDetails.gender === "Male" ? "Wife Name" : "Husband Name",
-            name: "userpartnerName",
-            value: emiContextInfo.granterPersonalDetails.userpartnerName,
-            onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
-            extenduserinfo: emiContextInfo.granterPersonalDetails.marriageStatus === 'Single' ? 'hidden' : '',
-
-            svgicon: emiContextInfo.granterPersonalDetails.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-
-          },
-
-          {
-            label: "Citizenship Number",
-            name: "nationalID",
-            value: emiContextInfo.granterPersonalDetails.nationalID,
-            onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
-            placeholder: "Enter citizenship number",
-            svgicon: '/svgfile/idcardicon2.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "Address",
-            name: "address",
-            value: emiContextInfo.granterPersonalDetails.address,
-            onChange: (e) => handleInputChange(e, "granterPersonalDetails"),
-            placeholder: "Enter Address",
-            maxLength: 100,
-            svgicon: '/svgfile/homeaddressicon.png',
-            extenduserinfo: '',
-          },
-        ],
+        fields: granterPersonalDetails,
         additionalContent: (
           <div className="mt-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Required Documents</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {['ppphoto', 'front', 'back'].map((docType) => {
-                const isBankStatement = docType === 'bankStatement';
-                const file = emiContextInfo.files.granterDocument[docType];
-                const label = docType === 'ppphoto' ? 'Passport Photo' : `Citizenship ${docType.charAt(0).toUpperCase() + docType.slice(1)}`;
-                const previewKey = `granter-${docType}`;
-                return (
-                  <div key={docType} className="relative group text-center">
-                    <input
-                      type="file"
-                      id={previewKey}
-                      onChange={(e) => handleFileChange(e, docType, true)}
-                      className="hidden"
-                    />
-                    <label htmlFor={previewKey} className="cursor-pointer block">
-                      {file ? (
-                        <div className="h-40 flex items-center justify-center">
-                          <Image
-                            src={previews[previewKey]}
-                            alt={label}
-                            width={150}
-                            height={150}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="rounded mx-auto group-hover:opacity-70 transition-opacity max-h-40 object-contain"
-                            priority={docType === 'ppphoto'}
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-40 flex items-center justify-center bg-gray-100 rounded border-2 border-dashed border-gray-300 mx-auto">
-                          <Image
-                            src={'/svgfile/uploaddocumenticon.svg'}
-                            className="h-14 w-14 text-[var(--colour-fsP2)]/60"
-                            alt={' upload document'}
-                            height={80}
-                            width={80}
-                          />
-                        </div>
-                      )}
-                    </label>
-                    {/* <p className="text-base font-medium text-gray-700 mt-2">{label}</p> */}
-                    <Label className="block text-sm font-medium text-gray-700 mt-2">
-                      {label}
-                    </Label>
-                    {file && (
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button className="text-blue-600 hover:text-blue-800 mr-4">
-                              <Eye size={24} />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-[80vw] lg:max-w-[70vw] p-0 border-none bg-transparent">
-                            <div className="relative w-full h-auto max-h-[80vh] rounded-lg overflow-hidden shadow-2xl">
-                              <Image
-                                src={previews[previewKey]}
-                                alt={label}
-                                width={1200}
-                                height={800}
-                                sizes="100vw"
-                                className="w-full h-auto object-contain rounded-lg"
-                                priority
-                                quality={100}
-                              />
-                            </div>
-                          </DialogContent>
-
-                          <Button
-                            onClick={() => document.getElementById(previewKey).click()}
-                            className="cursor-pointer text-blue-600 hover:text-blue-800 mr-2"
-                          >
-                            <Pencil size={20} />
-                          </Button>
-                          <Button
-                            onClick={() => handleFileDelete(docType, isBankStatement ? false : false)}
-                            className="cursor-pointer text-blue-600 hover:text-blue-800"
-                          >
-                            <Trash size={20} />
-                          </Button>
-                        </Dialog>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <DocumentUpload
+              docTypes={['ppphoto', 'front', 'back']}
+              isGranter={true}
+              files={emiContextInfo.files}
+              previews={previews}
+              handleFileChange={handleFileChange}
+              handleFileDelete={handleFileDelete}
+            />
           </div>
         ),
+      },
+      {
+        title: "EMI Conditions",
+        sectionKey: "emiCalculation",
+        step: 3,
+        fields: emiConditionFields
       },
     ],
     makeCard: [
+
       {
-        title: "Personal and Bank Details",
-        sectionKey: "bankinfo",
+        title: "Personal Details",
+        sectionKey: "userInfo",
         step: 1,
-        fields: [
-
-
-          {
-            label: "Gender",
-            name: "gender",
-            value: emiContextInfo.userInfo.gender,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            type: "select",
-            options: ['Male', 'Female', 'Other'],
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Marriage Status",
-            name: "marriageStatus",
-            value: emiContextInfo.userInfo.marriageStatus,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            type: "select",
-            options: ['Single', 'Married', 'Divorced', 'Widowed'],
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: emiContextInfo.userInfo.gender === "Male" ? "Wife Name" : "Husband Name",
-            name: "userpartnerName",
-            value: emiContextInfo.userInfo.userpartnerName,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            extenduserinfo: emiContextInfo.userInfo.marriageStatus === 'Single' ? ' hidden ' : '',
-
-            svgicon: emiContextInfo.userInfo.gender === 'Male' ? '/svgfile/menperson.svg' : '/svgfile/creditcardicon.svg',
-          },
-          {
-            label: "Salary Amount",
-            name: "salaryAmount",
-            value: emiContextInfo.bankinfo.salaryAmount,
-            onChange: (e) => handleInputChange(e, "bankinfo"),
-            placeholder: "Enter salary amount",
-            svgicon: '/svgfile/moneycashicon.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "Bank Name",
-            name: "bankname",
-            value: emiContextInfo.bankinfo.bankname,
-            onChange: (e) => handleBankSelect("bankinfo", "bankname", e.target.value),
-            type: "select",
-            svgicon: '/svgfile/bank.svg',
-            extenduserinfo: '',
-          },
-          {
-            label: "Account Number",
-            name: "accountNumber",
-            value: emiContextInfo.bankinfo.accountNumber,
-            onChange: (e) => handleInputChange(e, "bankinfo"),
-            placeholder: "Enter account number",
-            svgicon: '/svgfile/idcardicon2.png',
-            extenduserinfo: '',
-          },
-          {
-            label: "Address",
-            name: "address",
-            value: emiContextInfo.userInfo.address,
-            onChange: (e) => handleInputChange(e, "userInfo"),
-            placeholder: "Enter address",
-            maxLength: 100,
-            svgicon: '/svgfile/homeaddressicon.png',
-            extenduserinfo: '',
-          },
-        ],
-      },
-      {
-        title: "Citizenship Documents",
-        sectionKey: "files",
-        step: 2,
-        fields: [],
+        fields: personalDetailsInfolist,
         additionalContent: (
           <div className="mt-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Required Documents</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {['ppphoto', 'front', 'back', 'bankStatement'].map((docType) => {
-                const isBankStatement = docType === 'bankStatement';
-                const file = isBankStatement ? emiContextInfo.files.bankStatement : emiContextInfo.files.citizenshipFile[docType];
-                const label = isBankStatement ? 'Bank Statement' : docType === 'ppphoto' ? 'Passport Photo' : `Citizenship ${docType.charAt(0).toUpperCase() + docType.slice(1)}`;
-                const previewKey = isBankStatement ? 'bankStatement' : `citizenship-${docType}`;
-                return (
-                  <div key={docType} className="relative group text-center">
-                    <input
-                      type="file"
-                      id={previewKey}
-                      onChange={(e) => handleFileChange(e, docType)}
-                      className="hidden"
-                    />
-                    <label htmlFor={previewKey} className="cursor-pointer block">
-                      {file ? (
-                        <div className="h-40 flex items-center justify-center">
-                          <Image
-                            src={previews[previewKey]}
-                            alt={label}
-                            width={150}
-                            height={150}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="rounded mx-auto group-hover:opacity-70 transition-opacity max-h-40 object-contain"
-                            priority={docType === 'ppphoto'}
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-40 flex items-center justify-center bg-gray-100 rounded border-2 border-dashed border-gray-300 mx-auto">
-                          <Image
-                            src={'/svgfile/uploaddocumenticon.svg'}
-                            className="h-14 w-14 text-[var(--colour-fsP2)]/60"
-                            alt={' upload document'}
-                            height={80}
-                            width={80}
-                          />
-                        </div>
-                      )}
-                    </label>
-                    {/* <p className="block text-sm font-medium text-gray-700 mb-2"></p> */}
-                    <Label className="block text-sm font-medium text-gray-700 mt-2">
-                      {label}
-                    </Label>
-                    {file && (
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button className="text-blue-600 hover:text-blue-800 mr-4">
-                              <Eye size={24} />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-[80vw] lg:max-w-[70vw] p-0 border-none bg-transparent">
-                            <div className="relative w-full h-auto max-h-[80vh] rounded-lg overflow-hidden shadow-2xl">
-                              <Image
-                                src={previews[previewKey]}
-                                alt={label}
-                                width={1200}
-                                height={800}
-                                sizes="100vw"
-                                className="w-full h-auto  object-contain rounded-lg"
-                                priority
-                                quality={100}
-                              />
-                            </div>
-                          </DialogContent>
-
-
-                          <Button
-                            onClick={() => document.getElementById(previewKey).click()}
-                            className="cursor-pointer text-blue-600 hover:text-blue-800 mr-2"
-                          >
-                            <Pencil size={20} />
-                          </Button>
-                          <Button
-                            onClick={() => handleFileDelete(docType, isBankStatement ? false : false)}
-                            className="cursor-pointer text-blue-600 hover:text-blue-800"
-                          >
-                            <Trash size={20} />
-                          </Button>
-                        </Dialog>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <DocumentUpload
+              docTypes={['ppphoto', 'front', 'back']}
+              isGranter={false}
+              files={emiContextInfo.files}
+              previews={previews}
+              handleFileChange={handleFileChange}
+              handleFileDelete={handleFileDelete}
+            />
           </div>
         ),
+      },
+      {
+        title: "Bank Details",
+        sectionKey: "bankinfo",
+        step: 2,
+        fields: bankdetailsInfo,
+        additionalContent: (
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Required Documents</h3>
+            <DocumentUpload
+              docTypes={['bankStatement']}
+              isGranter={false}
+              files={emiContextInfo.files}
+              previews={previews}
+              handleFileChange={handleFileChange}
+              handleFileDelete={handleFileDelete}
+            />
+          </div>
+        ),
+      },
+      {
+        title: "EMI Conditions",
+        sectionKey: "emiCalculation",
+        step: 3,
+        fields: emiConditionFields
       },
     ],
   };
 
   const selectedOption = emiContextInfo.hasCreditCard === 'yes' ? 'creditCard' : emiContextInfo.hasCreditCard === 'make' ? 'makeCard' : 'downPayment';
-  const currentFormSection = currentstep > 0 && currentstep < 3 ? formSections[selectedOption]?.find((section) => section.step === currentstep) : null;
+  const currentFormSection = currentstep > 0 && currentstep < 4 ? formSections[selectedOption]?.find((section) => section.step === currentstep) : null;
 
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         {/* Left Sidebar */}
-        <div className="w-full lg:w-80 flex-shrink-0">
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h3 className="text-gray-600 text-sm font-medium mb-4">Product Summary</h3>
-            <div className="mb-1">
-              <div className="relative aspect-square p-1 sm:p-2 w-full max-w-[280px] sm:max-w-[360px] mx-auto">
-                <Image
-                  src={product.image || ''}
-                  alt={product.name || ''}
-                  width={360}
-                  height={360}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="w-full h-full object-contain transition-transform duration-300 hover:scale-105 rounded-md"
-                  priority
-                />
-              </div>
-              <div className="text-gray-500 text-sm mb-1">{product?.name}</div>
-              <div className="text-2xl font-semibold text-blue-600">Rs {product?.price || 0}</div>
-            </div>
-            <div className="border-t pt-4">
-              <h4 className="text-gray-700 font-medium mb-3">EMI Details</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Monthly EMI from</span>
-                  <span className="font-medium">Rs. {emiData.monthlyEMI.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tenure</span>
-                  <span className="font-medium">9 months</span>
-                </div>
-              </div>
-              <div className="mt-4 text-xs text-gray-500 space-y-1">
-                <div>• Processing fee: 2% of loan amount</div>
-                <div>• Documentation charges may apply</div>
-                <div>• EMI amount may vary based on final approval</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <EmiProductDetails emiData={emiData} />
 
         {/* Main Content */}
         <div className="flex-1">
-          <div className="flex items-center justify-center mb-8">
-            <div className="flex items-center space-x-4 lg:space-x-8 w-full max-w-4xl">
-              <div className="flex items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${currentstep <= 0 ? 'bg-[var(--colour-fsP2)] text-white' : 'bg-gray-200 text-gray-600'}`}>
-                  1
-                </div>
-                <span className="ml-2 text-sm text-gray-600 hidden lg:block">Start</span>
-              </div>
-              <div className={`flex-1 h-1 ${(currentstep >= 1) ? 'bg-[var(--colour-fsP1)]' : "bg-gray-300"}  mx-0 `}></div>
-              <div className="flex items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${currentstep >= 1 && currentstep < 3 ? 'bg-[var(--colour-fsP2)] text-white' : 'bg-gray-200 text-gray-600'}`}>
-                  2
-                </div>
-                <span className="ml-2 text-sm font-medium text-gray-900 hidden lg:block">Details</span>
-              </div>
-              <div className={`flex-1 h-1 ${currentstep === 3 ? 'bg-[var(--colour-fsP1)]' : "bg-gray-300"}  mx-0 `}></div>
-              <div className="flex items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${currentstep === 3 ? 'bg-[var(--colour-fsP2)] text-white' : 'bg-gray-200 text-gray-600'}`}>
-                  3
-                </div>
-                <span className="ml-2 text-sm text-gray-600 hidden lg:block">Submit</span>
-              </div>
-            </div>
-          </div>
+          <ProgressBar currentstep={currentstep} />
 
           {currentstep === 0 ? (
             <div className="bg-white rounded-lg shadow-sm p-4 md:p-8 min-h-[400px] mb-4 flex flex-col items-center justify-center">
@@ -1002,7 +674,7 @@ const ApplyEmiProcess = () => {
                   <div className="flex flex-col md:flex-row gap-4 justify-center w-full max-w-2xl">
                     <Button
                       onClick={() => handleOptionSelect('creditCard')}
-                      className="flex items-center justify-center gap-3 py-6 flex-1 max-w-sm bg-[var(--colour-fsP2)] text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                      className="flex items-center cursor-pointer justify-center gap-3 py-6 flex-1 max-w-sm bg-[var(--colour-fsP2)] text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
                     >
                       <div className="rounded-full border p-1 bg-white">
                         <Image src={creditcardicon} alt="apply with credit card" height={20} width={20} />
@@ -1011,7 +683,7 @@ const ApplyEmiProcess = () => {
                     </Button>
                     <Button
                       onClick={() => setNoCreditCard(true)}
-                      className="flex items-center justify-center gap-3 py-6 flex-1 max-w-sm bg-[var(--colour-fsP1)] text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                      className="flex items-center cursor-pointer justify-center gap-3 py-6 flex-1 max-w-sm bg-[var(--colour-fsP1)] text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
                     >
                       <div className="rounded-full border p-1 bg-white">
                         <Image src={downpaymenticon} alt="down payment" height={20} width={20} />
@@ -1026,18 +698,18 @@ const ApplyEmiProcess = () => {
                     <h2 className="text-xl md:text-2xl font-semibold text-gray-800">Choose an Option -</h2>
                     <button
                       onClick={() => setNoCreditCard(false)}
-                      className="flex items-center justify-center font-medium"
+                      className="flex items-center justify-center font-medium cursor-pointer"
                     >
-                      <div className="gap-3 flex">
+                      {/* <div className="gap-3 flex">
                         <Image src={chnagecreditcard} alt="Back" height={70} width={40} priority />
-                      </div>
+                      </div> */}
                       <span className="text-gray-800">Back</span>
                     </button>
                   </div>
                   <div className="flex flex-col md:flex-row gap-4 justify-center w-full max-w-2xl mx-auto">
                     <Button
                       onClick={() => handleOptionSelect('downPayment')}
-                      className="flex items-center justify-center gap-3 py-6 flex-1 max-w-sm bg-[var(--colour-fsP2)] text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                      className="flex items-center cursor-pointer justify-center gap-3 py-6 flex-1 max-w-sm bg-[var(--colour-fsP2)] text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
                     >
                       <div className="rounded-full border p-1 bg-white">
                         <Image src={downpaymenticon} alt="down payment" height={20} width={20} />
@@ -1046,7 +718,7 @@ const ApplyEmiProcess = () => {
                     </Button>
                     <Button
                       onClick={() => handleOptionSelect('makeCard')}
-                      className="flex items-center justify-center gap-3 py-6 flex-1 max-w-sm bg-[var(--colour-fsP1)] text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                      className="flex items-center cursor-pointer justify-center gap-3 py-6 flex-1 max-w-sm bg-[var(--colour-fsP1)] text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
                     >
                       <div className="rounded-full border p-1 bg-white">
                         <Image src={addcreditcard} alt="make credit card" height={20} width={20} priority />
@@ -1057,7 +729,7 @@ const ApplyEmiProcess = () => {
                 </div>
               )}
             </div>
-          ) : currentstep === 3 ? (
+          ) : currentstep === 4 ? (
             <RenderReview
               emiData={emiData}
               handleFileChange={handleFileChange}
@@ -1071,28 +743,28 @@ const ApplyEmiProcess = () => {
               <div className="bg-white rounded-lg shadow-sm p-4 md:p-8 mt-2">
                 <h2 className="text-xl md:text-xl font-medium text-[var(--colour-fsP2)] mb-1">{currentFormSection.title}</h2>
                 <div className="space-y-6 text-base font-sans">
-
-
-                  {currentFormSection.sectionKey === "bankinfo" && currentFormSection.title === "Credit Card Details" &&
-                    <CreditCardComponent cardinfofield={currentFormSection} />
-                  }
-                  {(currentFormSection.sectionKey === "userInfo" || currentFormSection.sectionKey === "granterPersonalDetails" || currentFormSection.title === "Personal and Bank Details") &&
-                    <BuyerPersonalInfo cardinfofield={currentFormSection} />
-                  }
+                  {(() => {
+                    if (currentFormSection.sectionKey === "bankinfo" && currentFormSection.title === "Credit Card Details") {
+                      return <CreditCardComponent cardinfofield={currentFormSection} />;
+                    } else if (currentFormSection.sectionKey === "userInfo" || currentFormSection.sectionKey === "granterPersonalDetails" || currentFormSection.sectionKey === "emiCalculation" || currentFormSection.sectionKey === "bankinfo") {
+                      return <BuyerPersonalInfo cardinfofield={currentFormSection} />;
+                    }
+                    return null;
+                  })()}
                   {currentFormSection.additionalContent}
                   <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6">
                     <Button
                       type="button"
                       onClick={handleBack}
 
-                      className="px-6 text-gray-600 hover:text-gray-800 transition-colors text-base font-medium w-full sm:w-auto"
+                      className="px-6 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors text-base font-medium w-full sm:w-auto"
                     >
                       Back
                     </Button>
                     <Button
                       type="button"
                       onClick={handleContinue}
-                      className="px-6 bg-blue-900 text-white hover:bg-[var(--colour-fsP1)] "
+                      className="px-6 bg-blue-900 cursor-pointer text-white hover:bg-[var(--colour-fsP1)] "
 
                     >
                       Continue

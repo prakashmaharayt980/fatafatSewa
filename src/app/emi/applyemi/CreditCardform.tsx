@@ -15,9 +15,9 @@ export default function CreditCardComponent({ cardinfofield }) {
   return (
     <div className="bg-gray-50 flex items-center justify-center">
       <div className="bg-white w-full overflow-hidden">
-        <div className="flex space-x-2">
+        <div className="flex sm:flex-row flex-col space-x-2">
           {/* Card Image Section */}
-          <div className="w-1/2 bg-[var(--colour-fsP2)]/10 rounded-lg p-1 flex items-center justify-center">
+          <div className="w-full sm:w-1/2 bg-[var(--colour-fsP2)]/10 rounded-lg p-1 flex items-center justify-center">
             <Image
               src="/svgfile/creditCardUi.svg"
               alt="Credit Card UI"
@@ -29,7 +29,7 @@ export default function CreditCardComponent({ cardinfofield }) {
           </div>
 
           {/* Input Section */}
-          <div className="w-1/2 p-1 space-y-1">
+          <div className="w-full sm:w-1/2 p-1 space-y-1">
             {/* Loop through fields, excluding expiryDate and cardLimit */}
             {cardinfofield.fields
               .filter(field => field.name !== "expiryDate" && field.name !== "cardLimit")

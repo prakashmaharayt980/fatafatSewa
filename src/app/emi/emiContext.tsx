@@ -21,8 +21,9 @@ interface UserInfo {
   dob: string;
   address: string;
   nationalID: number;
-  marriageStatus:string;
-   userpartnerName:string;
+  marriageStatus: string;
+  userpartnerName: string;
+
 }
 
 interface DocumentFiles {
@@ -36,7 +37,7 @@ interface EmiFiles {
   creditCardStatement: File | null;
   bankStatement: File | null;
   granterDocument: DocumentFiles;
-  userSignature:File | null
+  userSignature: File | null
 }
 
 interface BankInfo {
@@ -62,9 +63,9 @@ export interface EmiContextState {
   product: ProductDetails | null;
   emiCalculation: {
     monthlyEmi: number;
-    emiTenure: number;
+    duration: number;
     downPayment: number;
-  };
+    interestRate:number;  };
   hasCreditCard: string;
   bankinfo: BankInfo;
   granterPersonalDetails: GranterPersonalDetails;
@@ -74,11 +75,11 @@ export interface EmiContextState {
 interface EmiContextType {
   emiContextInfo: EmiContextState;
   setEmiContextInfo: Dispatch<SetStateAction<EmiContextState>>;
-    AvailablebankProvider:Array<{
-    id:string;
-     name:string;
-      rate: number;
-       img:string;
+  AvailablebankProvider: Array<{
+    id: string;
+    name: string;
+    rate: number;
+    img: string;
   }>
 }
 
@@ -94,8 +95,10 @@ const defaultState: EmiContextState = {
     dob: "",
     address: "",
     nationalID: 0,
-    marriageStatus:'Single',
-    userpartnerName:''
+    marriageStatus: 'Single',
+    userpartnerName: '',
+
+
   },
   isDrawerOpen: false,
   files: {
@@ -111,13 +114,16 @@ const defaultState: EmiContextState = {
       back: null,
       ppphoto: null,
     },
-    userSignature:null
+    userSignature: null
   },
   product: null,
   emiCalculation: {
     monthlyEmi: 0,
-    emiTenure: 0,
+    duration: 12,
     downPayment: 0,
+    interestRate: 12,
+    
+    
   },
   hasCreditCard: "no",
   bankinfo: {
@@ -129,20 +135,21 @@ const defaultState: EmiContextState = {
     bankname: "",
     creditCardProvider: "",
     cardLimit: 0,
-    salaryAmount:0
+    salaryAmount: 0
   },
   granterPersonalDetails: {
     name: "",
     email: "",
     phone: "",
     occupation: "",
-      gender: "Male",
+    gender: "Male",
     dob: "",
     address: "",
     grandfathername: "",
     nationalID: 0,
-   marriageStatus:'Single',
-     userpartnerName:''
+    marriageStatus: 'Single',
+    userpartnerName: '',
+
   },
 
 };
@@ -166,19 +173,19 @@ export const EmiProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return defaultState;
   });
 
-      const AvailablebankProvider = useMemo(
-          () => [
-              { id: 'nabil', name: 'Nabil Bank', rate: 11.5, img: '/imgfile/bankingPartners7.png' },
-              { id: 'global', name: 'Global IME Bank', rate: 12, img: '/imgfile/bankingPartners1.png' },
-              { id: 'nmb', name: 'NMB Bank', rate: 11.75, img: '/imgfile/bankingPartners3.png' },
-              { id: 'siddhartha', name: 'Siddhartha Bank', rate: 12.25, img: '/imgfile/bankingPartners9.png' },
-              { id: 'NicAsia', name: 'Nic Asia Bank', rate: 12.25, img: '/imgfile/bankingPartners11.png' },
-              { id: 'hbl', name: 'Himalayan Bank', rate: 12.25, img: '/imgfile/bankingPartners10.png' },
-              { id: 'sanimabank', name: 'Sanima Bank', rate: 12.25, img: '/imgfile/bankingPartners8.png' },
-              { id: 'kumari', name: 'Kumari Bank', rate: 12.25, img: '/imgfile/bankingPartners6.png' },
-          ],
-          []
-      );
+  const AvailablebankProvider = useMemo(
+    () => [
+      { id: 'nabil', name: 'Nabil Bank', rate: 11.5, img: '/imgfile/bankingPartners7.png' },
+      { id: 'global', name: 'Global IME Bank', rate: 12, img: '/imgfile/bankingPartners1.png' },
+      { id: 'nmb', name: 'NMB Bank', rate: 11.75, img: '/imgfile/bankingPartners3.png' },
+      { id: 'siddhartha', name: 'Siddhartha Bank', rate: 12.25, img: '/imgfile/bankingPartners9.png' },
+      { id: 'NicAsia', name: 'Nic Asia Bank', rate: 12.25, img: '/imgfile/bankingPartners11.png' },
+      { id: 'hbl', name: 'Himalayan Bank', rate: 12.25, img: '/imgfile/bankingPartners10.png' },
+      { id: 'sanimabank', name: 'Sanima Bank', rate: 12.25, img: '/imgfile/bankingPartners8.png' },
+      { id: 'kumari', name: 'Kumari Bank', rate: 12.25, img: '/imgfile/bankingPartners6.png' },
+    ],
+    []
+  );
 
   // Save to localStorage whenever state changes (excluding files)
   useEffect(() => {
@@ -187,7 +194,7 @@ export const EmiProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [emiContextInfo]);
 
   return (
-    <EmiContext.Provider value={{ emiContextInfo, setEmiContextInfo,AvailablebankProvider }}>
+    <EmiContext.Provider value={{ emiContextInfo, setEmiContextInfo, AvailablebankProvider }}>
       {children}
     </EmiContext.Provider>
   );

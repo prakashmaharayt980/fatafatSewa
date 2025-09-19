@@ -54,8 +54,9 @@ const OfferBanner = () => {
             alt="Apple Product"
             width={400}
             height={400}
-            priority
+            
             className="object-contain object-center rounded-lg shadow-sm"
+            loading="lazy"
           />
           <div className="flex flex-col items-start gap-8">
             {/* Title */}
@@ -127,6 +128,7 @@ const OfferBanner = () => {
                 width={80}
                 height={80}
                 className="object-contain rounded-md mr-4"
+                loading="lazy"
               />
               <div className="flex flex-col justify-center">
                 <p className="text-yellow-500 text-sm mb-1 font-medium">★★★★★</p>

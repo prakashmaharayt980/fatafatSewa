@@ -10,7 +10,7 @@ export default function BuyerPersonalInfo({ cardinfofield }) {
 
 
   return (
-    <div className="bg-gray-50  grid grid-cols-2 gap-3">
+    <div className="bg-gray-50  grid grid-cols-1 sm:grid-cols-2 gap-3">
       {cardinfofield.fields
 
         .map((field, fieldIndex) => (
