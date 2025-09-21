@@ -115,7 +115,7 @@ const RenderReview: React.FC<RenderReviewProps> = ({
                 <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 border border-gray-300 rounded overflow-hidden">
                   {files.citizenshipFile?.ppphoto ? (
                     <Image
-                      src={previews["citizenship-ppphoto"]}
+                      src={previews["citizenship-ppphoto"] ||''}
                       alt="Applicant Photo"
                       width={100}
                       height={100}
@@ -232,7 +232,7 @@ const RenderReview: React.FC<RenderReviewProps> = ({
                   <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 border border-gray-300 rounded overflow-hidden">
                     {files.granterDocument?.ppphoto ? (
                       <Image
-                        src={previews["granter-ppphoto"]}
+                        src={previews["granter-ppphoto"] ||''}
                         alt="Guarantor Photo"
                         width={128}
                         height={128}
@@ -333,7 +333,7 @@ const RenderReview: React.FC<RenderReviewProps> = ({
                     <div className="h-42 flex p-2 items-center bg-[var(--colour-fsP2)]/70 border-blue-950 rounded-lg shadow-sm shadow-gray-700/30 justify-center">
                       {file ? (
                         <Image
-                          src={previews[previewKey]}
+                          src={previews[previewKey] ||''}
                           alt={label}
 
                           width={200}
@@ -372,7 +372,7 @@ const RenderReview: React.FC<RenderReviewProps> = ({
                         <div className="h-42 flex p-2 items-center bg-[var(--colour-fsP2)]/70 border-blue-950 rounded-lg shadow-sm shadow-gray-700/30 justify-center">
                           {file ? (
                             <Image
-                              src={previews[previewKey]}
+                              src={previews[previewKey] ||''}
                               alt={label}
                               width={200}
                               height={200}
@@ -426,7 +426,7 @@ const RenderReview: React.FC<RenderReviewProps> = ({
                   {files.userSignature ? (
                     <div className="relative">
                       <Image
-                        src={previews.userSignature}
+                        src={previews.userSignature ||''}
                         alt="Signature"
                         width={120}
                         height={40}
@@ -447,7 +447,7 @@ const RenderReview: React.FC<RenderReviewProps> = ({
                             <div className="flex items-center justify-center p-6 bg-white min-h-[400px]">
                               <div className="relative w-full h-full flex items-center justify-center">
                                 <Image
-                                  src={previews.userSignature}
+                                  src={previews.userSignature ||''}
                                   alt="Signature Preview"
                                   width={1200}
                                   height={800}
