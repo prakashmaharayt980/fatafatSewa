@@ -12,7 +12,7 @@ const {emiContextInfo}=useContextEmi()
             <div className="mb-1">
               <div className="relative aspect-square p-1 sm:p-2 w-full max-w-[280px] sm:max-w-[360px] mx-auto">
                 <Image
-                  src={product.image || null}
+                  src={product.image}
                   alt={product.name || 'product summary'}
                   width={360}
                   height={360}
