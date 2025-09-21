@@ -665,7 +665,7 @@ const ApplyEmiProcess = () => {
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         {/* Left Sidebar */}
-        <EmiProductDetails emiData={emiData} />
+        <EmiProductDetails emiData={emiData} product={product} />
 
         {/* Main Content */}
         <div className="flex-1">

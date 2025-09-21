@@ -1,10 +1,11 @@
+
+'use client'
 import Image from 'next/image'
 import React from 'react'
-import { useContextEmi } from '../emiContext';
 
-export default function EmiProductDetails({emiData}) {
-const {emiContextInfo}=useContextEmi()
-    const product = emiContextInfo.product;
+
+export default function EmiProductDetails({emiData,product}) {
+
   return (
     <div className="w-full lg:w-80 flex-shrink-0">
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
