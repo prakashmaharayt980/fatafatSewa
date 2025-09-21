@@ -527,19 +527,22 @@ const ApplyEmiProcess = () => {
         title: "Credit Card Details",
         sectionKey: "bankinfo",
         step: 1,
-        fields: creditCardDetailsInfo
+        fields: creditCardDetailsInfo,
+        additionalContent:(<></>),
       },
       {
         title: "Personal Details",
         sectionKey: "userInfo",
         step: 2,
-        fields: personalDetailsInfolist
+        fields: personalDetailsInfolist,
+         additionalContent:(<></>),
       },
       {
         title: "EMI Conditions",
         sectionKey: "emiCalculation",
         step: 3,
-        fields: emiConditionFields
+        fields: emiConditionFields,
+         additionalContent:(<></>),
       },
     ],
     downPayment: [
@@ -600,7 +603,8 @@ const ApplyEmiProcess = () => {
         title: "EMI Conditions",
         sectionKey: "emiCalculation",
         step: 3,
-        fields: emiConditionFields
+        fields: emiConditionFields,
+         additionalContent:(<></>),
       },
     ],
     makeCard: [
@@ -647,7 +651,8 @@ const ApplyEmiProcess = () => {
         title: "EMI Conditions",
         sectionKey: "emiCalculation",
         step: 3,
-        fields: emiConditionFields
+        fields: emiConditionFields,
+         additionalContent:(<></>),
       },
     ],
   };
