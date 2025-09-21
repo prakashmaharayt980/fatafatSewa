@@ -62,7 +62,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
               {file ? (
                 <div className="h-42 flex p-2 items-center bg-[var(--colour-fsP2)]/70 border-blue-950 rounded-lg shadow-sm shadow-gray-700/30 justify-center">
                   <Image
-                    src={previews[previewKey] }
+                    src={previews[previewKey] || '' }
                     alt={label || ' document img'}
                     width={200}
                     height={200}
@@ -111,7 +111,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
                     <div className="flex items-center justify-center p-6 bg-white min-h-[400px]">
                       <div className="relative w-full h-full flex items-center justify-center">
                         <Image
-                          src={previews[previewKey] }
+                          src={previews[previewKey]  || '' }
                           alt={label || 'document img'}
                           width={1200}
                           height={800}
