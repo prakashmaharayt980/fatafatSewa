@@ -1,51 +1,28 @@
 import React, { useState, useRef } from 'react';
-import { FileText, Star, Truck, MessageCircle, Send, X, Key } from 'lucide-react';
+import { Star, MessageCircle, Send, ChevronDown, ChevronUp, UserCircle, User } from 'lucide-react';
 import { ProductDetails } from './page';
-
-
-
-const Textarea = ({ className = '', ...props }) => {
-  return (
-    <textarea
-      className={`flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
-      {...props}
-    />
-  );
-};
-
-const ParsedContent = ({ description }) => (
-  <div className="prose prose-sm max-w-none">
-    {Array.isArray(description) ? (
-      <ul className="space-y-2">
-        {description.map((item, index) => (
-          <li key={index} className="text-gray-700 leading-relaxed">{item}</li>
-        ))}
-      </ul>
-    ) : (
-      <p className="text-gray-700 leading-relaxed">{description}</p>
-    )}
-  </div>
-);
-
-
+import ParsedContent from '../ParsedContent';
+import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 
 const mockKeyFeatures = {
-  "Material": "Premium Grade Steel",
-  "Dimensions": "12 x 8 x 4 inches",
-  "Weight": "2.5 lbs",
-  "Warranty": "2 years manufacturer warranty",
-  "Color Options": "Black, Silver, Blue",
-  "Compatibility": "Universal fit"
+  Material: 'Premium Grade Steel',
+  Dimensions: '12 x 8 x 4 inches',
+  Weight: '2.5 lbs',
+  Warranty: '2 years manufacturer warranty',
+  'Color Options': 'Black, Silver, Blue',
+  Compatibility: 'Universal fit',
 };
 
-const mockReviews = [
+const demoReviews = [
   { author: 'John D.', rating: 5, text: 'Excellent quality and fast shipping. The product exceeded my expectations and I would definitely recommend it to others.' },
   { author: 'Sarah M.', rating: 4, text: 'Great product, exactly as described. The build quality is solid and it works perfectly for my needs.' },
-  { author: 'Mike R.', rating: 5, text: 'Outstanding value for money. This has become an essential part of my daily routine.' }
+  { author: 'Mike R.', rating: 5, text: 'Outstanding value for money. This has become an essential part of my daily routine.' },
 ];
 
 interface MoreDetailsProductProps {
-  productDesciption?: ProductDetails['highlights'];
+  productDesciption: ProductDetails['highlights'];
   keyFeatures?: Record<string, string>;
   ReviewsData?: any[];
 }
@@ -56,7 +33,7 @@ interface Review {
   text: string;
 }
 
-interface ratingInterface {
+interface RatingInterface {
   rating: number;
   hoverRating: number;
   newRating: number;
@@ -68,10 +45,9 @@ interface ratingInterface {
 export default function MoreDetailsProduct({
   productDesciption,
   keyFeatures = mockKeyFeatures,
-  ReviewsData = mockReviews
+  ReviewsData = demoReviews,
 }: MoreDetailsProductProps) {
-  const [activeTab, setActiveTab] = useState('description');
-  const [Rating, setRating] = useState<ratingInterface>({
+  const [Rating, setRating] = useState<RatingInterface>({
     rating: 0,
     hoverRating: 0,
     newRating: 0,
@@ -79,13 +55,13 @@ export default function MoreDetailsProduct({
     isSubmittingReview: false,
     commentOpen: false,
   });
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [showFullFeatures, setShowFullFeatures] = useState(false);
   const reviewTextareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!Rating.newReview.trim() || Rating.newRating === 0) {
-      return;
-    }
+    if (!Rating.newReview.trim() || Rating.newRating === 0) return;
     setRating({ ...Rating, isSubmittingReview: true });
 
     // Simulate submission
@@ -101,182 +77,206 @@ export default function MoreDetailsProduct({
     }, 1500);
   };
 
-  const reviews: Review[] = mockReviews;
-
-  const tabs = [
-    { id: 'description', label: 'Description', icon: <FileText className="w-4 h-4" /> },
-    { id: 'reviews', label: 'Reviews', icon: <Star className="w-4 h-4" /> },
-    { id: 'KeyFeatures', label: 'Key Features', icon: <Key className="w-4 h-4" /> },
-  ];
+  const reviews: Review[] = ReviewsData;
 
   return (
-    <div className="w-full max-w-8xl mx-auto shadow-lg border border-slate-200 rounded-xl overflow-hidden px-1 py-3">
-      {/* Professional Tab Navigation */}
-      <div className="flex justify-center  mb-3">
-        <div className="flex space-x-3 w-full bg-white  p-2 ">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 px-6 py-2 rounded-full transition-all duration-300 text-sm font-medium capitalize ${activeTab === tab.id
-                  ? 'bg-blue-500 text-white shadow-md'
-                  : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              aria-label={`View ${tab.label}`}
-            >
-              {tab.icon}
-              {tab.label}
-            </button>
-          ))}
+    <div className="w-full max-w-7xl mx-auto py-8 bg-white">
+      {/* Description and Key Features Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-2">
+        {/* Product Description */}
+        <div className="lg:col-span-3 ">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4  ">Product Description</h2>
+          <div
+            className={`text-gray-700 text-sm leading-relaxed transition-all duration-300 ${showFullDescription ? 'max-h-none' : 'max-h-48 overflow-hidden'
+              }`}
+          >
+            <ParsedContent description={productDesciption} />
+          </div>
+          <button
+            onClick={() => setShowFullDescription(!showFullDescription)}
+            className="flex items-center gap-2 mt-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+          >
+            {showFullDescription ? (
+              <>
+                Show Less <ChevronUp className="w-4 h-4" />
+              </>
+            ) : (
+              <>
+                Show More <ChevronDown className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Key Features */}
+        <div className="lg:col-span-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-1">Full Specifications</h3>
+          <div
+            className={`border shadow-sm border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ${showFullFeatures ? 'max-h-none' : 'max-h-48 overflow-hidden'
+              }`}
+          >
+            {Object.entries(keyFeatures).map(([key, value], index) => (
+              <div
+                key={index}
+                className={`px-4 py-2 border-b flex flex-row gap-2 border-gray-100 last:border-b-0 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                  }`}
+              >
+           
+                <h4 className="font-medium text-gray-900">{key}</h4> :
+                <p className="text-gray-600 text-sm">{value}</p>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => setShowFullFeatures(!showFullFeatures)}
+            className="flex items-center gap-2 mt-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+          >
+            {showFullFeatures ? (
+              <>
+                Show Less <ChevronUp className="w-4 h-4" />
+              </>
+            ) : (
+              <>
+                Show More <ChevronDown className="w-4 h-4" />
+              </>
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Tab Content */}
-      <div className="tab-content px-6">
-        {activeTab === 'description' && (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Product Description</h2>
-            <ParsedContent description={productDesciption} />
-          </div>
-        )}
+      <div className="space-y-8">
+        {/* Write a Review Button */}
 
-        {activeTab === 'reviews' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-gray-900">Customer Reviews</h2>
-              {!Rating.commentOpen && (
+
+        {/* Reviews List */}
+        <div className="space-y-4">
+          <div>
+            <div className='flex flex-row justify-between'>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Reviews</h3>
+             { !Rating.commentOpen &&
+              <div>
                 <button
-                  onClick={() => setRating({ ...Rating, commentOpen: true })}
-                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200"
+                  onClick={() => setRating({ ...Rating, commentOpen: !Rating.commentOpen })}
+                  className="inline-flex items-center gap-2 px-6 py-2 bg-[var(--colour-fsP2)] text-white text-sm font-medium rounded-lg hover:bg-[var(--colour-fsP1)]  transition-colors duration-200"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  Write Review
+                 Write a Review
                 </button>
-              )}
+              </div>}
             </div>
 
-            {/* Review Form */}
+            {/* Review Form (Conditionally Rendered) */}
             {Rating.commentOpen && (
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-gray-900">Share Your Experience</h3>
-                  <button
-                    onClick={() => setRating({ ...Rating, commentOpen: false })}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {/* Star Rating */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
-                    <div className="flex items-center space-x-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          className="p-1 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-                          onClick={() => setRating({ ...Rating, newRating: star })}
-                          onMouseEnter={() => setRating({ ...Rating, hoverRating: star })}
-                          onMouseLeave={() => setRating({ ...Rating, hoverRating: 0 })}
-                        >
-                          <Star
-                            size={20}
-                            className={`transition-colors ${star <= (Rating.newRating || Rating.hoverRating)
-                                ? 'text-yellow-400 fill-yellow-400'
-                                : 'text-gray-300 hover:text-gray-400'
-                              }`}
-                          />
-                        </button>
-                      ))}
-                    </div>
+              <form
+                onSubmit={handleSubmit}
+                className="bg-white rounded-xl px-4 py-2  transition-shadow duration-300"
+              >
+                {/* <h3 className="text-lg font-semibold text-gray-900 mb-4">Write a Review</h3> */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        className="p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-sm"
+                        onClick={() => setRating({ ...Rating, newRating: star })}
+                        onMouseEnter={() => setRating({ ...Rating, hoverRating: star })}
+                        onMouseLeave={() => setRating({ ...Rating, hoverRating: 0 })}
+                      >
+                        <Star
+                          size={18}
+                          className={`transition-colors duration-150 ${star <= (Rating.newRating || Rating.hoverRating)
+                            ? 'text-yellow-400 fill-yellow-400'
+                            : 'text-gray-300 hover:text-gray-400'
+                            }`}
+                        />
+                      </button>
+                    ))}
                   </div>
 
-                  {/* Review Text */}
-                  <div>
-                    <label htmlFor="review-text" className="block text-sm font-medium text-gray-700 mb-2">
-                      Your Review
-                    </label>
+                  <div className="relative">
                     <Textarea
                       ref={reviewTextareaRef}
                       id="review-text"
                       placeholder="Tell us about your experience with this product..."
                       value={Rating.newReview}
                       onChange={(e) => setRating({ ...Rating, newReview: e.target.value })}
-                      className="w-full"
+                      className="w-full resize-none border border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-900 min-h-[100px] max-h-[300px] focus:ring-1 focus:ring-indigo-50 focus:border-transparent"
                       rows={4}
-                      disabled={Rating.isSubmittingReview}
+                      style={{
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                        whiteSpace: 'pre-wrap',
+                      }}
                     />
                   </div>
 
-                  {/* Submit Button */}
-                  <div className="flex gap-3">
-                    <button
+                  <div className="flex flex-row justify-end gap-3">
+                    <Button
                       type="submit"
-                      onClick={() => handleSubmit}
-                      disabled={!Rating.newReview.trim() || Rating.newRating === 0 || Rating.isSubmittingReview}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      // disabled={!Rating.newReview.trim() || Rating.newRating === 0 || Rating.isSubmittingReview}
+                      className="inline-flex items-center justify-center gap-2 px-6 py-2 bg-green-800 text-white text-sm font-medium rounded-lg hover:bg-[var(--colour-fsP1)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                     >
                       <Send className="w-4 h-4" />
-                      {Rating.isSubmittingReview ? 'Submitting...' : 'Submit Review'}
-                    </button>
-                    <button
+                      Submit Review
+                    </Button>
+                    <Button
                       type="button"
                       onClick={() => setRating({ ...Rating, commentOpen: false, newRating: 0, newReview: '' })}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                      className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              </div>
+              </form>
             )}
+          </div>
 
-            {/* Reviews List */}
-            <div className="space-y-4">
-              {reviews.length > 0 ? (
-                reviews.map((review, index) => (
-                  <div key={index} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-sm transition-shadow duration-200">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="flex text-yellow-400">
-                        {Array.from({ length: 5 }, (_, i) => (
-                          <Star
-                            key={i}
-                            size={16}
-                            className={i < review.rating ? 'fill-current' : 'text-gray-200'}
-                          />
-                        ))}
+
+          {demoReviews.length > 0 ? (
+            <div className="bg-white border space-x-3 border-gray-200 rounded-xl px-4 py-2 shadow-sm hover:shadow-md transition-all duration-300">
+              {
+                demoReviews.map((review, index) => (
+                  <div
+                    key={index}
+                    className='mb-3  border-b border-gray-300'
+                  >
+                    <div className="flex items-center justify-between ">
+                      <div className="flex items-center gap-2">
+                        <Avatar>
+                          <AvatarImage src='/svgfile/menperson.svg' />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex text-yellow-400">
+                            {Array.from({ length: 5 }, (_, i) => (
+                              <Star
+                                key={i}
+                                size={18}
+                                className={i < review.rating ? 'fill-current text-yellow-400' : 'text-gray-200'}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-sm font-medium text-gray-600">{review.author}</span>
+                        </div>
                       </div>
-                      <span className="text-sm font-medium text-gray-600">by {review.author}</span>
+                      <span className="text-xs text-gray-400">{new Date().toLocaleDateString()}</span>
                     </div>
-                    <p className="text-gray-700 leading-relaxed">{review.text}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed">{review.text}</p>
                   </div>
                 ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Star className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>No reviews yet. Be the first to share your thoughts!</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+              }
 
-        {activeTab === 'KeyFeatures' && (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Key Features</h3>
-            <ul className="list-disc pl-6 space-y-4 text-gray-700 text-base">
-              {Object.entries(keyFeatures).map(([key, value], index) => (
-                <li key={index} className="leading-relaxed">
-                  <span className="font-semibold">{key}: </span>
-                  <span>{value}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            </div>
+
+          ) : (
+            <div className="text-center py-12 bg-white rounded-xl border border-gray-200 shadow-sm">
+              <Star className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+              <p className="text-gray-500 text-sm">No reviews yet. Be the first to share your thoughts!</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

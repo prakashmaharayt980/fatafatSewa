@@ -1,18 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import Image from 'next/image';
 import { ContextStoreProvider, useContextStore } from './api/ContextStore';
 import Imgbanner from './homepage/Imgbanner';
-import BasketCard from './homepage/BasketCard';
-import PopularCategories from './homepage/PopularCategories';
-import OfferBanner from './homepage/OfferBanner';
-import OurArticles from './homepage/OurArticles';
-import SkeletonHomepage from './homepage/skeletonHomepage';
-import CategoryProductSection from './homepage/BasketCardwithImage';
-import TwoImageBanner from './homepage/Banner2';
-import img1 from '../../public/imgfile/banner3.png';
 import MetaTagData from './homepage/MetaTagData';
+import img1 from '../../public/imgfile/banner3.png';
+import SkeletonHomepage from './homepage/skeletonHomepage';
+
+// Lazy-loaded components
+const BasketCard = lazy(() => import('./homepage/BasketCard'));
+const PopularCategories = lazy(() => import('./homepage/PopularCategories'));
+const OfferBanner = lazy(() => import('./homepage/OfferBanner'));
+const OurArticles = lazy(() => import('./homepage/OurArticles'));
+const CategoryProductSection = lazy(() => import('./homepage/BasketCardwithImage'));
+const TwoImageBanner = lazy(() => import('./homepage/Banner2'));
 
 // Child component to consume the context
 const HomePageContent = () => {
@@ -47,17 +49,23 @@ const HomePageContent = () => {
       {/* New Arrivals - Laptops */}
       {laptops?.[0] && (
         <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <BasketCard title="New Arrivals" items={laptops} />
+          <Suspense fallback={<div>Loading New Arrivals...</div>}>
+            <BasketCard title="New Arrivals" items={laptops} />
+          </Suspense>
         </div>
       )}
       {laptops?.[0] && (
         <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <BasketCard title="Laptop of 2025" items={laptopitem} />
+          <Suspense fallback={<div>Loading Laptops...</div>}>
+            <BasketCard title="Laptop of 2025" items={laptopitem} />
+          </Suspense>
         </div>
       )}
 
       <div className="m-0 p-0 sm:mx-0 sm:px-0">
-        <PopularCategories categories={categories} />
+        <Suspense fallback={<div>Loading Categories...</div>}>
+          <PopularCategories categories={categories} />
+        </Suspense>
       </div>
 
       {/* Accessories Section */}
@@ -74,38 +82,52 @@ const HomePageContent = () => {
             />
           </div>
           <div className="w-full md:w-3/4 m-0 p-0">
-            <CategoryProductSection title="Accessories" items={accessories} />
+            <Suspense fallback={<div>Loading Accessories...</div>}>
+              <CategoryProductSection title="Accessories" items={accessories} />
+            </Suspense>
           </div>
         </div>
       )}
 
       <div className="m-0 p-0 sm:mx-0 sm:px-0">
-        <OfferBanner />
+        <Suspense fallback={<div>Loading Offer Banner...</div>}>
+          <OfferBanner />
+        </Suspense>
       </div>
 
       {/* Water Pumps Section */}
       {waterPumps?.[0] && (
         <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <BasketCard title="Water Pumps of 2025" items={waterPumps} />
+          <Suspense fallback={<div>Loading Water Pumps...</div>}>
+            <BasketCard title="Water Pumps of 2025" items={waterPumps} />
+          </Suspense>
         </div>
       )}
       {waterPumps?.[0] && (
         <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <BasketCard title="Home Appliance of 2025" items={homeappliance} />
+          <Suspense fallback={<div>Loading Home Appliances...</div>}>
+            <BasketCard title="Home Appliance of 2025" items={homeappliance} />
+          </Suspense>
         </div>
       )}
       <div className="m-0 p-0 sm:mx-0 sm:px-0">
-        <TwoImageBanner />
+        <Suspense fallback={<div>Loading Banner...</div>}>
+          <TwoImageBanner />
+        </Suspense>
       </div>
 
       {waterPumps?.[0] && (
         <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <BasketCard title="Drone of 2025" items={droneitem} />
+          <Suspense fallback={<div>Loading Drones...</div>}>
+            <BasketCard title="Drone of 2025" items={droneitem} />
+          </Suspense>
         </div>
       )}
 
       <div className="m-0 p-0 sm:mx-0 sm:px-0">
-        <OurArticles />
+        <Suspense fallback={<div>Loading Articles...</div>}>
+          <OurArticles />
+        </Suspense>
       </div>
 
       <MetaTagData />

@@ -63,7 +63,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
       <div className="w-full h-full flex flex-col gap-3 sm:gap-1">
         {/* Main Image Container */}
         <div className="relative group">
-          <div className="relative w-full h-80 sm:h-96 lg:h-[500px] xl:h-[600px] bg-gradient-to-br from-gray-50 to-white  overflow-hidden">
+          <div className="relative w-full h-80 sm:h-96 lg:h-[400px] xl:h-[400px] bg-gradient-to-br from-gray-50 to-white  overflow-hidden">
             <Image
               src={selectedImage}
               alt={product.name}
@@ -72,14 +72,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
               priority
             />
-            <button
-              onClick={() => openZoom(currentSelectedIndex)}
-              className="absolute top-3 right-3 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-900 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-lg backdrop-blur-sm"
-            >
-              <ZoomIn size={18} />
-            </button>
-            {/* Image overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    
+            
           </div>
         </div>
         

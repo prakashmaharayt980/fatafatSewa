@@ -40,54 +40,52 @@ const OfferBanner = () => {
   }, [dummyEndTimestamp]);
 
   return (
-    <div className="w-full border-t-4 bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-100 border-[var(--colour-fsP2)] shadow-md py-16 px-4 sm:px-6 lg:px-8 font-inter">
-      {/* Alternative color schemes you can try:
-         1. "bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-100"
-         2. "bg-gradient-to-br from-blue-50 via-white to-indigo-50"
-         3. "bg-gradient-to-br from-orange-50 via-white to-amber-50" 
-      */}
-      <div className="max-w-7xl mx-auto relative">
-        {/* Image and Grouped Column in Row */}
-        <div className="flex flex-col md:flex-row justify-center items-center mb-12 gap-12">
+    <div className="w-full border-t-4 bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-100 border-[var(--colour-fsP2)] shadow-md py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 font-inter">
+      <div className="max-w-7xl mx-auto">
+        {/* Image and Content Section */}
+        <div className="flex flex-col md:flex-row justify-center items-center mb-8 sm:mb-12 gap-6 sm:gap-12">
           <Image
             src={productimg}
             alt="Apple Product"
             width={400}
             height={400}
-            
-            className="object-contain object-center rounded-lg shadow-sm"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+            className="object-contain object-center rounded-lg shadow-sm w-full sm:w-3/4 md:w-1/2 max-w-[400px]"
             loading="lazy"
           />
-          <div className="flex flex-col items-start gap-8">
+          <div className="flex flex-col items-start gap-6 sm:gap-8 w-full md:w-1/2">
             {/* Title */}
-            <div className="mb-1">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
+            <div className="text-center md:text-left">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
                 Apple Shopping Event
               </h2>
-              <p className="text-lg md:text-lg text-gray-600 max-w-lg leading-relaxed mt-3 font-medium">
+              <p className="text-base sm:text-lg text-gray-600 max-w-lg leading-relaxed mt-2 sm:mt-3 font-medium">
                 Save up to 20% on all Apple devices – limited time only!
               </p>
             </div>
 
-            <div className="w-full max-w-md">
-              <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-center gap-4">
-                  <Clock className="w-6 h-6 text-orange-500 animate-spin-slow" />
-                  <div className="flex gap-2">
-                    {["hours", "minutes", "seconds"].map((unit) => (
+            {/* Timer */}
+            <div className="w-full max-w-sm sm:max-w-md">
+              <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-sm p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                  <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500 animate-spin-slow" />
+                  <div className="flex gap-1 sm:gap-2">
+                    {["days", "hours", "minutes", "seconds"].map((unit) => (
                       <div key={unit} className="flex items-center">
                         <div className="flex gap-1">
                           {String(timeLeft[unit]).padStart(2, "0").split("").map((digit, i) => (
                             <div
                               key={i}
-                              className="w-8 h-10 flex items-center justify-center bg-orange-50 border-2 border-orange-200 rounded-lg text-xl font-bold text-orange-600"
+                              className="w-7 sm:w-8 h-9 sm:h-10 flex items-center justify-center bg-orange-50 border-2 border-orange-200 rounded-lg text-lg sm:text-xl font-bold text-orange-600"
                             >
                               {digit}
                             </div>
                           ))}
                         </div>
                         {unit !== "seconds" && (
-                          <span className="mx-1 text-2xl font-bold text-orange-400">:</span>
+                          <span className="mx-0.5 sm:mx-1 text-xl sm:text-2xl font-bold text-orange-400">
+                            :
+                          </span>
                         )}
                       </div>
                     ))}
@@ -96,21 +94,21 @@ const OfferBanner = () => {
               </div>
             </div>
 
-             <Button
-                className={cn(
-                  "bg-[var(--colour-fsP1)]  px-16 py-6 text-white items-center hover:from-blue-700 hover:to-indigo-700",
-                  "text-lg font-semibold rounded-full shadow-sm",
-                  "transition-all duration-300 hover:shadow-xl focus:ring-4 focus:ring-blue-300/50"
-                )}
-              >
-               <span> Shop Now</span>
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
+            <Button
+              className={cn(
+                "bg-[var(--colour-fsP1)] px-8 sm:px-16 py-5 sm:py-6 text-white items-center hover:from-blue-700 hover:to-indigo-700",
+                "text-base sm:text-lg font-semibold rounded-full shadow-sm",
+                "transition-all duration-300 hover:shadow-xl focus:ring-4 focus:ring-blue-300/50 w-full sm:w-auto"
+              )}
+            >
+              <span>Shop Now</span>
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+            </Button>
           </div>
         </div>
 
-        {/* Product Cards with Light Shadow, No Border */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6">
+        {/* Product Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
           {[
             { name: "iPad Mini", price: "Rs. 49,800", img: iphoneImg },
             { name: "Apple Watch", price: "Rs. 66,317", img: iphoneImg },
@@ -120,20 +118,21 @@ const OfferBanner = () => {
           ].map((product, index) => (
             <div
               key={index}
-              className="bg-white/90 backdrop-blur-lg flex flex-row items-center p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="bg-white/90 backdrop-blur-lg flex flex-row items-center p-3 sm:p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
             >
               <Image
                 src={product.img}
                 alt={product.name}
-                width={80}
-                height={80}
-                className="object-contain rounded-md mr-4"
+                width={60}
+                height={60}
+                sizes="(max-width: 640px) 60px, 80px"
+                className="object-contain rounded-md mr-3 sm:mr-4"
                 loading="lazy"
               />
               <div className="flex flex-col justify-center">
-                <p className="text-yellow-500 text-sm mb-1 font-medium">★★★★★</p>
-                <p className="text-gray-900 font-semibold text-base leading-tight">{product.name}</p>
-                <p className="text-gray-900 font-bold text-sm">{product.price}</p>
+                <p className="text-yellow-500 text-xs sm:text-sm mb-1 font-medium">★★★★★</p>
+                <p className="text-gray-900 font-semibold text-sm sm:text-base leading-tight">{product.name}</p>
+                <p className="text-gray-900 font-bold text-xs sm:text-sm">{product.price}</p>
               </div>
             </div>
           ))}

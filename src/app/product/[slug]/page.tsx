@@ -15,6 +15,8 @@ import BasketCard from "@/app/homepage/BasketCard";
 import { SlugProps } from "@/app/types/PropSlug";
 import { CategorySlug } from "@/app/types/CategoryTypes";
 import ReletdProducts from "./ReletedProduct";
+import { PaymentMethodsOptions } from "@/app/CommonVue/Payment";
+import Image from "next/image";
 
 // ProductDetails interface based on API response
 export interface ProductDetails {
@@ -256,9 +258,9 @@ export default function ProductDetailsPage({ params }: SlugProps) {
         </nav>
 
         {/* Main Product Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 mb-12 animate-fade-in">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 animate-fade-in">
           {/* Image Gallery */}
-          <div className="space-y-4">
+          <div className=" col-span-2">
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
               <ImageGallery
                 product={productDetails}
@@ -270,8 +272,8 @@ export default function ProductDetailsPage({ params }: SlugProps) {
           </div>
           
           {/* Product Info */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 hover:shadow-xl transition-all duration-300">
+          <div className="col-span-3">
+            <div className="bg-white rounded-2xl shadow-lg  hover:shadow-xl transition-all duration-300">
               <ProductInfo
                 product={productDetails}
                 selectedColor={selectedColor}
@@ -284,6 +286,43 @@ export default function ProductDetailsPage({ params }: SlugProps) {
               />
             </div>
           </div>
+        </div>
+
+        <div className="flex flex-col gap-3 mt-3 p-5">
+          <label> Product Highlight</label>
+                    {/* Express Delivery (Unchanged) */}
+            <div className="flex flex-col gap-3">
+                {productDetails.highlights && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                        {productDetails.highlights.split('|').map((highlight, index) => (
+                            <div key={`highlight-${index}`} className="flex items-start gap-2">
+                                <span className="text-yellow-600 text-lg leading-none">•</span>
+                                <span className="text-sm font-medium text-gray-800">
+                                    {highlight.trim()}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Payment Methods (Unchanged) */}
+            {/* <div className="mt-6">
+                <h3 className="text-sm sm:text-md font-medium text-gray-700 mb-3">Payment Methods:</h3>
+                <div className="flex flex-wrap gap-3">
+                    {PaymentMethodsOptions.map((method) => (
+                        <div key={method.name} className="flex flex-col items-center p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105">
+                            <Image
+                                src={method.img}
+                                alt={method.name}
+                                width={50}
+                                height={30}
+                                className="object-center"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div> */}
         </div>
 
         {/* Product Details Tabs */}
