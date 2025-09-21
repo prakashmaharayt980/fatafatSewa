@@ -2,7 +2,7 @@
 
 import React, { use, useEffect, useState } from 'react';
 import TopBanner from './TopBanner';
-import SubCategoriesItems from './SubCategoriesItems';
+
 
 import RemoteServices from '@/app/api/remoteservice';
 import { SlugProps } from '@/app/types/PropSlug';
@@ -54,7 +54,6 @@ const CategoryPage = ({ params }: SlugProps) => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <TopBanner />
 
-      {/* <SubCategoriesItems /> */}
 
       
       <ProductFilters categoryslug={categorySlugData.products} />
