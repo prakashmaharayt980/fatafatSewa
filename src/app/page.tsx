@@ -51,7 +51,7 @@ const HomePageContent = () => {
       <Imgbanner />
 
          <Suspense fallback={<div>Loading New Arrivals...</div>}>
-          <BasketCardTrading title="New Arrivals" slug={'laptop-price-in-nepal'} />
+          <BasketCardTrading title="New Arrivals"  />
         </Suspense>
      <Suspense fallback={<div>Loading Laptops...</div>}>
           <BasketCard title="Laptop of 2025" slug={'laptop-price-in-nepal'} />
