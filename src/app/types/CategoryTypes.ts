@@ -27,3 +27,16 @@ export interface CategorySlug {
     }>;
   };
 }
+
+export interface ProductTrending {
+  image: string;
+  slug: string;
+  price: string;
+  originalPrice: string;
+  discounted_price: number;
+  name: string;
+  reviews: string[];
+  emi_enabled?: number;
+  average_rating: number;
+  highlights: string;
+}

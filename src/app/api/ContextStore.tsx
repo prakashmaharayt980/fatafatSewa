@@ -65,10 +65,7 @@ export interface HomePageData {
     updated_at?: string;
   }>;
 
-  newArrivals: ProductTrending[];
-  laptops: CategorySlug[];
-  accessories: CategorySlug[];
-  waterPumps: CategorySlug[];
+
   blogContent: Array<[{
     author: string;
     content: string;
@@ -77,9 +74,6 @@ export interface HomePageData {
     created_at: Date;
     id: number
   }]>
-  homeappliance: CategorySlug[],
-  laptopitem: CategorySlug[],
-  droneitem: CategorySlug[]
 
 }
 
@@ -113,43 +107,27 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
         setLoading(true);
         const [
           categoriesRes,
-          laptopRes,
-          accessoriesRes,
-          waterPumpRes,
-          homeappliance,
-          trendingRes,
+
           blogsRes,
-          laptopitem,
-          droneitem,
+       
 
         ] = await Promise.all([
           RemoteServices.Categories(),
-          RemoteServices.CategoriesSlug('mobile-price-in-nepal'),
-          RemoteServices.CategoriesSlug('accessories-price-in-nepal'),
-          RemoteServices.CategoriesSlug('water-pump-price-in-nepal'),
-          RemoteServices.CategoriesSlug('macbook-price-in-nepal'),
-          RemoteServices.ProductTranding().then(res=>res.data),
+  
           RemoteServices.BlogsAll().then(res=>res.data),
-          RemoteServices.CategoriesSlug('laptop-price-in-nepal'),
-          RemoteServices.CategoriesSlug('drone-price-in-nepal'),
+ 
         ]);
 
         setHomePageData({
           categories: categoriesRes.data,
-          newArrivals:trendingRes,
-          laptops: [laptopRes],
-          accessories: [accessoriesRes],
-          waterPumps: [waterPumpRes],
+
           blogContent: [blogsRes],
-          homeappliance: [homeappliance],
-          laptopitem: [laptopitem],
-          droneitem: [droneitem],
+    
 
 
         });
 
-        console.log('cat Data:', laptopRes);
-        console.log('trending Data:', trendingRes);
+
       } catch (e) {
         setError('Failed to fetch data. Please try again later. ');
       } finally {

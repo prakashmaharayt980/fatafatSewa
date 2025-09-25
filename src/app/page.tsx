@@ -1,6 +1,6 @@
 'use client';
 
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useRef } from 'react';
 import Image from 'next/image';
 import { ContextStoreProvider, useContextStore } from './api/ContextStore';
 import Imgbanner from './homepage/Imgbanner';
@@ -9,6 +9,7 @@ import img1 from '../../public/imgfile/banner3.png';
 import SkeletonHomepage from './homepage/skeletonHomepage';
 import BasketCardTrading from './homepage/BasketCardTrading';
 
+
 // Lazy-loaded components
 const BasketCard = lazy(() => import('./homepage/BasketCard'));
 const PopularCategories = lazy(() => import('./homepage/PopularCategories'));
@@ -16,6 +17,8 @@ const OfferBanner = lazy(() => import('./homepage/OfferBanner'));
 const OurArticles = lazy(() => import('./homepage/OurArticles'));
 const CategoryProductSection = lazy(() => import('./homepage/BasketCardwithImage'));
 const TwoImageBanner = lazy(() => import('./homepage/Banner2'));
+
+
 
 // Child component to consume the context
 const HomePageContent = () => {
@@ -41,37 +44,24 @@ const HomePageContent = () => {
     );
   }
 
-  const { laptops, accessories, waterPumps, categories, laptopitem, droneitem, homeappliance,newArrivals } = homePageData;
+  const { categories } = homePageData;
 
   return (
     <div className="mx-auto m-0 p-0 sm:py-3 sm:px-2 md:px-4 space-y-4 sm:space-y-12">
       <Imgbanner />
 
-      {/* New Arrivals - Laptops */}
-      {newArrivals?.[0] && (
-        <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <Suspense fallback={<div>Loading New Arrivals...</div>}>
-            <BasketCardTrading title="New Arrivals" items={newArrivals} />
-          </Suspense>
-        </div>
-      )}
-      {laptops?.[0] && (
-        <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <Suspense fallback={<div>Loading Laptops...</div>}>
-            <BasketCard title="Laptop of 2025" items={laptopitem} />
-          </Suspense>
-        </div>
-      )}
+         <Suspense fallback={<div>Loading New Arrivals...</div>}>
+          <BasketCardTrading title="New Arrivals" slug={'laptop-price-in-nepal'} />
+        </Suspense>
+     <Suspense fallback={<div>Loading Laptops...</div>}>
+          <BasketCard title="Laptop of 2025" slug={'laptop-price-in-nepal'} />
+        </Suspense>
 
-      <div className="m-0 p-0 sm:mx-0 sm:px-0">
         <Suspense fallback={<div>Loading Categories...</div>}>
           <PopularCategories categories={categories} />
         </Suspense>
-      </div>
 
-      {/* Accessories Section */}
-      {accessories?.[0] && (
-        <div className="flex flex-col md:flex-row gap-0 sm:gap-4 w-full m-0 p-0 sm:mx-0 sm:px-0">
+  <div className="flex flex-col md:flex-row gap-0 sm:gap-4 w-full m-0 p-0 sm:mx-0 sm:px-0">
           <div className="relative w-full md:w-1/4 min-h-[300px] sm:min-h-[400px] m-0 p-0">
             <Image
               src={img1}
@@ -84,52 +74,36 @@ const HomePageContent = () => {
           </div>
           <div className="w-full md:w-3/4 m-0 p-0">
             <Suspense fallback={<div>Loading Accessories...</div>}>
-              <CategoryProductSection title="Accessories" items={accessories} />
+              <CategoryProductSection title="Accessories" slug={'accessories-price-in-nepal'} />
             </Suspense>
           </div>
         </div>
-      )}
 
-      <div className="m-0 p-0 sm:mx-0 sm:px-0">
-        <Suspense fallback={<div>Loading Offer Banner...</div>}>
+                <Suspense fallback={<div>Loading Offer Banner...</div>}>
           <OfferBanner />
         </Suspense>
-      </div>
 
-      {/* Water Pumps Section */}
-      {waterPumps?.[0] && (
-        <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <Suspense fallback={<div>Loading Water Pumps...</div>}>
-            <BasketCard title="Water Pumps of 2025" items={waterPumps} />
-          </Suspense>
-        </div>
-      )}
-      {waterPumps?.[0] && (
-        <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <Suspense fallback={<div>Loading Home Appliances...</div>}>
-            <BasketCard title="Home Appliance of 2025" items={homeappliance} />
-          </Suspense>
-        </div>
-      )}
-      <div className="m-0 p-0 sm:mx-0 sm:px-0">
-        <Suspense fallback={<div>Loading Banner...</div>}>
+              <Suspense fallback={<div>Loading Water Pumps...</div>}>
+          <BasketCard title="Water Pumps of 2025" slug={'water-pump-price-in-nepal'} />
+        </Suspense>
+
+                <Suspense fallback={<div>Loading Home Appliances...</div>}>
+          <BasketCard title="Home Appliance of 2025" slug={'macbook-price-in-nepal'} />
+        </Suspense>
+
+
+     <Suspense fallback={<div>Loading Banner...</div>}>
           <TwoImageBanner />
         </Suspense>
-      </div>
 
-      {waterPumps?.[0] && (
-        <div className="m-0 p-0 sm:mx-0 sm:px-0">
-          <Suspense fallback={<div>Loading Drones...</div>}>
-            <BasketCard title="Drone of 2025" items={droneitem} />
-          </Suspense>
-        </div>
-      )}
+                <Suspense fallback={<div>Loading Drones...</div>}>
+          <BasketCard title="Drone of 2025" slug={'drone-price-in-nepal'} />
+        </Suspense>
 
-      <div className="m-0 p-0 sm:mx-0 sm:px-0">
-        <Suspense fallback={<div>Loading Articles...</div>}>
+              <Suspense fallback={<div>Loading Articles...</div>}>
           <OurArticles />
         </Suspense>
-      </div>
+
 
       <MetaTagData />
     </div>
