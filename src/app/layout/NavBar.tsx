@@ -11,7 +11,8 @@ import {
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { blogIvon, emiCalcultorIocn } from '../CommonVue/Payment';
+import { imglist } from '../CommonVue/Image';
+
 
 const NavBar = () => {
 
@@ -161,7 +162,7 @@ const NavBar = () => {
                                     >
                                         
                                             <Image
-                                                src={blogIvon}
+                                                src={imglist.blog}
                                                 alt='blog icon'
                                                 height={20}
                                                 width={20}
@@ -176,7 +177,7 @@ const NavBar = () => {
                                                                               className={`px-3 py-2 gap-1 rounded-full text-sm items-center font-medium flex flex-row transition-all bg-white text-gray-700 border border-gray-300 hover:bg-gray-50`}
                                     >
                                            <Image
-                                                src={emiCalcultorIocn}
+                                                src={imglist.emiCalcultorIocn}
                                                 alt='blog icon'
                                                 height={20}
                                                 width={20}
@@ -187,24 +188,7 @@ const NavBar = () => {
 
 
                                     </button>
-                                    <button
-
-                                        onClick={() => handlerouter('/product/category/mobile-price-in-nepal')}
-
-                                                                              className={`px-3 py-2 gap-1 rounded-full text-sm items-center font-medium flex flex-row transition-all bg-white text-gray-700 border border-gray-300 hover:bg-gray-50`}
-                                    >
-                                           <Image
-                                                src={emiCalcultorIocn}
-                                                alt='blog icon'
-                                                height={20}
-                                                width={20}
-                                                        priority
-                                            />
-                                        <span className={" font-medium items-center "}>working on category</span>
-                               
-
-
-                                    </button>
+                                   
                                 </div>
                             )}
                         </div>

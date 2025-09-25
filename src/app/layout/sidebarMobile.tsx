@@ -14,29 +14,32 @@ import { X, ChevronDown, Heart, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CompanyLogo } from '../CommonVue/Payment';
+import { useRouter } from 'next/navigation';
+import { imglist } from '../CommonVue/Image';
 
 const MobileSidebar = ({ open, toggleMobileMenu, IsUserLogin, loginNeed, nvaitemlist }) => {
+  const router = useRouter()
+
+  const handlerouter = (path: string) => {
+    router.push(path)
+    toggleMobileMenu()
+  }
   return (
     <Sheet open={open} onOpenChange={toggleMobileMenu}>
       <SheetContent side="left" className="p-0 w-[300px] lg:hidden">
         {/* Sidebar */}
-        <div className="flex flex-col h-full bg-white shadow-xl overflow-y-auto">
+        <div className="flex flex-col h-full p-3 bg-white shadow-xl overflow-y-auto">
           {/* Header */}
           <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-            <Image
-              src={CompanyLogo}
-              alt="Fatafatsewa Logo"
-              className="w-auto h-6"
-              fill
-            />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleMobileMenu}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <X className="h-5 w-5" />
-            </Button>
+            <div className='h-8 w-32 relative'>
+              <Image
+                src={CompanyLogo}
+                alt="Fatafatsewa Logo"
+                className="w-auto h-full"
+                fill
+              />
+            </div>
+
           </div>
 
           {/* Navigation Links */}
@@ -48,10 +51,10 @@ const MobileSidebar = ({ open, toggleMobileMenu, IsUserLogin, loginNeed, nvaitem
                     <Accordion type="single" collapsible>
                       <AccordionItem value={`item-${index}`}>
                         <AccordionTrigger className="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-[var(--colour-fsP2)]">
                             {category.title}
                           </span>
-                          <ChevronDown className="w-4 h-4 text-gray-500 transition-transform group-open:rotate-180" />
+
                         </AccordionTrigger>
                         <AccordionContent className="px-4 pb-3 space-y-4">
                           {category.content.map((section, sectionIndex) => (
@@ -77,22 +80,43 @@ const MobileSidebar = ({ open, toggleMobileMenu, IsUserLogin, loginNeed, nvaitem
                       </AccordionItem>
                     </Accordion>
                   ) : (
-                    <div className="px-4 py-2">
-                      <Link
-                        href={category.to || '/blog'}
-                        onClick={toggleMobileMenu}
-                        className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100"
+                    <div className="px-4 py-2 flex flex-col gap-2">
+
+
+
+                      <button
+
+                        onClick={() => handlerouter('/blog')}
+                        className={`px-3 py-2 gap-1 w-full rounded-full text-sm items-center font-medium flex flex-row transition-all bg-white text-gray-700 border border-gray-300 hover:bg-gray-50`}
                       >
-                        {category.title === 'Blog' && (
-                          <Image
-                            src={CompanyLogo}
-                            alt="blog icon"
-                            className="h-4 w-4"
-                            fill
-                          />
-                        )}
-                        <span>{category.title}</span>
-                      </Link>
+
+                        <Image
+                          src={imglist.blog}
+                          alt='blog icon'
+                          height={20}
+                          width={20}
+                          priority
+                        />
+                        <span className={" font-medium items-center "}>Blog</span>
+                      </button>
+                      <button
+
+                        onClick={() => handlerouter('/emi')}
+
+                        className={`px-3 py-2 gap-1 rounded-full w-full text-sm items-center font-medium flex flex-row transition-all bg-white text-gray-700 border border-gray-300 hover:bg-gray-50`}
+                      >
+                        <Image
+                          src={imglist.emiCalcultorIocn}
+                          alt='blog icon'
+                          height={20}
+                          width={20}
+                          priority
+                        />
+                        <span className={" font-medium items-center "}>Emi Calcultor</span>
+
+
+
+                      </button>
                     </div>
                   )}
                 </div>

@@ -8,7 +8,7 @@ import RemoteServices from '../api/remoteservice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { blogIvon } from '../CommonVue/Payment';
+
 import NavBar from './NavBar';
 import nvaitemlist from './navitem.json';
 import { useContextCart } from '../checkout/CartContext';
@@ -16,14 +16,15 @@ import MobileSidebar from './sidebarMobile';
 
 
 const HeaderComponent = () => {
-    const { IsUserLogin, loginNeed,setIsDrawerOpen ,setWishListInfo} = useContextCart()
+    const { IsUserLogin, loginNeed, setIsDrawerOpen, setWishListInfo } = useContextCart()
 
     const router = useRouter();
     const searchRef = useRef(null);
+    const [searchTimeout, setSearchTimeout] = useState(null);
 
     // Consolidated state object
     const [state, setState] = useState({
-        search: "",
+        search: " ",
         searchResults: [],
         showSearchDropdown: false,
         isSearching: false,
@@ -39,38 +40,48 @@ const HeaderComponent = () => {
         setState(prev => ({ ...prev, ...updates }));
     };
 
-    // Search functionality
     const handleSearchChange = async (e) => {
         const value = e.target.value;
         updateState({ search: value });
 
-        if (value.trim().length > 2) {
+        // Clear any existing timeout
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
+
+        // Check if the value has at least 3 characters (including spaces)
+        if (value.length > 2) {
             updateState({ isSearching: true, showSearchDropdown: true });
 
-            try {
-                const res = await RemoteServices.SerachProducts(value.trim());
-                updateState({
-                    searchResults: res.data || [],
-                    isSearching: false
-                });
-            } catch (error) {
-                console.error('Search error:', error);
-                updateState({
-                    searchResults: [],
-                    isSearching: false
-                });
-            }
+            // Set new timeout
+            const timeoutId = setTimeout(async () => {
+                try {
+                    // Send the raw value with spaces to the API
+                    const res = await RemoteServices.SerachProducts(value);
+                    updateState({
+                        searchResults: res.data || [],
+                        isSearching: false
+                    });
+                } catch (error) {
+                    updateState({
+                        searchResults: [],
+                        isSearching: false
+                    });
+                }
+            }, 500);
+
+            setSearchTimeout(timeoutId);
         } else {
             updateState({ showSearchDropdown: false, searchResults: [] });
         }
     };
 
-    const handleProductClick = (slug) => {
-        console.log('Navigating to product:', slug)
+    const handleProductClick = (slug: string, e?: React.MouseEvent) => {
+        e?.preventDefault();
+        e?.stopPropagation();
+
         router.push(`/product/${slug}`);
         updateState({ showSearchDropdown: false, mobileSearchVisible: false });
-
-
     };
 
     const handleroute = (path) => {
@@ -105,17 +116,7 @@ const HeaderComponent = () => {
                 updateState({ showSearchDropdown: false });
             }
 
-            // Close category drawer
-            if (state.showCategoryDrawer &&
-                !event.target.closest('.category-drawer') &&
-                !event.target.closest('.category-button')) {
-                updateState({ showCategoryDrawer: false });
-            }
 
-            // Close account menu
-            if (!event.target.closest('.account-menu')) {
-                updateState({ showAccountMenu: false });
-            }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
@@ -125,11 +126,11 @@ const HeaderComponent = () => {
     // Search Results Component
     const SearchResults = ({ isMobile: _isMobile = false }) => (
         <div className={cn(
-            "absolute bg-white border border-gray-200 rounded-lg shadow-lg mt-2 max-h-80 overflow-y-auto z-51",
+            "absolute bg-white border w-full sm:min-w-xl border-gray-200 rounded-lg shadow-lg mt-2 max-h-80 overflow-y-auto z-52",
 
         )}>
             {state.isSearching ? (
-                <div className="p-6 text-center text-gray-500">
+                <div className="p-6 text-center w-full sm:min-w-xl text-gray-500">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
                     <p>Searching...</p>
                 </div>
@@ -138,7 +139,7 @@ const HeaderComponent = () => {
                     {state.searchResults.map((product) => (
                         <div
                             key={product.id}
-                            onClick={() => handleProductClick(product.slug)}
+                            onClick={(e) => handleProductClick(product.slug, e)}
                             className="flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors"
                         >
                             {product.image && (
@@ -213,6 +214,7 @@ const HeaderComponent = () => {
                                         value={state.search}
                                         onChange={handleSearchChange}
                                         className="w-full px-4 py-2.5 bg-transparent border-none focus:outline-none text-sm placeholder-gray-500"
+                                        autoFocus
                                     />
                                     <button className="bg-blue-600 text-white px-4 py-2.5 m-0.5 hover:bg-blue-700 transition-colors rounded-full duration-200 flex items-center justify-center">
                                         <Search className="w-4 h-4" />
@@ -306,20 +308,20 @@ const HeaderComponent = () => {
                     </div>
                 </div>
 
-            
 
-      <MobileSidebar
-        open={state.isMobileMenuOpen}
-        toggleMobileMenu={toggleMobileMenu}
-        IsUserLogin={IsUserLogin}
-        loginNeed={loginNeed}
-        nvaitemlist={nvaitemlist}
-      />
+
+                <MobileSidebar
+                    open={state.isMobileMenuOpen}
+                    toggleMobileMenu={toggleMobileMenu}
+                    IsUserLogin={IsUserLogin}
+                    loginNeed={loginNeed}
+                    nvaitemlist={nvaitemlist}
+                />
 
                 {/* Mobile Search Bar */}
                 {state.mobileSearchVisible && (
-                    <div className="lg:hidden border-b border-gray-200 bg-gray-50">
-                        <div className="max-w-7xl mx-auto px-2 sm:px-4 py-3">
+                    <div className="lg:hidden border-b w-full border-gray-200 bg-gray-50">
+                        <div className="max-w-7xl w-full mx-auto px-2 sm:px-4 py-3">
                             <div className="relative" ref={searchRef}>
                                 <div className="flex rounded-lg border border-gray-300 bg-white overflow-hidden shadow-sm">
                                     <input

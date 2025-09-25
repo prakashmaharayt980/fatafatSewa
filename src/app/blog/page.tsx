@@ -335,7 +335,7 @@ const BlogPage = () => {
             </div>
 
             <div className="my-24 justify-center flex flex-col items-center align-middle">
-              <h4 className="text-[var(--colour-fsP2)] font-semibold text-xl mb-4 text-center lg:text-left">Let's Connect Us</h4>
+              <h4 className="text-[var(--colour-fsP2)] font-semibold text-xl mb-4 text-center lg:text-left">Let&apos;s Connect Us</h4>
               <div className="flex gap-3 justify-center lg:justify-start">
                 {socialIcons.map(({ Icon, url, color }, index) => (
                   <a
