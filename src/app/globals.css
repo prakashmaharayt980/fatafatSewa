@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 * {
     box-sizing: border-box;
@@ -13,8 +16,33 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    
+
 }
+
+    .heading-title::before,
+                .heading-title::after {
+                    content: "";
+                    height: 7px;
+                    opacity: 0.5;
+                    pointer-events: none;
+                    position: absolute;
+                    width: 7px;
+                    border-color: #ff4545;
+                }
+
+                .heading-title::before {
+                    border-left: 2px solid #ff4545;
+                    border-top: 2px solid #ff4545;
+                    left: 0;
+                    top: 0;
+                }
+
+                .heading-title::after {
+                    border-bottom: 2px solid #ff4545;
+                    border-right: 2px solid #ff4545;
+                    bottom: 0;
+                    right: 0;
+                }
 
 :root{
     --logobluecolur1:#1f67b7;
@@ -37,6 +65,14 @@ body {
     --colour-text3:#595959;
     --colour-text4:#CDECFF;
     --colour-yellow1:#FF9107;
+    --sidebar: hsl(0 0% 98%);
+    --sidebar-foreground: hsl(240 5.3% 26.1%);
+    --sidebar-primary: hsl(240 5.9% 10%);
+    --sidebar-primary-foreground: hsl(0 0% 98%);
+    --sidebar-accent: hsl(240 4.8% 95.9%);
+    --sidebar-accent-foreground: hsl(240 5.9% 10%);
+    --sidebar-border: hsl(220 13% 91%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
 @theme{
@@ -67,14 +103,9 @@ body {
     --font-family-all: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     --font-faily-blogcontent: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
-
   --font-family-math:'math'
 
-
-
 }
-
-
 
 @layer utilities {
     .scrollbar-hide {
@@ -84,39 +115,39 @@ body {
     .scrollbar-hide::-webkit-scrollbar {
         display: none;
     }
-    
+
     /* Responsive text utilities */
     .text-responsive {
         font-size: clamp(0.875rem, 2.5vw, 1rem);
     }
-    
+
     .text-responsive-lg {
         font-size: clamp(1.125rem, 3vw, 1.5rem);
     }
-    
+
     .text-responsive-xl {
         font-size: clamp(1.25rem, 4vw, 2rem);
     }
-    
+
     /* Responsive spacing */
     .space-responsive {
         gap: clamp(0.5rem, 2vw, 1rem);
     }
-    
+
     .p-responsive {
         padding: clamp(0.5rem, 2vw, 1rem);
     }
-    
+
     .px-responsive {
         padding-left: clamp(0.5rem, 2vw, 1rem);
         padding-right: clamp(0.5rem, 2vw, 1rem);
     }
-    
+
     .py-responsive {
         padding-top: clamp(0.5rem, 2vw, 1rem);
         padding-bottom: clamp(0.5rem, 2vw, 1rem);
     }
-    
+
     /* Container utilities */
     .container-responsive {
         max-width: 100%;
@@ -125,35 +156,35 @@ body {
         padding-left: clamp(1rem, 4vw, 2rem);
         padding-right: clamp(1rem, 4vw, 2rem);
     }
-    
+
     /* Animation utilities */
     .animate-fade-in {
         animation: fadeIn 0.5s ease-in-out;
     }
-    
+
     .animate-slide-up {
         animation: slideUp 0.5s ease-out;
     }
-    
+
     .animate-scale-in {
         animation: scaleIn 0.3s ease-out;
     }
-    
+
     /* Hover effects */
     .hover-lift {
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
-    
+
     .hover-lift:hover {
         transform: translateY(-2px);
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
-    
+
     /* Focus states */
     .focus-ring {
         transition: box-shadow 0.2s ease-in-out;
     }
-    
+
     .focus-ring:focus {
         outline: none;
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
@@ -196,11 +227,11 @@ body {
     .mobile-hidden {
         display: none !important;
     }
-    
+
     .mobile-text-center {
         text-align: center !important;
     }
-    
+
     .mobile-full-width {
         width: 100% !important;
     }
@@ -218,4 +249,34 @@ body {
     }
 }
 
+.dark {
+    --sidebar: hsl(240 5.9% 10%);
+    --sidebar-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-primary: hsl(224.3 76.3% 48%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(240 3.7% 15.9%);
+    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-border: hsl(240 3.7% 15.9%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@theme inline {
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+}
 

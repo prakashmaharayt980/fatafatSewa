@@ -7,6 +7,7 @@ import Imgbanner from './homepage/Imgbanner';
 import MetaTagData from './homepage/MetaTagData';
 import img1 from '../../public/imgfile/banner3.png';
 import SkeletonHomepage from './homepage/skeletonHomepage';
+import BasketCardTrading from './homepage/BasketCardTrading';
 
 // Lazy-loaded components
 const BasketCard = lazy(() => import('./homepage/BasketCard'));
@@ -40,17 +41,17 @@ const HomePageContent = () => {
     );
   }
 
-  const { laptops, accessories, waterPumps, categories, laptopitem, droneitem, homeappliance } = homePageData;
+  const { laptops, accessories, waterPumps, categories, laptopitem, droneitem, homeappliance,newArrivals } = homePageData;
 
   return (
     <div className="mx-auto m-0 p-0 sm:py-3 sm:px-2 md:px-4 space-y-4 sm:space-y-12">
       <Imgbanner />
 
       {/* New Arrivals - Laptops */}
-      {laptops?.[0] && (
+      {newArrivals?.[0] && (
         <div className="m-0 p-0 sm:mx-0 sm:px-0">
           <Suspense fallback={<div>Loading New Arrivals...</div>}>
-            <BasketCard title="New Arrivals" items={laptops} />
+            <BasketCardTrading title="New Arrivals" items={newArrivals} />
           </Suspense>
         </div>
       )}

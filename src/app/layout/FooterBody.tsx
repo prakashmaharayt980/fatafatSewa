@@ -106,7 +106,7 @@ const FooterBody = () => {
             <h3 className="font-semibold text-[var(--colour-fsP2)] text-lg lg:text-xl mb-4 text-center sm:text-left">
               Quick Links
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 flex flex-col justify-center lg:justify-start items-center sm:items-start">
               {QuickLinks.map((link, index) => (
                 <li key={index}>
                   <a
@@ -127,7 +127,7 @@ const FooterBody = () => {
             <h3 className="font-semibold text-[var(--colour-fsP2)] text-lg lg:text-xl mb-4 text-center sm:text-left">
               Categories
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 flex flex-col justify-center lg:justify-start items-center sm:items-start">
               {Categories.map((category, index) => (
                 <li key={index}>
                   <a
@@ -148,10 +148,10 @@ const FooterBody = () => {
             <h3 className="font-semibold text-[var(--colour-fsP2)] text-lg lg:text-xl mb-4 text-center lg:text-left">
               Contact Info
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3 flex flex-col justify-center lg:justify-start  sm:items-start">
               {ContactInfo.map((info, index) => (
                 <li key={index} className="flex items-start gap-3 text-center lg:text-left">
-                  <div className="flex-shrink-0 w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center mx-auto lg:mx-0">
+                  <div className="flex-shrink-0 w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center mx-0">
                     <info.icon className="w-4 h-4 text-blue-600" />
                   </div>
                   <span className="text-gray-600 text-sm lg:text-base font-normal leading-relaxed">{info.title}</span>
@@ -169,7 +169,7 @@ const FooterBody = () => {
             {/* Payment Methods */}
             <div className="lg:col-span-1">
               <h4 className="font-semibold text-[var(--colour-fsP2)] text-lg mb-4 text-center lg:text-left">Payment Methods</h4>
-              <div className="flex gap-3 flex-wrap justify-center lg:justify-start">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 justify-center lg:justify-start">
                 {paymentMethods.map((method, index) => (
                   <div
                     key={index}

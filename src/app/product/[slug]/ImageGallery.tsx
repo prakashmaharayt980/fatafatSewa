@@ -19,8 +19,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   selectedImage,
   setSelectedImage
 }) => {
-  const [isZoomOpen, setIsZoomOpen] = useState(false);
-  const [zoomImageIndex, setZoomImageIndex] = useState(0);
+
 
   const getImagesForColor = (color: string) => {
     const variant = product.variants.find((v) => v.attributes.Color.toLowerCase() === color.toLowerCase());
@@ -28,7 +27,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
       variant?.attributes.image || product.image,
       "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=600&h=600&fit=crop",
       "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&h=600&fit=crop",
-   
+
     ];
   };
 
@@ -39,119 +38,52 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 
   ];
 
-  const openZoom = (imageIndex: number) => {
-    setZoomImageIndex(imageIndex);
-    setIsZoomOpen(true);
-  };
 
-  const closeZoom = () => {
-    setIsZoomOpen(false);
-  };
-
-  const nextImage = () => {
-    setZoomImageIndex((prev) => (prev + 1) % currentImages.length);
-  };
-
-  const prevImage = () => {
-    setZoomImageIndex((prev) => (prev - 1 + currentImages.length) % currentImages.length);
-  };
-
-  const currentSelectedIndex = currentImages.indexOf(selectedImage || currentImages[0]);
 
   return (
     <>
-      <div className="w-full h-full flex flex-col gap-3 sm:gap-1">
+      <div className="w-full h-full max-w-lg flex flex-col gap-3 sm:gap-1 justify-center ">
         {/* Main Image Container */}
-        <div className="relative group">
-          <div className="relative w-full h-80 sm:h-96 lg:h-[400px] xl:h-[400px] bg-gradient-to-br from-gray-50 to-white  overflow-hidden">
-            <Image
-              src={selectedImage}
-              alt={product.name}
-              className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
-              priority
-            />
-    
-            
-          </div>
+
+        <div className="relative w-full aspect-square   bg-gradient-to-br from-gray-50 to-white overflow-hidden  group">
+          {/* <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors duration-300" /> */}
+          <Image
+            src={selectedImage}
+            alt={product.name}
+            className="w-full h-full object-contain transition-all rounded duration-500  "
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, 60vw"
+            quality={90}
+            priority
+          />
+          {/* <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl" /> */}
         </div>
-        
         {/* Thumbnail Strip */}
-        <div className="flex gap-2 my-2 sm:gap-3 overflow-x-auto scrollbar-hide items-center justify-center px-2">
+        <div className="flex gap-3  overflow-x-auto scrollbar-hide items-center justify-center p-2">
           {currentImages.slice(0, 4).map((image, idx) => (
             <div
               key={`${selectedColor}-${idx}`}
-              className={`relative w-14 border-gray-200 h-14 sm:w-16 sm:h-16 cursor-pointer overflow-hidden rounded-lg border-2 transition-all duration-300 flex-shrink-0 group/thumb ${
-                selectedImage === image
-                  ? " "
-                  : " hover:border-blue-300 hover:ring-1 hover:ring-blue-300/20 "
-              }`}
+              className={`relative w-16 h-16  cursor-pointer overflow-hidden rounded-lg transition-all duration-300 flex-shrink-0 group/thumb 
+                ${selectedImage === image
+                  ? "ring-1 ring-[var(--colour-fsP2)] ring-offset-1"
+                  : ''
+                }`}
               onClick={() => setSelectedImage(image)}
             >
               <Image
                 src={image}
                 alt={`${product.name} view ${idx + 1}`}
-                className="w-full h-full object-cover transition-all duration-300 group-hover/thumb:scale-110"
+                className="w-full h-full object-cover transition-all duration-300 group-hover/thumb:scale-105"
                 fill
-                priority
-                sizes="(max-width: 640px) 56px, 64px"
+                quality={85}
+                sizes="(max-width: 640px) 32px, 40px"
               />
-              {/* Thumbnail overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover/thumb:opacity-100 transition-opacity duration-300"></div>
+
             </div>
           ))}
         </div>
       </div>
 
-      {/* Zoom Modal */}
-      {isZoomOpen && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="relative w-full max-w-2xl max-h-[80vh] flex items-center justify-center">
-            {/* Close Button */}
-            <button
-              onClick={closeZoom}
-              className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-800 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
-            >
-              <X size={20} />
-            </button>
-
-            {/* Navigation Buttons */}
-            {currentImages.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
-                >
-                  <ChevronRight size={20} />
-                </button>
-              </>
-            )}
-
-            {/* Zoomed Image */}
-            <div className="relative w-full h-full flex items-center justify-center">
-              <Image
-                src={currentImages[zoomImageIndex]}
-                alt={`${product.name} - Zoomed view`}
-                className="max-w-full max-h-full object-contain rounded-md"
-                width={600}
-                height={600}
-              />
-            </div>
-
-            {/* Image Counter */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/80 text-gray-800 px-3 py-1 rounded-full text-xs">
-              {zoomImageIndex + 1} / {currentImages.length}
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

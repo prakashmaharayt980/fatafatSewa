@@ -191,55 +191,55 @@ const ApplyEmiProcess = () => {
     setcurrentstep(1);
   };
 
-  
+
 
   const emiData = useMemo(() => {
-  if (!product?.price || product.price <= 0) {
-    return {
-      downPayment: 0,
-      loanAmount: 0,
-      monthlyEMI: 0,
-      totalInterest: 0,
-      totalPayment: 0,
-      duration: 12,
-    };
-  }
+    if (!product?.price || product.price <= 0) {
+      return {
+        downPayment: 0,
+        loanAmount: 0,
+        monthlyEMI: 0,
+        totalInterest: 0,
+        totalPayment: 0,
+        duration: 12,
+      };
+    }
 
-  // Use downPaymentPercent from emiCalculation
-  const downPaymentPercent = emiContextInfo.emiCalculation.downPayment || 0;
-  const downPaymentAmount = product.price * (downPaymentPercent / 100);
-  const loanAmount = product.price - downPaymentAmount;
-  // Use interestRate from emiContextInfo root
-  const monthlyRate = (emiContextInfo.emiCalculation.interestRate || 10) / 100 / 12;
-  // Use duration from emiCalculation
-  const numberOfPayments = emiContextInfo.emiCalculation.duration || 12;
+    // Use downPaymentPercent from emiCalculation
+    const downPaymentPercent = emiContextInfo.emiCalculation.downPayment || 0;
+    const downPaymentAmount = product.price * (downPaymentPercent / 100);
+    const loanAmount = product.price - downPaymentAmount;
+    // Use interestRate from emiContextInfo root
+    const monthlyRate = (emiContextInfo.emiCalculation.interestRate || 10) / 100 / 12;
+    // Use duration from emiCalculation
+    const numberOfPayments = emiContextInfo.emiCalculation.duration || 12;
 
-  const emi =
-    loanAmount > 0
-      ? (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
+    const emi =
+      loanAmount > 0
+        ? (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
         (Math.pow(1 + monthlyRate, numberOfPayments) - 1)
-      : 0;
+        : 0;
 
-  const totalPayment = emi * numberOfPayments + downPaymentAmount;
-  const totalInterest = totalPayment - product.price;
+    const totalPayment = emi * numberOfPayments + downPaymentAmount;
+    const totalInterest = totalPayment - product.price;
 
-  return {
-    downPayment: downPaymentAmount,
-    loanAmount,
-    monthlyEMI: emi,
-    totalInterest,
-    totalPayment,
-    duration: numberOfPayments,
-  };
-}, [
-  product?.price,
-  emiContextInfo.emiCalculation.downPayment,
-  emiContextInfo.emiCalculation.duration,
-  emiContextInfo.emiCalculation.interestRate,
-]);
+    return {
+      downPayment: downPaymentAmount,
+      loanAmount,
+      monthlyEMI: emi,
+      totalInterest,
+      totalPayment,
+      duration: numberOfPayments,
+    };
+  }, [
+    product?.price,
+    emiContextInfo.emiCalculation.downPayment,
+    emiContextInfo.emiCalculation.duration,
+    emiContextInfo.emiCalculation.interestRate,
+  ]);
   const emiConditionFields = [
     {
-      label: "Down Payment (%)",
+      label: "Down Payment Amount",
       name: "downPayment",
       value: emiContextInfo.emiCalculation.downPayment,
       onChange: (e) => handleInputChange(e, "emiCalculation"),
@@ -252,12 +252,12 @@ const ApplyEmiProcess = () => {
       value: emiContextInfo.emiCalculation.duration,
       onChange: (e) => handleInputChange(e, "emiCalculation"),
       type: "select",
-      options: ['6', '9', '12'],
+      options: [ '12','18','24','36'],
       svgicon: '/svgfile/monthicon.png',
       extenduserinfo: '',
     },
     {
-      label: " Total payment",
+      label: "",
       name: "downPaymentPercent",
       value: emiData.totalPayment.toFixed(2),
       onChange: () => { },
@@ -352,15 +352,7 @@ const ApplyEmiProcess = () => {
       svgicon: '/svgfile/homeaddressicon.png',
       extenduserinfo: '',
     },
-    {
-      label: "Salary Amount",
-      name: "salaryAmount",
-      value: emiContextInfo.bankinfo.salaryAmount,
-      onChange: (e) => handleInputChange(e, "bankinfo"),
-      placeholder: "Enter salary amount",
-      svgicon: '/svgfile/moneycashicon.png',
-      extenduserinfo: '',
-    },
+
   ]
 
   const creditCardDetailsInfo = [
@@ -431,6 +423,15 @@ const ApplyEmiProcess = () => {
       onChange: (e) => handleInputChange(e, "bankinfo"),
       placeholder: "Enter account number",
       svgicon: '/svgfile/idcardicon2.png',
+      extenduserinfo: '',
+    },
+    {
+      label: "Bank Branch",
+      name: "bankbranch",
+      value: emiContextInfo.bankinfo.bankbranch,
+      onChange: (e) => handleInputChange(e, "bankinfo"),
+      placeholder: "Enter Bank Branch",
+      svgicon: '/svgfile/bank.svg',
       extenduserinfo: '',
     },
     {
@@ -528,21 +529,21 @@ const ApplyEmiProcess = () => {
         sectionKey: "bankinfo",
         step: 1,
         fields: creditCardDetailsInfo,
-        additionalContent:(<></>),
+        additionalContent: (<></>),
       },
       {
         title: "Personal Details",
         sectionKey: "userInfo",
         step: 2,
         fields: personalDetailsInfolist,
-         additionalContent:(<></>),
+        additionalContent: (<></>),
       },
       {
         title: "EMI Conditions",
         sectionKey: "emiCalculation",
         step: 3,
         fields: emiConditionFields,
-         additionalContent:(<></>),
+        additionalContent: (<></>),
       },
     ],
     downPayment: [
@@ -604,7 +605,7 @@ const ApplyEmiProcess = () => {
         sectionKey: "emiCalculation",
         step: 3,
         fields: emiConditionFields,
-         additionalContent:(<></>),
+        additionalContent: (<></>),
       },
     ],
     makeCard: [
@@ -652,7 +653,7 @@ const ApplyEmiProcess = () => {
         sectionKey: "emiCalculation",
         step: 3,
         fields: emiConditionFields,
-         additionalContent:(<></>),
+        additionalContent: (<></>),
       },
     ],
   };
@@ -665,10 +666,10 @@ const ApplyEmiProcess = () => {
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         {/* Left Sidebar */}
-        {product !==null &&
-           <EmiProductDetails emiData={emiData} product={product} />
+        {product !== null &&
+          <EmiProductDetails emiData={emiData} product={product} />
         }
-     
+
 
         {/* Main Content */}
         <div className="flex-1">

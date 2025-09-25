@@ -112,7 +112,7 @@ export default function ProductEMIUI({ chooseProduct }) {
           {/* Product Image */}
           <div className="relative aspect-square p-1 sm:p-2 w-full max-w-[280px] sm:max-w-[360px] mx-auto">
             <Image
-              src={product.image || "/fallback-image.jpg"}
+              src={product.image || ""}
               alt={product.name || "Product Image"}
               width={360}
               height={360}

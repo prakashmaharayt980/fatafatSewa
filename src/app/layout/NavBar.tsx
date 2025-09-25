@@ -8,13 +8,13 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { useContextCart } from '../checkout/CartContext';
+
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { blogIvon, emiCalcultorIocn } from '../CommonVue/Payment';
 
 const NavBar = () => {
-    const { setemicalclatorinfo } = useContextCart()
+
     const router = useRouter()
     // Memoize and validate navigation data to prevent unnecessary re-renders
     const validatedNavItems = useMemo(() => {

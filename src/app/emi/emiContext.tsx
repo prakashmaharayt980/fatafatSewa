@@ -48,6 +48,7 @@ interface BankInfo {
   accountNumber: string;
   bankname: string;
   creditCardProvider: string;
+  bankbranch: string;
   cardLimit: number;
   salaryAmount: number;
 }
@@ -134,6 +135,7 @@ const defaultState: EmiContextState = {
     accountNumber: "",
     bankname: "",
     creditCardProvider: "",
+    bankbranch: "",
     cardLimit: 0,
     salaryAmount: 0
   },

@@ -120,7 +120,7 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           trendingRes,
           blogsRes,
           laptopitem,
-          droneitem
+          droneitem,
 
         ] = await Promise.all([
           RemoteServices.Categories(),
@@ -128,7 +128,7 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
           RemoteServices.CategoriesSlug('accessories-price-in-nepal'),
           RemoteServices.CategoriesSlug('water-pump-price-in-nepal'),
           RemoteServices.CategoriesSlug('macbook-price-in-nepal'),
-          RemoteServices.ProductTranding(),
+          RemoteServices.ProductTranding().then(res=>res.data),
           RemoteServices.BlogsAll().then(res=>res.data),
           RemoteServices.CategoriesSlug('laptop-price-in-nepal'),
           RemoteServices.CategoriesSlug('drone-price-in-nepal'),
@@ -136,18 +136,20 @@ export const ContextStoreProvider = ({ children }: { children: React.ReactNode }
 
         setHomePageData({
           categories: categoriesRes.data,
-          newArrivals: trendingRes.data,
+          newArrivals:trendingRes,
           laptops: [laptopRes],
           accessories: [accessoriesRes],
           waterPumps: [waterPumpRes],
           blogContent: [blogsRes],
           homeappliance: [homeappliance],
           laptopitem: [laptopitem],
-          droneitem: [droneitem]
+          droneitem: [droneitem],
+
 
         });
 
-        console.log('cat Data:', categoriesRes.data);
+        console.log('cat Data:', laptopRes);
+        console.log('trending Data:', trendingRes);
       } catch (e) {
         setError('Failed to fetch data. Please try again later. ');
       } finally {

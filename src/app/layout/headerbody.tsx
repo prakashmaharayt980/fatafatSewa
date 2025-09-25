@@ -8,10 +8,12 @@ import RemoteServices from '../api/remoteservice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-
+import { blogIvon } from '../CommonVue/Payment';
 import NavBar from './NavBar';
-
+import nvaitemlist from './navitem.json';
 import { useContextCart } from '../checkout/CartContext';
+import MobileSidebar from './sidebarMobile';
+
 
 const HeaderComponent = () => {
     const { IsUserLogin, loginNeed,setIsDrawerOpen ,setWishListInfo} = useContextCart()
@@ -303,6 +305,16 @@ const HeaderComponent = () => {
                         </div>
                     </div>
                 </div>
+
+            
+
+      <MobileSidebar
+        open={state.isMobileMenuOpen}
+        toggleMobileMenu={toggleMobileMenu}
+        IsUserLogin={IsUserLogin}
+        loginNeed={loginNeed}
+        nvaitemlist={nvaitemlist}
+      />
 
                 {/* Mobile Search Bar */}
                 {state.mobileSearchVisible && (

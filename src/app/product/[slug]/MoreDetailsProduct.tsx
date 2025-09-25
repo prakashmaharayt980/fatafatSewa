@@ -1,19 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Star, MessageCircle, Send, ChevronDown, ChevronUp, UserCircle, User } from 'lucide-react';
+import { Star, MessageCircle, Send, ChevronDown, ChevronUp, UserCircle, User, Battery, Wifi, Bluetooth } from 'lucide-react';
 import { ProductDetails } from './page';
 import ParsedContent from '../ParsedContent';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import IconRenderer from '@/app/CommonVue/CustomIconImg';
 
-const mockKeyFeatures = {
-  Material: 'Premium Grade Steel',
-  Dimensions: '12 x 8 x 4 inches',
-  Weight: '2.5 lbs',
-  Warranty: '2 years manufacturer warranty',
-  'Color Options': 'Black, Silver, Blue',
-  Compatibility: 'Universal fit',
-};
+
 
 const demoReviews = [
   { author: 'John D.', rating: 5, text: 'Excellent quality and fast shipping. The product exceeded my expectations and I would definitely recommend it to others.' },
@@ -44,7 +38,7 @@ interface RatingInterface {
 
 export default function MoreDetailsProduct({
   productDesciption,
-  keyFeatures = mockKeyFeatures,
+  keyFeatures ,
   ReviewsData = demoReviews,
 }: MoreDetailsProductProps) {
   const [Rating, setRating] = useState<RatingInterface>({
@@ -79,12 +73,17 @@ export default function MoreDetailsProduct({
 
   const reviews: Review[] = ReviewsData;
 
+
+
+
+
+
   return (
-    <div className="w-full max-w-7xl mx-auto py-8 bg-white">
+    <div className="w-full max-w-7xl border-y-2 border-[var(--colour-fsP2)] mx-auto py-4 bg-white  my-1">
       {/* Description and Key Features Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-2">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-2 ">
         {/* Product Description */}
-        <div className="lg:col-span-3 ">
+        <div className="lg:col-span-2  p-2 ">
           <h2 className="text-xl font-semibold text-gray-900 mb-4  ">Product Description</h2>
           <div
             className={`text-gray-700 text-sm leading-relaxed transition-all duration-300 ${showFullDescription ? 'max-h-none' : 'max-h-48 overflow-hidden'
@@ -109,23 +108,24 @@ export default function MoreDetailsProduct({
         </div>
 
         {/* Key Features */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2  p-2" >
           <h3 className="text-xl font-semibold text-gray-900 mb-1">Full Specifications</h3>
           <div
-            className={`border shadow-sm border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ${showFullFeatures ? 'max-h-none' : 'max-h-48 overflow-hidden'
+            className={`overflow-hidden transition-all duration-300 ${showFullFeatures ? 'max-h-none' : 'max-h-48 overflow-hidden'
               }`}
           >
-            {Object.entries(keyFeatures).map(([key, value], index) => (
-              <div
-                key={index}
-                className={`px-4 py-2 border-b flex flex-row gap-2 border-gray-100 last:border-b-0 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                  }`}
-              >
-           
-                <h4 className="font-medium text-gray-900">{key}</h4> :
-                <p className="text-gray-600 text-sm">{value}</p>
-              </div>
-            ))}
+           {Object.entries(keyFeatures).map(([key, value], index) => (
+                <div
+                  key={index}
+                  className="px-4 py-3 flex items-start gap-4 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center gap-2 min-w-36">
+                    <IconRenderer iconKey={key} size={20} color="#1967b3" />
+                    <h4 className="font-medium text-sm text-gray-900">{key}</h4>
+                  </div>
+                  <p className="text-gray-600 text-sm flex-1">{value}</p>
+                </div>
+              ))}
           </div>
           <button
             onClick={() => setShowFullFeatures(!showFullFeatures)}
@@ -153,16 +153,16 @@ export default function MoreDetailsProduct({
           <div>
             <div className='flex flex-row justify-between'>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Reviews</h3>
-             { !Rating.commentOpen &&
-              <div>
-                <button
-                  onClick={() => setRating({ ...Rating, commentOpen: !Rating.commentOpen })}
-                  className="inline-flex items-center gap-2 px-6 py-2 bg-[var(--colour-fsP2)] text-white text-sm font-medium rounded-lg hover:bg-[var(--colour-fsP1)]  transition-colors duration-200"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                 Write a Review
-                </button>
-              </div>}
+              {!Rating.commentOpen &&
+                <div>
+                  <button
+                    onClick={() => setRating({ ...Rating, commentOpen: !Rating.commentOpen })}
+                    className="inline-flex items-center gap-2 px-6 py-2 bg-[var(--colour-fsP2)] text-white text-sm font-medium rounded-lg hover:bg-[var(--colour-fsP1)]  transition-colors duration-200"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    Write a Review
+                  </button>
+                </div>}
             </div>
 
             {/* Review Form (Conditionally Rendered) */}
@@ -235,7 +235,7 @@ export default function MoreDetailsProduct({
 
 
           {demoReviews.length > 0 ? (
-            <div className="bg-white border space-x-3 border-gray-200 rounded-xl px-4 py-2 shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden space-x-3  px-4 py-2  transition-all duration-300">
               {
                 demoReviews.map((review, index) => (
                   <div

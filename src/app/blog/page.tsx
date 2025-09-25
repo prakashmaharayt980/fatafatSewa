@@ -1,7 +1,8 @@
 'use client';
 
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Search, Calendar, User } from 'lucide-react';
+import { Search, Calendar, User, Facebook, Twitter, Instagram, Youtube, Linkedin } from 'lucide-react';
+import FeaturedPage from './FeaturedPage';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/components/ui/pagination';
 import RemoteServices from '../api/remoteservice';
 import Image from 'next/image';
@@ -10,6 +11,11 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { formatDate, stripHtml } from '../CommonVue/datetime';
 import { bloginfointerface } from '../types/Blogtypes';
+import BlogHeader from './BlogHeader';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import iconlist, { imglist } from '../CommonVue/Image';
+import { Button } from '@/components/ui/button';
+
 
 
 const BlogPage = () => {
@@ -57,8 +63,8 @@ const BlogPage = () => {
 
   const totalPages = bloginfo?.meta?.last_page || 1;
   const featuredArticle = filteredArticles[0];
-  const regularArticles = filteredArticles.slice(1, 5);
-  const regularArticleswithimg = filteredArticles.slice(6, 7);
+  const regularArticles = filteredArticles.slice(1, 3);
+  const regularArticleswithimg = filteredArticles.slice(6, 11);
   const regularArticleswithimgHroizental = filteredArticles.slice(7, 9);
   const regularArticleswithimgHroizentalrev = filteredArticles.slice(9, 10);
   const lastarticlesup = filteredArticles.slice(10, 14);
@@ -69,11 +75,9 @@ const BlogPage = () => {
   }
 
   const FeaturedArticle = ({ article }) => (
-    <article className="border-b-2 border-gray-300 pb-6 mb-4 cursor-pointer" onClick={() => handleblogdetails(article.slug)}>
-      <div className="text-xs font-bold text-[var(--colour-fsP1)] uppercase tracking-wide">
-        Mobile • BREAKING NEWS
-      </div>
-      <h1 className="text-2xl md:text-5xl font-bold text-[var(--colour-fsP2)] leading-tight mb-2 font-serif">
+    <article className=" border-gray-300 pb-6 mb-1 cursor-pointer" onClick={() => handleblogdetails(article.slug)}>
+
+      <h1 className="text-3xl  font-bold text-[var(--colour-fsP2)] leading-tight mb-2 font-serif">
         {article.title}
       </h1>
       <div className="flex items-center text-sm text-gray-600 mb-2 font-medium">
@@ -86,102 +90,118 @@ const BlogPage = () => {
           ? `${stripHtml(article.content).substring(0, 350)}...`
           : stripHtml(article.content)}
       </p>
-      <button className="text-blue-700 font-semibold hover:underline">
+      <button className="text-blue-700 text-sm font-semibold hover:underline">
         Continue Reading →
       </button>
     </article>
   );
 
-  const ArticleCard = ({ article }) => (
-    <article className="border-b border-gray-300 pb-4 mb-4 cursor-pointer" onClick={() => handleblogdetails(article.slug)}>
-      {/* <div className="text-xs font-bold text-blue-700 mb-1 uppercase tracking-wide">
-        {article.category || 'General'}
-      </div> */}
-      <h3 className={`font-bold text-black/70 leading-tight mb-2 font-serif hover:text-[var(--colour-fsP2)] cursor-pointer text-lg md:text-xl`}>
-        {article.title}
-      </h3>
-      <div className="flex items-center text-xs text-[var(--colour-fsP2)] mb-2">
-        <span className="mr-3">{article.author || 'Unknown Author'}</span>
-        <span className="mr-3">•</span>
-        <span>{formatDate(article.created_at)}</span>
-      </div>
-      <p className={`text-gray-700 leading-relaxed font-serif text-base`}>
-        {stripHtml(article.content).length > 200
-          ? `${stripHtml(article.content).substring(0, 200)}...`
-          : stripHtml(article.content)}
-      </p>
-    </article>
-  );
 
-  const ArticleCardImg = ({ article, classtitle }) => (
-    <article className="border-gray-300  hover:scale-105 mb-4 cursor-pointer" onClick={() => handleblogdetails(article.slug)}>
-      <div className=" relative overflow-hidden ">
+
+  const Topbanner = ({ article }) => (
+    <article className="border-gray-300   cursor-pointer" onClick={() => handleblogdetails(article.slug)}>
+      <div className=" relative overflow-hidden h-56 ">
         <Image
-          src={CompanyLogo}
+          src={imglist.urlimg2}
           alt={article.title}
-          width={100}
-          height={100}
-          className="w-full object-contain h-40 md:h-56 "
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
+
+          className="w-full h-full  object-fill transition-transform duration-500 group-hover:scale-105"
+          fill
+          quality={100}
         />
 
       </div>
 
-      <h3 className={cn(
-        "font-bold text-[var(--colour-fsP2)] leading-tight mb-1 font-serif hover:text-blue-700 cursor-pointer  transition-colors duration-200",
-        classtitle
-      )}>
-        {article.title}
-      </h3>
-      <div className={cn(
-        "flex items-center  text-gray-500  text-xs",
+      <div className='flex flex-row items-center gap-3 mt-2'>
+        <Avatar>
+          <AvatarImage src={iconlist.meniconimg} alt={article.title} />
+        </Avatar>
+        <div className='flex flex-col'>
+          <h3 className={cn(
+            "font-bold text-[var(--colour-fsP2)] leading-tight mb-1 font-serif hover:text-blue-700 cursor-pointer  transition-colors duration-200",
 
-      )}>
-        <span className="mr-3">{article.author || 'Unknown Author'}</span>
-        <span className="mr-3">•</span>
-        <span>{formatDate(article.created_at)}</span>
+          )}>
+            {article.title}
+          </h3>
+          <div className={cn(
+            "flex items-center  text-gray-500  text-xs",
+
+          )}>
+            <span className="mr-3">{article.author || 'Unknown Author'}</span>
+            <span className="mr-3">•</span>
+            <span>{formatDate(article.created_at)}</span>
+          </div>
+        </div>
       </div>
-      <p className="text-gray-700 leading-relaxed font-serif text-base">
-        {stripHtml(article.content).length > 300
-          ? `${stripHtml(article.content).substring(0, 300)}...`
-          : stripHtml(article.content)}
-      </p>
+
+    </article>
+  );
+  const ArticleCardImg = ({ article }) => (
+    <article className="border-gray-300   cursor-pointer" onClick={() => handleblogdetails(article.slug)}>
+      <div className=" relative overflow-hidden rounded-xl p-4">
+        <Image
+          src={'https://fatafatsewa.com/storage/media/1641/apr-pod-banner-min.png'}
+          alt={article.title}
+          width={100}
+          height={100}
+          className="w-full object-contain rounded-lg overflow-hidden h-40 md:h-56 "
+        
+        />
+
+      </div>
+      <div className='flex flex-col justify-center text-center gap-1'>
+
+        <h3 className={cn(
+          "font-bold text-[var(--colour-fsP2)] text-2xl leading-tight mb-1 font-serif hover:text-blue-700 cursor-pointer  transition-colors duration-200",
+
+        )}>
+          {article.title}
+        </h3>
+        <div className={cn(
+          "flex items-center justify-center  text-gray-500  text-xs",
+
+        )}>
+          <span className="mr-3">{article.author || 'Unknown Author'}</span>
+          <span className="mr-3">•</span>
+          <span>{formatDate(article.created_at)}</span>
+        </div>
+        <p className="text-gray-700 text-start px-2 leading-relaxed font-serif text-base">
+          {stripHtml(article.content).length > 200
+            ? `${stripHtml(article.content).substring(0, 200)}...`
+            : stripHtml(article.content)}
+        </p>
+      </div>
     </article>
   );
 
 
 
-  const ArticlecardImgHorizontal = ({ article, classparent }) => (
-    <article className="border-gray-300 pb-4 mb-4 group cursor-pointer" onClick={() => handleblogdetails(article.slug)}>
+  const ArticlecardImgHorizontal = ({ article, }) => (
+    <article className="border-gray-300 pb-4 mb-1 group cursor-pointer" onClick={() => handleblogdetails(article.slug)}>
       <div className={cn(
         "flex  gap-4",
-        classparent
+
       )}>
         <div className="w-1/3 flex-shrink-0">
-          <div className="relative overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-all duration-300 h-full">
+          <div className="relative overflow-hidden p-3 rounded-lg  transition-all duration-300 h-24">
             <Image
-              src={CompanyLogo}
+              src={imglist.urlimg2}
               alt={article.title}
-              width={100}
-              height={100}
-              className="w-full h-full object-contain min-h-[120px] md:min-h-[150px] group-hover:scale-105 transition-transform duration-500"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
+
+              className="w-full h-full object-conver transition-transform duration-500"
+              fill
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
           </div>
         </div>
         <div className="w-2/3 flex flex-col justify-between">
 
-          <h3 className="font-bold text-[var(--colour-fsP2)] leading-tight mb-3 font-serif hover:text-blue-700 cursor-pointer text-lg md:text-xl transition-colors duration-200">
+          <h3 className="font-bold text-[var(--colour-fsP2)] leading-tight mb-1 font-serif hover:text-blue-700 cursor-pointer text-sm  transition-colors duration-200">
             {article.title}
           </h3>
-          <p className="text-gray-700 leading-relaxed font-serif text-sm md:text-base mb-3 flex-grow">
-            {stripHtml(article.content).length > 400
-              ? `${stripHtml(article.content).substring(0, 400)}...`
+          <p className="text-gray-700 leading-relaxed font-serif text-xs md:text-base mb-1 flex-grow">
+            {stripHtml(article.content).length > 100
+              ? `${stripHtml(article.content).substring(0, 100)}...`
               : stripHtml(article.content)}
           </p>
           <div className="flex items-center text-xs text-[var(--colour-fsP1)] mt-auto">
@@ -241,40 +261,19 @@ const BlogPage = () => {
     return items;
   };
 
+  const socialIcons = [
+    { Icon: Facebook, url: "#", color: "hover:text-blue-600" },
+    { Icon: Twitter, url: "#", color: "hover:text-sky-500" },
+    { Icon: Instagram, url: "#", color: "hover:text-pink-600" },
+    { Icon: Youtube, url: "#", color: "hover:text-red-600" },
+    { Icon: Linkedin, url: "#", color: "hover:text-blue-700" },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Search and Navigation */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <div className="flex rounded-full border border-gray-200 bg-gray-50/50 w-full md:w-96 overflow-hidden focus-within:ring-2 focus-within:ring-blue-300">
-              <input
-                type="text"
-                placeholder="Search articles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 bg-transparent text-gray-800 placeholder-gray-500 focus:outline-none"
-              />
-              <button className="bg-blue-600 text-white px-4 py-2 m-0.5 hover:bg-blue-700 transition-colors rounded-full flex items-center justify-center">
-                <Search className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              {categories.map(category => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedCategory === category
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                    }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+      <div className="max-w-7xl mx-auto px-2 py-4">
+
+
 
         {/* Articles Layout */}
         {loading ? (
@@ -290,57 +289,127 @@ const BlogPage = () => {
         ) : filteredArticles.length > 0 ? (
           <>
             {featuredArticle && <FeaturedArticle article={featuredArticle} />}
-            <div className="flex flex-row gap-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-3/5">
-                {regularArticles.map((article) => (
-                  <div key={article.id} className="w-full">
-                    <ArticleCard article={article} />
-                  </div>
-                ))}
+            {/* Featured Content Section */}
+            <div className='flex flex-row gap-3  max-w-[1400px] mx-auto'>
+              {/* Featured Articles Grid */}
+              <div className="w-2/3 bg-white rounded-2xl shadow-lg overflow-hidden  transform  transition-all duration-300 border border-gray-100">
+
+                <div className="grid grid-cols-2 gap-2 p-2">
+                  {regularArticles.map((article) => (
+                    <div key={article.id} className="group cursor-pointer">
+                      <div className="relative overflow-hidden rounded-xl bg-gray-50  transition-all duration-300">
+                        <div className="aspect-w-16 aspect-h-9">
+                          <Topbanner article={article} />
+                        </div>
+
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col gap-4 w-2/5">
-                {regularArticleswithimg.map((article) => (
-                  <div key={article.id} className="w-full">
-                    <ArticleCardImg article={article} classtitle='text-xl md:text-2xl' />
+
+              {/* Advertisement Panel */}
+              <div className="w-1/3 rounded-2xl shadow-lg overflow-hidden group bg-cover bg-no-repeat   transform -translate-y-1 transition-all duration-300"
+                style={{
+                  backgroundImage: `url(${imglist.urlimg2})`,
+
+                }}
+              >
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 bg-white/70 p-4  transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <Button className="inline-block cursor-pointer px-3 py-1 bg-white/90 rounded-full text-xs font-semibold text-[var(--colour-fsP2)] mb-1">
+                      shop Now
+                    </Button>
+                    <div className='p-2 rounded'>
+                      <h2 className="text-2xl font-bold font-serif ">Exclusive Offer!</h2>
+                      <p className="text-sm ">
+                        Discover our latest collection with unbeatable discounts. Shop now and elevate your style!
+                      </p>
+                    </div>
                   </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className="my-24 justify-center flex flex-col items-center align-middle">
+              <h4 className="text-[var(--colour-fsP2)] font-semibold text-xl mb-4 text-center lg:text-left">Let's Connect Us</h4>
+              <div className="flex gap-3 justify-center lg:justify-start">
+                {socialIcons.map(({ Icon, url, color }, index) => (
+                  <a
+                    key={index}
+                    href={url}
+                    className={`w-11 h-11 bg-white rounded-full flex items-center justify-center text-gray-600 ${color} transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1 hover:scale-105`}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
                 ))}
               </div>
             </div>
+
+            {/* Featured Articles Section */}
+            <FeaturedPage articles={regularArticleswithimg} />
 
             <div>
-              {
-                regularArticleswithimgHroizental.map((article) => (
-                  <div key={article.id} className="w-full">
-                    <ArticlecardImgHorizontal article={article} classparent="flex-row" />
-                  </div>
-                ))
-              }
-              {
-                regularArticleswithimgHroizentalrev.map((article) => (
-                  <div key={article.id} className="w-full">
-                    <ArticlecardImgHorizontal article={article} classparent="flex-row-reverse" />
-                  </div>
-                ))
-              }
+              <div className="relative">
+                <h2 className="text-xl font-bold text-gray-900 font-serif heading-title relative inline-block  px-4 mb-2">
+                  Mobile Articles
+                </h2>
+              </div>
+              <div className='grid grid-cols-1 sm:grid-cols-5 gap-6  mx-auto my-8'>
+                <div className='col-span-2  border border-gray-100 rounded-lg p-2 overflow-hidden shadow-sm'>
+                  {regularArticleswithimgHroizental && <ArticleCardImg article={featuredArticle} />}
+                </div>
+
+                <div className='col-span-3 border border-gray-100 rounded-lg px-2 my-auto overflow-hidden shadow-sm'>
+                  {
+                    regularArticleswithimg.slice(0, 4).map((article) => (
+                      <div key={article.id} className="w-full">
+                        <ArticlecardImgHorizontal article={article} />
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
+            </div>
+
+               <FeaturedPage articles={regularArticleswithimg} />
+
+            <div>
+              <div className="relative">
+                <h2 className="text-xl font-bold text-gray-900 font-serif heading-title relative inline-block  px-4 mb-2">
+                  News Articles
+                </h2>
+              </div>
+              <div className='grid grid-cols-1 sm:grid-cols-5 gap-6  mx-auto my-8'>
+            
+
+                <div className='col-span-3 border border-gray-100 rounded-lg px-2 my-auto overflow-hidden shadow-sm'>
+                  {
+                    regularArticleswithimg.slice(0, 4).map((article) => (
+                      <div key={article.id} className="w-full">
+                        <ArticlecardImgHorizontal article={article} />
+                      </div>
+                    ))
+                  }
+                </div>
+
+                    <div className='col-span-2  border border-gray-100 rounded-lg p-2 overflow-hidden shadow-sm'>
+                  {regularArticleswithimgHroizental && <ArticleCardImg article={featuredArticle} />}
+                </div>
+              </div>
             </div>
 
 
-            <hr className="border-t border-gray-300 mb-3 w-full" />
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {lastarticlesup.map((article) => (
-                <div key={article.id} className="w-full">
-                  <ArticleCardImg article={article} classtitle='text-lg md:text-xl' />
-                </div>
-              ))}
-            </div>
-            <hr className="border-t border-gray-300 mb-3 w-full" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {lastarticlesdown.map((article) => (
-                <div key={article.id} className="w-full">
-                  <ArticleCard article={article} />
-                </div>
-              ))}
-            </div>
+
+
+   <FeaturedPage articles={regularArticleswithimg} />
+
+
+
+
             {totalPages > 1 && (
               <div className="mt-8 pt-6 border-t-2 border-gray-300">
                 <Pagination>

@@ -38,7 +38,7 @@ const RemoteServices = {
   SerachProducts: (data: string) =>
     getRequest(`/v1/products?name=${data}&limit=10`).then(res => res.data),
   ProductTranding: () =>
-    getRequest(`/v1/products?order_by=-created`).then(res => res.data),
+    getRequest(`/v1/products?order_by=created`).then(res => res.data),
 
   FilterProducts: ({slug,sort,page}) =>
     getRequest(`/get-products?category=${slug}&sorting=${sort}&page=${page}&get_filters=true`)
@@ -46,6 +46,7 @@ const RemoteServices = {
 
   Categories: () =>
     getRequest(`/v1/categories?order_by=created`).then(res => res.data),
+  
 
   CategoriesSlug: (slug: string) =>
     getRequest(`/v1/categories/${slug}`).then(res => res.data),
