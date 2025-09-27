@@ -10,10 +10,11 @@ import { Separator } from '@/components/ui/separator';
 
 import imglogo from '@/app/assets/logoimg.png';
 import { cn } from '@/lib/utils';
-import { HomePageData } from '@/app/api/ContextStore';
+import { CategoryTypes } from '@/app/types/CategoryTypes';
+
 
 interface CategorySideDrawerProps {
-  categories: HomePageData['categories'];
+  categories: CategoryTypes['categories'];
   showCategoryDrawer: boolean;
   toggleCategoryDrawer: () =>void;
 }
