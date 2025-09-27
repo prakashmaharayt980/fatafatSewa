@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
-import { ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { ProductDetails } from "./page";
+import { ProductDetails } from "@/app/types/CategoryTypes";
+
 
 
 
