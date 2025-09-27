@@ -1,6 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { ProductDetails } from '../product/[slug]/page';
+import { ProductDetails } from '../types/CategoryTypes';
+
 
 interface UserInfo {
   name: string;

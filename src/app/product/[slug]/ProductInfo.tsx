@@ -1,15 +1,15 @@
 import React, { useMemo } from "react";
-import { ShoppingCart, CreditCard, ArrowLeftRight, UserCircle, ShoppingBag, CreditCardIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ProductDetails } from "./page";
+import { ArrowLeftRight, ShoppingBag, CreditCardIcon } from "lucide-react";
+
+
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useContextCart } from "@/app/checkout/CartContext";
 import { PaymentMethodsOptions } from "@/app/CommonVue/Payment";
 import { useRouter } from "next/navigation";
 import { useContextEmi } from "@/app/emi/emiContext";
-import { Avatar } from "@/components/ui/avatar";
-import { AvatarFallback } from "@radix-ui/react-avatar";
+import { ProductDetails } from "@/app/types/CategoryTypes";
+
 
 interface ProductInfoProps {
     product: ProductDetails;
@@ -71,12 +71,12 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                 },
                 className: 'bg-[var(--colour-fsP2)] text-white',
             },
-            {
-                name: 'Compare',
-                Icon: ArrowLeftRight,
-                action: () => setIsDrawerOpen(true),
-                className: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-200',
-            },
+            // {
+            //     name: 'Compare',
+            //     Icon: ArrowLeftRight,
+            //     action: () => setIsDrawerOpen(true),
+            //     className: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-200',
+            // },
         ],
         [product, quantity, addToCart, setEmiContextInfo, setIsDrawerOpen]
     );
@@ -158,7 +158,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
 
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {AcctionButtons.map((btn, idx) => {
                     const Icon =btn.Icon  
                     return (

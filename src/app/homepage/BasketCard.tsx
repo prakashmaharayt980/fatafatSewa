@@ -17,7 +17,7 @@ interface BasketCardProps {
 
 const fetcher = async (slug: string) => {
   const response = await RemoteServices.CategoriesSlug(slug);
-  console.log('CategoriesSlug Response:', response); // Debug log
+
   return response;
 };
 

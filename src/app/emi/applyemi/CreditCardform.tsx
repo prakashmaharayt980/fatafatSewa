@@ -86,6 +86,7 @@ export default function CreditCardComponent({ cardinfofield }) {
                         onChange={field.onChange}
                         placeholder={field.placeholder}
                         maxLength={field.maxLength}
+                        max={field?.maxvalue}
                         className="w-full border-none text-gray-600 font-[400] outline-none"
                       />
                     )}

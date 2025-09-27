@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, use } from 'react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
@@ -26,10 +26,11 @@ import DocumentUpload from './DocumentUpload';
 
 
 const ApplyEmiProcess = () => {
-  const { emiContextInfo, setEmiContextInfo, AvailablebankProvider } = useContextEmi();
+  const { emiContextInfo, setEmiContextInfo, AvailablebankProvider, emiCalculation } = useContextEmi();
   const [NoCreditCard, setNoCreditCard] = useState(false);
   const [currentstep, setcurrentstep] = useState(0);
   const product = emiContextInfo.product;
+  const emiCalc = emiContextInfo.emiCalculation;
   const [previews, setPreviews] = useState({});
 
   useEffect(() => {
@@ -109,22 +110,7 @@ const ApplyEmiProcess = () => {
     }));
   };
 
-  const handleDobChange = (e, section) => {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4);
-    if (value.length > 7) value = value.slice(0, 7) + '-' + value.slice(7, 9);
-    const regex = /^\d{4}-\d{2}-\d{2}$/;
-    if (value.length === 10 && !regex.test(value)) {
-      return; // Prevent invalid date format
-    }
-    setEmiContextInfo((prev) => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        dob: value,
-      },
-    }));
-  };
+
 
   const handleBankSelect = (section, name, value) => {
     setEmiContextInfo((prev) => ({
@@ -192,86 +178,62 @@ const ApplyEmiProcess = () => {
   };
 
 
+  const tumerOptions = useMemo(() => {
+    const tumer = AvailablebankProvider.find(bank => bank.name === emiContextInfo.bankinfo.bankname)?.tenureOptions
+    console.log('tumer', tumer);
+    return tumer || [];
+  }, [emiContextInfo.bankinfo.bankname, AvailablebankProvider])
 
-  const emiData = useMemo(() => {
-    if (!product?.price || product.price <= 0) {
-      return {
-        downPayment: 0,
-        loanAmount: 0,
-        monthlyEMI: 0,
-        totalInterest: 0,
-        totalPayment: 0,
-        duration: 12,
-      };
-    }
 
-    // Use downPaymentPercent from emiCalculation
-    const downPaymentPercent = emiContextInfo.emiCalculation.downPayment || 0;
-    const downPaymentAmount = product.price * (downPaymentPercent / 100);
-    const loanAmount = product.price - downPaymentAmount;
-    // Use interestRate from emiContextInfo root
-    const monthlyRate = (emiContextInfo.emiCalculation.interestRate || 10) / 100 / 12;
-    // Use duration from emiCalculation
-    const numberOfPayments = emiContextInfo.emiCalculation.duration || 12;
 
-    const emi =
-      loanAmount > 0
-        ? (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-        (Math.pow(1 + monthlyRate, numberOfPayments) - 1)
-        : 0;
-
-    const totalPayment = emi * numberOfPayments + downPaymentAmount;
-    const totalInterest = totalPayment - product.price;
-
-    return {
-      downPayment: downPaymentAmount,
-      loanAmount,
-      monthlyEMI: emi,
-      totalInterest,
-      totalPayment,
-      duration: numberOfPayments,
-    };
-  }, [
-    product?.price,
-    emiContextInfo.emiCalculation.downPayment,
-    emiContextInfo.emiCalculation.duration,
-    emiContextInfo.emiCalculation.interestRate,
-  ]);
+  const emiData = useMemo(() => emiCalculation(
+    product.price === null ? 0 : product.price,
+    emiCalc.duration,
+    emiCalc.downPayment,
+    emiContextInfo.bankinfo.bankname
+  ), [product.price, emiCalc.duration, emiCalc.downPayment, emiContextInfo.bankinfo.bankname, emiCalculation])
   const emiConditionFields = [
     {
       label: "Down Payment Amount",
       name: "downPayment",
-      value: emiContextInfo.emiCalculation.downPayment,
+      value: emiData.downPayment,
       onChange: (e) => handleInputChange(e, "emiCalculation"),
       svgicon: '/svgfile/moneycashicon.png',
+      extenduserinfo: '',
+      placeholder: 'Enter down payment amount',
+      maxvalue: product.price
+    },
+    {
+      label: "Bank",
+      name: "bankname",
+      value: emiContextInfo.bankinfo.bankname,
+      onChange: (e) => handleBankSelect("bankinfo", "bankname", e.target.value),
+      type: "select",
+      placeholder: "Select Bank",
+
+      svgicon: '/svgfile/monthicon.png',
       extenduserinfo: '',
     },
     {
       label: "Duration (months)",
       name: "duration",
-      value: emiContextInfo.emiCalculation.duration,
+      value: emiCalc.duration,
       onChange: (e) => handleInputChange(e, "emiCalculation"),
+      placeholder: "Select Duration",
       type: "select",
-      options: [ '12','18','24','36'],
+      options: tumerOptions,
       svgicon: '/svgfile/monthicon.png',
       extenduserinfo: '',
     },
     {
-      label: "",
-      name: "downPaymentPercent",
-      value: emiData.totalPayment.toFixed(2),
+      label: "Finance Amount",
+      name: "financeAmount",
+      value: emiData.financeAmount,
       onChange: () => { },
       svgicon: '/svgfile/moneycashicon.png',
       extenduserinfo: '',
     },
-    {
-      label: "Emi intrest Amount ",
-      name: "downPaymentPercent",
-      value: emiData.totalInterest.toFixed(2),
-      onChange: () => { },
-      svgicon: '/svgfile/moneycashicon.png',
-      extenduserinfo: '',
-    }
+
   ];
 
   const personalDetailsInfolist = [
@@ -359,9 +321,9 @@ const ApplyEmiProcess = () => {
     // Standard order: Card Number first, then Expiry, then Name, then Provider, then Limit
     {
       label: "Bank Name",
-      name: "creditCardProvider",
-      value: emiContextInfo.bankinfo.creditCardProvider,
-      onChange: (e) => handleBankSelect("bankinfo", "creditCardProvider", e.target.value),
+      name: "bankname",
+      value: emiContextInfo.bankinfo.bankname,
+      onChange: (e) => handleBankSelect("bankinfo", "bankname", e.target.value),
       type: "select",
       svgicon: '/svgfile/bank.svg',
       extenduserinfo: '',
@@ -566,12 +528,12 @@ const ApplyEmiProcess = () => {
                   height={80}
                   width={80}
                 />
-                <p className="text-2xl font-bold text-blue-600">Rs {emiData.downPayment.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-blue-600">Rs {emiData.downPayment}</p>
               </div>
             </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Required Documents</h3>
             <DocumentUpload
-              docTypes={['ppphoto', 'front', 'back', 'bankStatement']}
+              docTypes={['ppphoto', 'front', 'back']}
               isGranter={false}
               files={emiContextInfo.files}
               previews={previews}

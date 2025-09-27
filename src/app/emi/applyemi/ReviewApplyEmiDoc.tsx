@@ -6,12 +6,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useContextEmi } from "../emiContext";
 
 interface RenderReviewProps {
-  emiData: {
-    downPayment: number;
-    monthlyEMI: number;
-    totalPayment: number;
-    totalInterest: number;
-  };
+  emiData,
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>, docType: string) => void;
   handleFileDelete: (docType: string, isGranter?: boolean) => void;
   handleBack: () => void;
@@ -50,7 +45,7 @@ const RenderReview: React.FC<RenderReviewProps> = ({
   const creditCardFields: InfoItem[] = hasCreditCard === "yes" ? [
     { label: "Card Number", value: `**** **** **** ${bankinfo.creditCardNumber?.slice(-4)}` },
     { label: "Card Holder Name", value: bankinfo.cardHolderName },
-    { label: "Card Provider", value: bankinfo.creditCardProvider },
+    { label: "Card Provider", value: bankinfo.bankname },
     { label: "Expiry Date", value: bankinfo.expiryDate },
     { label: "Credit Limit", value: `Rs. ${bankinfo.cardLimit}` },
   ] : [];
@@ -88,10 +83,10 @@ const RenderReview: React.FC<RenderReviewProps> = ({
 
   // Define EMI calculation fields
   const emiFields: InfoItem[] = [
-    { label: "Down Payment", value: ` ${emiCalculation.downPayment || 0} %` },
-    { label: "Duration", value: `Rs. ${emiCalculation.duration} months` },
-    { label: "Total Amount ", value: `Rs. ${emiData.totalPayment.toFixed(2)}` },
-    { label: "Emi intrest Amount ", value: `Rs. ${emiData.totalInterest.toFixed(2)}` },
+    { label: "Down Payment", value: ` ${emiData.downPayment || 0}` },
+    { label: "Duration", value: `Rs. ${emiData.tenure} months` },
+    { label: "Finace amount ", value: `Rs. ${emiData.financeAmount}` },
+    { label: "Produt Amount ", value: `Rs. ${emiData.principal}` },
   ];
 
   const handlesignture = () => {

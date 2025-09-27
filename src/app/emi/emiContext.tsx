@@ -10,7 +10,8 @@ import {
   SetStateAction,
   useMemo,
 } from "react";
-import { ProductDetails } from "../product/[slug]/page";
+import { ProductDetails } from "../types/CategoryTypes";
+
 
 interface UserInfo {
   name: string;
@@ -47,7 +48,7 @@ interface BankInfo {
   accountHolderName: string;
   accountNumber: string;
   bankname: string;
-  creditCardProvider: string;
+
   bankbranch: string;
   cardLimit: number;
   salaryAmount: number;
@@ -66,7 +67,8 @@ export interface EmiContextState {
     monthlyEmi: number;
     duration: number;
     downPayment: number;
-    interestRate:number;  };
+
+  };
   hasCreditCard: string;
   bankinfo: BankInfo;
   granterPersonalDetails: GranterPersonalDetails;
@@ -81,7 +83,15 @@ interface EmiContextType {
     name: string;
     rate: number;
     img: string;
+    tenureOptions: number[];
   }>
+  emiCalculation:(principal: number, tenure: number, downPayment: number | string, bankid: string) => {
+    principal: number;
+    tenure: number;
+    downPayment: number | string;
+    financeAmount: number;
+    paymentpermonth: number;
+  }
 }
 
 const STORAGE_KEY = "emiContextInfo";
@@ -122,9 +132,9 @@ const defaultState: EmiContextState = {
     monthlyEmi: 0,
     duration: 12,
     downPayment: 0,
-    interestRate: 12,
-    
-    
+ 
+
+
   },
   hasCreditCard: "no",
   bankinfo: {
@@ -134,7 +144,7 @@ const defaultState: EmiContextState = {
     accountHolderName: "",
     accountNumber: "",
     bankname: "",
-    creditCardProvider: "",
+
     bankbranch: "",
     cardLimit: 0,
     salaryAmount: 0
@@ -175,19 +185,77 @@ export const EmiProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return defaultState;
   });
 
+
+
   const AvailablebankProvider = useMemo(
     () => [
-      { id: 'nabil', name: 'Nabil Bank', rate: 11.5, img: '/imgfile/bankingPartners7.png' },
-      { id: 'global', name: 'Global IME Bank', rate: 12, img: '/imgfile/bankingPartners1.png' },
-      { id: 'nmb', name: 'NMB Bank', rate: 11.75, img: '/imgfile/bankingPartners3.png' },
-      { id: 'siddhartha', name: 'Siddhartha Bank', rate: 12.25, img: '/imgfile/bankingPartners9.png' },
-      { id: 'NicAsia', name: 'Nic Asia Bank', rate: 12.25, img: '/imgfile/bankingPartners11.png' },
-      { id: 'hbl', name: 'Himalayan Bank', rate: 12.25, img: '/imgfile/bankingPartners10.png' },
-      { id: 'sanimabank', name: 'Sanima Bank', rate: 12.25, img: '/imgfile/bankingPartners8.png' },
-      { id: 'kumari', name: 'Kumari Bank', rate: 12.25, img: '/imgfile/bankingPartners6.png' },
+      { id: 'nabil', name: 'Nabil Bank', rate: 11.5, img: '/imgfile/bankingPartners7.png', tenureOptions: [12, 18, 24, 36] },
+      { id: 'global', name: 'Global IME Bank', rate: 12, img: '/imgfile/bankingPartners1.png', tenureOptions: [12, 24, 36] },
+      { id: 'nmb', name: 'NMB Bank', rate: 11.75, img: '/imgfile/bankingPartners3.png', tenureOptions: [12, 24, 36] },
+      { id: 'siddhartha', name: 'Siddhartha Bank', rate: 12.25, img: '/imgfile/bankingPartners9.png', tenureOptions: [12, 24, 36] },
+      { id: 'NicAsia', name: 'Nic Asia Bank', rate: 12.25, img: '/imgfile/bankingPartners11.png', tenureOptions: [12, 24, 36] },
+      { id: 'hbl', name: 'Himalayan Bank', rate: 12.25, img: '/imgfile/bankingPartners10.png', tenureOptions: [12, 24, 36] },
+      { id: 'sanimabank', name: 'Sanima Bank', rate: 12.25, img: '/imgfile/bankingPartners8.png', tenureOptions: [12, 24, 36] },
+      { id: 'kumari', name: 'Kumari Bank', rate: 12.25, img: '/imgfile/bankingPartners6.png', tenureOptions: [12, 24, 36] },
     ],
     []
   );
+
+
+  const emiCalculation = (
+    principal: number,
+    tenure: number,
+    downPayment: number | string,
+    bankid: string
+  ) => {
+    let financeAmount = principal;
+    let paymentpermonth = 0;
+
+    if (principal <= 0) {
+      return {
+        principal,
+        tenure:12,
+        downPayment,
+        financeAmount: 0,
+        paymentpermonth: 0,
+      };
+    }
+
+    if(downPayment === "0" || downPayment === 0){
+      downPayment = 0;
+      financeAmount = principal - downPayment;
+      paymentpermonth = financeAmount / tenure;
+    }
+
+    if (typeof downPayment === "string" && downPayment === "40%" && parseInt(downPayment) <= principal) {
+      downPayment = (40 / 100) * principal;
+      financeAmount = principal - downPayment;
+      paymentpermonth = financeAmount / tenure;
+    }
+
+    if (typeof downPayment === "string" && parseInt(downPayment) >= 0 && parseInt(downPayment) <= principal  ) {
+      financeAmount = principal - parseInt(downPayment);
+      // const bank = AvailablebankProvider.find((b) => b.id === bankid);
+      // const interestRate = bank ? bank.rate : 0;
+      paymentpermonth = financeAmount / tenure;
+      // paymentpermonth=(financeAmount + (financeAmount * interestRate) / 100) / tenure;
+    }
+    if (typeof downPayment === "number" && downPayment >= 0 && downPayment <= principal ) {
+      financeAmount = principal - downPayment;
+      // const bank = AvailablebankProvider.find((b) => b.id === bankid);
+      // const interestRate = bank ? bank.rate : 0;
+      paymentpermonth = financeAmount / tenure;
+      // paymentpermonth=(financeAmount + (financeAmount * interestRate) / 100) / tenure;
+    }
+
+    return {
+      principal,
+      tenure,
+      downPayment,
+      financeAmount,
+      paymentpermonth,
+    };
+  }
 
   // Save to localStorage whenever state changes (excluding files)
   useEffect(() => {
@@ -196,7 +264,7 @@ export const EmiProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [emiContextInfo]);
 
   return (
-    <EmiContext.Provider value={{ emiContextInfo, setEmiContextInfo, AvailablebankProvider }}>
+    <EmiContext.Provider value={{ emiContextInfo, setEmiContextInfo, AvailablebankProvider ,emiCalculation}}>
       {children}
     </EmiContext.Provider>
   );

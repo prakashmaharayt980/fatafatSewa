@@ -24,7 +24,7 @@ const HeaderComponent = () => {
 
     // Consolidated state object
     const [state, setState] = useState({
-        search: " ",
+        search: "",
         searchResults: [],
         showSearchDropdown: false,
         isSearching: false,
@@ -41,6 +41,7 @@ const HeaderComponent = () => {
     };
 
     const handleSearchChange = async (e) => {
+        e.stopPropagation();
         const value = e.target.value;
         updateState({ search: value });
 
@@ -214,7 +215,11 @@ const HeaderComponent = () => {
                                         value={state.search}
                                         onChange={handleSearchChange}
                                         className="w-full px-4 py-2.5 bg-transparent border-none focus:outline-none text-sm placeholder-gray-500"
-                                        autoFocus
+                                        onKeyDown={(e) => {
+                                            if (e.key === ' ') {
+                                                e.stopPropagation(); // Prevent space key from being intercepted
+                                            }
+                                        }}
                                     />
                                     <button className="bg-blue-600 text-white px-4 py-2.5 m-0.5 hover:bg-blue-700 transition-colors rounded-full duration-200 flex items-center justify-center">
                                         <Search className="w-4 h-4" />

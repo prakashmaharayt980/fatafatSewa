@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Star, MessageCircle, Send, ChevronDown, ChevronUp, UserCircle, User, Battery, Wifi, Bluetooth } from 'lucide-react';
-import { ProductDetails } from './page';
+import { Star, MessageCircle, Send, ChevronDown, ChevronUp, } from 'lucide-react';
+
 import ParsedContent from '../ParsedContent';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import IconRenderer from '@/app/CommonVue/CustomIconImg';
-
+import { ProductDetails } from '@/app/types/CategoryTypes';
+import valuejson from './text.json'
 
 
 const demoReviews = [
@@ -75,21 +76,21 @@ export default function MoreDetailsProduct({
 
 
 
-
+const textdesction=valuejson[0].content
 
 
   return (
     <div className="w-full max-w-7xl border-y-2 border-[var(--colour-fsP2)] mx-auto py-4 bg-white  my-1">
       {/* Description and Key Features Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-2 ">
-        {/* Product Description */}
-        <div className="lg:col-span-2  p-2 ">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-2">
+        {/* Product Description - Scrollable */}
+        <div className="lg:col-span-2  ">
           <h2 className="text-xl font-semibold text-gray-900 mb-4  ">Product Description</h2>
           <div
-            className={`text-gray-700 text-sm leading-relaxed transition-all duration-300 ${showFullDescription ? 'max-h-none' : 'max-h-48 overflow-hidden'
+            className={`text-gray-700 text-sm leading-relaxed transition-all duration-300 ${showFullDescription ? 'max-[90vh]' : 'max-h-48 overflow-hidden'
               }`}
           >
-            <ParsedContent description={productDesciption} />
+            <ParsedContent description={textdesction} />
           </div>
           <button
             onClick={() => setShowFullDescription(!showFullDescription)}
@@ -107,14 +108,15 @@ export default function MoreDetailsProduct({
           </button>
         </div>
 
-        {/* Key Features */}
-        <div className="lg:col-span-2  p-2" >
-          <h3 className="text-xl font-semibold text-gray-900 mb-1">Full Specifications</h3>
-          <div
-            className={`overflow-hidden transition-all duration-300 ${showFullFeatures ? 'max-h-none' : 'max-h-48 overflow-hidden'
-              }`}
-          >
-           {Object.entries(keyFeatures).map(([key, value], index) => (
+        {/* Key Features - Sticky */}
+        <div className="lg:col-span-2  p-2 lg:sticky lg:top-0 lg:self-start">
+          <div className="bg-white">
+            <h3 className="text-xl font-semibold text-gray-900 mb-1">Full Specifications</h3>
+            <div
+              className={`overflow-hidden transition-all duration-300 ${showFullFeatures ? 'max-h-none' : 'max-h-48 overflow-hidden'
+                }`}
+            >
+              {Object.entries(keyFeatures).map(([key, value], index) => (
                 <div
                   key={index}
                   className="px-4 py-3 flex items-start gap-4 hover:bg-gray-50 transition-colors"
@@ -126,21 +128,22 @@ export default function MoreDetailsProduct({
                   <p className="text-gray-600 text-sm flex-1">{value}</p>
                 </div>
               ))}
+            </div>
+            <button
+              onClick={() => setShowFullFeatures(!showFullFeatures)}
+              className="flex items-center gap-2 mt-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            >
+              {showFullFeatures ? (
+                <>
+                  Show Less <ChevronUp className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  Show More <ChevronDown className="w-4 h-4" />
+                </>
+              )}
+            </button>
           </div>
-          <button
-            onClick={() => setShowFullFeatures(!showFullFeatures)}
-            className="flex items-center gap-2 mt-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
-          >
-            {showFullFeatures ? (
-              <>
-                Show Less <ChevronUp className="w-4 h-4" />
-              </>
-            ) : (
-              <>
-                Show More <ChevronDown className="w-4 h-4" />
-              </>
-            )}
-          </button>
         </div>
       </div>
 
