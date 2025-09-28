@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/sonner';
 import ChatBot from './chatbot';
 import { CartProvider } from './checkout/CartContext';
 import CheckoutDrawer from './checkout/CheckoutDrawer';
-import DeliverySection from './checkout/DeliverySection';
+
 import CheckoutSuccess from './checkout/CheckoutSucess';
 
 import LoginPage from './login/page';
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ChatBot />
           <Toaster richColors position="top-right" />
           <CheckoutDrawer />
-          <DeliverySection />
+         
           <CheckoutSuccess />
 
           <LoginPage />

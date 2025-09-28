@@ -12,6 +12,7 @@ import {
 
 import { useContextCart } from './CartContext';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 
 const CheckoutDrawer = () => {
@@ -25,9 +26,15 @@ const CheckoutDrawer = () => {
 
  processedToCheckout
   } = useContextCart();
+  const router = useRouter();
 
 
   const subtotal = calculateSubtotal();
+
+  const handlerouter = () => {
+    router.push('/checkout');
+    setIsDrawerOpen(false);
+  }
 
 
 
@@ -110,7 +117,7 @@ const CheckoutDrawer = () => {
             </div>
             <div className="flex gap-2 sm:gap-3">
               <button
-                onClick={processedToCheckout}
+                onClick={handlerouter}
                 className="px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base font-medium rounded-lg flex items-center gap-1 sm:gap-2 transition-colors bg-[var(--colour-fsP1)] text-white hover:bg-blue-700"
               >
                 Proceed To Checkout <ArrowRight className="w-3 sm:w-4 h-3 sm:h-4" />

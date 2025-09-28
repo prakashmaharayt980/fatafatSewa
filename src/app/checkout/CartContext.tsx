@@ -67,6 +67,7 @@ interface CartContextType {
   processedToCheckout: () => void;
   handlesubmit: () => void;
   finalCheckout: boolean;
+  setFinalCheckout: Dispatch<SetStateAction<boolean>>;
   setOrderSuccess: Dispatch<SetStateAction<boolean>>;
   orderSuccess: boolean;
   emiContextInfo: EmiContextInfoIF;
@@ -159,6 +160,7 @@ const CartContext = createContext<CartContextType>({
   },
   setWishListInfo: () => {},
   getRecentEmiProduct: () => null,
+  setFinalCheckout: () => {},
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -315,7 +317,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const processedToCheckout = () => {
-    setFinalCheckout((prev) => !prev);
+
     setIsDrawerOpen(false);
   };
 
@@ -368,6 +370,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         WishListInfo,
         setWishListInfo,
         getRecentEmiProduct,
+        setFinalCheckout
       }}
     >
       {children}
