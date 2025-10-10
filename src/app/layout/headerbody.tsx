@@ -16,11 +16,21 @@ import MobileSidebar from './sidebarMobile';
 
 
 const HeaderComponent = () => {
-    const { IsUserLogin, loginNeed, setIsDrawerOpen, setWishListInfo } = useContextCart()
+    const { IsUserLogin, loginNeed, setIsDrawerOpen, setWishListInfo, items } = useContextCart()
 
     const router = useRouter();
     const searchRef = useRef(null);
     const [searchTimeout, setSearchTimeout] = useState(null);
+
+    const [badgeCount, setBadgeCount] = useState(0); // Initial match server (0)
+    const [isBadgeVisible, setIsBadgeVisible] = useState(false); // Initial hidden
+
+    useEffect(() => {
+        // Update badge after hydration, using live items
+        const count = items.length;
+        setBadgeCount(count);
+        setIsBadgeVisible(count > 0);
+    }, [items]);
 
     // Consolidated state object
     const [state, setState] = useState({
@@ -266,7 +276,7 @@ const HeaderComponent = () => {
                                         {state.showAccountMenu && (
                                             <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                                                 <div className="py-2">
-                                                    <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
+                                                    <Link href="/Profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</Link>
                                                     <Link href="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">My Orders</Link>
                                                     <Link href="/wishlist" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Wishlist</Link>
                                                     <hr className="my-1" />
@@ -282,8 +292,13 @@ const HeaderComponent = () => {
                                     >
                                         <ShoppingCart className="h-4 w-4" />
                                         {/* Cart badge */}
-                                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                                            3
+                                        <span
+                                            className={cn(
+                                                "absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center",
+                                                isBadgeVisible ? "" : "hidden" // Always base classes; visibility via state
+                                            )}
+                                        >
+                                            {badgeCount}
                                         </span>
                                     </button>
 

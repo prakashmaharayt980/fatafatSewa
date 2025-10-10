@@ -24,7 +24,7 @@ const CheckoutDrawer = () => {
     calculateSubtotal,
     removeFromCart,
 
- processedToCheckout
+
   } = useContextCart();
   const router = useRouter();
 

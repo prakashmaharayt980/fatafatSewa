@@ -1,26 +1,27 @@
 'use client';
+
 import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { ProductDetails } from '../types/CategoryTypes';
 
-
+// Define interfaces
 interface UserInfo {
   name: string;
   email: string;
   phone: string;
   occupation: string;
   gender: string;
-  dob: string; // Ensure dob is a string
+  dob: string;
   address: string;
 }
 
-export interface EmiContextInfoIF {
+interface EmiContextInfoIF {
   userInfo: UserInfo;
   isDrawerOpen: boolean;
   files: {
     citizenshipFile: File | null;
-    photoFiles: File[]; // Initialize as empty array for consistency
-    creditCardStatement: File | null; // Explicitly allow File or null
-    bankStatement: File | null; // Explicitly allow File or null
+    photoFiles: File[];
+    creditCardStatement: File | null;
+    bankStatement: File | null;
   };
   emiTenure: string;
   product: ProductDetails | null;
@@ -39,7 +40,7 @@ export interface EmiContextInfoIF {
 }
 
 interface EmiCalculatorInter {
-  productselected: ProductDetails | null; // Allow null
+  productselected: ProductDetails | null;
   emirequiredinfo: {
     bank: string;
     eachCollectionDuration: number;
@@ -65,7 +66,6 @@ interface CartContextType {
   calculateSubtotal: () => number;
   setItems: (items: ProductDetails[]) => void;
   processedToCheckout: () => void;
-  handlesubmit: () => void;
   finalCheckout: boolean;
   setFinalCheckout: Dispatch<SetStateAction<boolean>>;
   setOrderSuccess: Dispatch<SetStateAction<boolean>>;
@@ -80,7 +80,7 @@ interface CartContextType {
   loginNeed: () => void;
   WishListInfo: {
     isDrawerOpen: boolean;
-    productList: ProductDetails[]; // Initialize as empty array
+    productList: ProductDetails[];
   };
   setWishListInfo: Dispatch<SetStateAction<CartContextType['WishListInfo']>>;
   getRecentEmiProduct: () => ProductDetails | null;
@@ -101,7 +101,6 @@ const CartContext = createContext<CartContextType>({
   finalCheckout: false,
   setOrderSuccess: () => {},
   orderSuccess: false,
-  handlesubmit: () => {},
   emiContextInfo: {
     userInfo: {
       name: '',
@@ -109,13 +108,13 @@ const CartContext = createContext<CartContextType>({
       phone: '',
       occupation: '',
       gender: '',
-      dob: '', // Initialize as empty string
+      dob: '',
       address: '',
     },
     isDrawerOpen: false,
     files: {
       citizenshipFile: null,
-      photoFiles: [], // Initialize as empty array
+      photoFiles: [],
       creditCardStatement: null,
       bankStatement: null,
     },
@@ -156,7 +155,7 @@ const CartContext = createContext<CartContextType>({
   loginNeed: () => {},
   WishListInfo: {
     isDrawerOpen: false,
-    productList: [], // Initialize as empty array
+    productList: [],
   },
   setWishListInfo: () => {},
   getRecentEmiProduct: () => null,
@@ -165,7 +164,7 @@ const CartContext = createContext<CartContextType>({
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const getRecentEmiProduct = (): ProductDetails | null => {
-    if (typeof window === 'undefined') return null; // Avoid localStorage on server
+    if (typeof window === 'undefined') return null;
     try {
       const storedProduct = localStorage.getItem('recent emi');
       return storedProduct ? JSON.parse(storedProduct) : null;
@@ -179,9 +178,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [finalCheckout, setFinalCheckout] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-  const [IsUserLogin, setIsUserLogin] = useState(false);
-  const [loginDailog, setloginDailog] = useState(false);
-
+  const [IsUserLogin, setIsUserLogin] = useState<boolean>(false);
+  const [loginDailog, setloginDailog] = useState<boolean>(false);
   const [emiContextInfo, setEmiContextInfo] = useState<EmiContextInfoIF>({
     userInfo: {
       name: '',
@@ -189,18 +187,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       phone: '',
       occupation: '',
       gender: '',
-      dob: '', // Initialize as empty string
+      dob: '',
       address: '',
     },
     isDrawerOpen: false,
     files: {
       citizenshipFile: null,
-      photoFiles: [], // Initialize as empty array
+      photoFiles: [],
       creditCardStatement: null,
       bankStatement: null,
     },
     emiTenure: '',
-    product: null, // Initialize as null, set in useEffect
+    product: null,
     downPayment: null,
     monthlyEMI: null,
     hasCreditCard: 'no',
@@ -214,7 +212,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       creditCardProvider: '',
     },
   });
-
   const [emicalclatorinfo, setemicalclatorinfo] = useState<EmiCalculatorInter>({
     productselected: null,
     emirequiredinfo: {
@@ -229,14 +226,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     },
     isEmiCalcltorOpen: false,
   });
-
   const [WishListInfo, setWishListInfo] = useState<CartContextType['WishListInfo']>({
     isDrawerOpen: false,
-    productList: [], // Initialize as empty array
+    productList: [],
   });
 
-  // Use useEffect to load recent EMI product on client side
+  // Load cart items from localStorage on mount (client-side only)
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const storedItems = localStorage.getItem('cartItems');
+      if (storedItems) {
+        setItems(JSON.parse(storedItems));
+      }
+    } catch (error) {
+      console.error('Error loading cart items from localStorage:', error);
+    }
+
+    // Load recent EMI product
     const recentProduct = getRecentEmiProduct();
     if (recentProduct) {
       setEmiContextInfo((prev) => ({
@@ -246,8 +253,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  // Sync cart items to localStorage whenever items change
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem('cartItems', JSON.stringify(items));
+    } catch (error) {
+      console.error('Error saving cart items to localStorage:', error);
+    }
+  }, [items]);
+
   const addToCart = (product: ProductDetails, quantity: number = 1, openDrawer: boolean = false) => {
-    console.log('addToCart called:', { product, quantity, openDrawer });
     if (!product?.id || !product?.name || !product?.price) {
       console.error('Invalid product data:', product);
       throw new Error('Product must have id, name, and price');
@@ -280,18 +296,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const buyNow = (product: ProductDetails) => {
-    console.log('buyNow called:', product);
     if (!product?.id || !product?.name || !product?.price) {
       console.error('Invalid product data:', product);
       throw new Error('Product must have id, name, and price');
     }
     setItems([{ ...product, quantity: 1 }]);
-    console.log('Setting isDrawerOpen to true');
     setIsDrawerOpen(true);
   };
 
   const updateQuantity = (id: number, change: number) => {
-    console.log('updateQuantity called:', { id, change });
     setItems((prev) => {
       const item = prev.find((i) => i.id === id);
       if (!item) return prev;
@@ -304,7 +317,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const removeFromCart = (id: number) => {
-    console.log('removeFromCart called:', id);
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
@@ -317,14 +329,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const processedToCheckout = () => {
-
     setIsDrawerOpen(false);
-  };
-
-  const handlesubmit = () => {
-    setFinalCheckout(false);
-    setIsDrawerOpen(false);
-    setOrderSuccess(true);
   };
 
   const EMICalculator = (price: number, tenure: string, downPayment: number = 0): number => {
@@ -358,7 +363,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         finalCheckout,
         setOrderSuccess,
         orderSuccess,
-        handlesubmit,
         emiContextInfo,
         setEmiContextInfo,
         EMICalculator,
@@ -370,7 +374,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         WishListInfo,
         setWishListInfo,
         getRecentEmiProduct,
-        setFinalCheckout
+        setFinalCheckout,
       }}
     >
       {children}

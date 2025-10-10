@@ -9,7 +9,7 @@ import ChatBot from './chatbot';
 import { CartProvider } from './checkout/CartContext';
 import CheckoutDrawer from './checkout/CheckoutDrawer';
 
-import CheckoutSuccess from './checkout/CheckoutSucess';
+
 
 import LoginPage from './login/page';
 import WishList from './emi/Wishlist';
@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Toaster richColors position="top-right" />
           <CheckoutDrawer />
          
-          <CheckoutSuccess />
+
 
           <LoginPage />
 

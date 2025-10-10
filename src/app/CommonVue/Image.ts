@@ -14,6 +14,7 @@ const imglist={
     blog:"/imgfile/blogicon.png",
     offerbannerloginimg:"/imgfile/welcomebanner.png",
     emiCalcultorIocn:"/imgfile/emiicon.jpg",
+    addresspin:'/svgfile/homeaddressicon.png'
 
 }
 
