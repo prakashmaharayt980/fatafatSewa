@@ -118,7 +118,7 @@ const BasketCardTrading = ({ title }: BasketCardTradingProps) => {
 
   return (
     <div ref={ref} className="w-full bg-white overflow-visible">
-      <div className={cn('flex items-center justify-between py-4', 'px-3 sm:px-6')}>
+      <div className={cn('flex items-center justify-between py-1', 'px-3 sm:px-6')}>
         <h2 className={cn('text-lg font-bold text-gray-900', 'sm:text-xl')}>{title}</h2>
         <button
           onClick={() => router.push(`/product/category/${productList[0]?.slug}`)}
@@ -135,7 +135,7 @@ const BasketCardTrading = ({ title }: BasketCardTradingProps) => {
 
       <hr className={cn('mx-2 border-b-2 border-orange-500')} />
 
-      <div className={cn('py-4 pb-8', 'px-2 sm:px-6')}>
+      <div className={cn('py-2 pb-2', 'px-2 sm:px-6')}>
         <div
           ref={scrollContainerRef}
           className={cn(
@@ -159,7 +159,7 @@ const BasketCardTrading = ({ title }: BasketCardTradingProps) => {
         </div>
 
         {totalPages > 1 && (
-          <div className="flex justify-center mt-4 gap-2">
+          <div className="flex justify-center mt-1 gap-2">
             {[...Array(totalPages)].map((_, index) => (
               <button
                 key={index}

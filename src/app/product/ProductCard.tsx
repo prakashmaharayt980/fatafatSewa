@@ -111,7 +111,7 @@ const ProductCard = ({ product, index: _index }: { product: any, index: number }
                 </div>
 
                 {/* Feature Badges */}
-                <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-2">
+                <div className="flex flex-wrap justify-between gap-1 sm:gap-1.5 mb-2">
                     {product.emi_enabled !== 0 && (
                         <span 
                             className="inline-flex items-center border rounded-full px-1.5 sm:px-2 

@@ -98,9 +98,9 @@ const PopularCategories = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-6 sm:py-12" ref={ref}>
+    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-6 " ref={ref}>
       <div className="mb-2">
-        <div className="flex items-center justify-center mb-6">
+        <div className="flex items-center justify-center mb-2">
           <div className="flex-1 h-1 bg-gradient-to-r from-transparent via-blue-500 to-blue-500"></div>
           <h2 className="px-3 sm:px-6 text-lg sm:text-2xl font-bold text-gray-900">Popular Categories</h2>
           <div className="flex-1 h-1 bg-gradient-to-l from-transparent via-blue-500 to-blue-500"></div>
@@ -148,7 +148,7 @@ const PopularCategories = () => {
         </div>
       </div>
       {/* Interactive Dots */}
-      <div className="flex justify-center space-x-1 sm:space-x-2 mt-2 sm:mt-4">
+      <div className="flex justify-center space-x-1 sm:space-x-2 mt-2">
         {Array.from({ length: Math.ceil(visibleCategories.length / 7) }).map((_, index) => (
           <button
             key={index}
