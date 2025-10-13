@@ -26,13 +26,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     product,
     selectedColor,
     setSelectedColor,
-    selectedImage,
+
     setSelectedImage,
     quantity,
-    setQuantity,
+
     renderRating,
 }) => {
-    const { addToCart, buyNow, items, setIsDrawerOpen } = useContextCart();
+    const { addToCart, items, addToCompare,compareItems } = useContextCart();
     const { setEmiContextInfo } = useContextEmi();
     const router = useRouter();
 
@@ -71,14 +71,18 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                 },
                 className: 'bg-[var(--colour-fsP2)] text-white',
             },
-            // {
-            //     name: 'Compare',
-            //     Icon: ArrowLeftRight,
-            //     action: () => setIsDrawerOpen(true),
-            //     className: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-200',
-            // },
+            {
+                name: 'Compare',
+                Icon: ArrowLeftRight,
+                action: () => {
+                    addToCompare(product)
+           
+                    handlerouter('/product/productCompare')
+                },
+                className: 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-200',
+            },
         ],
-        [product, quantity, addToCart, setEmiContextInfo, setIsDrawerOpen]
+        [product, quantity, addToCart, setEmiContextInfo,addToCompare]
     );
 
     const currencyunit = "Rs. ";
@@ -123,7 +127,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                         </>
                     )}
                 </div>
-                
+
                 <div className="flex items-center gap-2 text-sm">
                     <span className="text-gray-600">EMI available from</span>
                     <span className="font-semibold text-indigo-600">Rs. {Math.floor(product?.discounted_price / 12)}/month</span>
@@ -142,7 +146,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                                     key={index}
                                     onClick={() => handleColourSelect(variant.attributes.Color)}
                                     className={cn(
-                                        "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                                        "px-4 py-2 rounded-full cursor-pointer text-sm font-medium transition-all duration-200",
                                         "ring-1 ring-gray-200",
                                         selectedColor === variant.attributes.Color
                                             ? "bg-gray-900 text-white ring-gray-900"
@@ -160,19 +164,19 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             {/* Action Buttons */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {AcctionButtons.map((btn, idx) => {
-                    const Icon =btn.Icon  
+                    const Icon = btn.Icon
                     return (
-                    <button
-                        key={`action-btn-${idx}`}
-                        onClick={btn.action}
-                        className={cn(
-                            "flex items-center justify-center gap-2 px-4 py-3",
-                            "rounded-lg font-medium text-sm transition-all duration-200",
-                            "hover:shadow-md active:transform active:scale-95",
-                            btn.className
-                        )}
-                    >
-                        {/* <div className="w-5 h-5 relative">
+                        <button
+                            key={`action-btn-${idx}`}
+                            onClick={btn.action}
+                            className={cn(
+                                "flex items-center justify-center gap-2 px-4 py-3 cursor-pointer",
+                                "rounded-lg font-medium text-sm transition-all duration-200",
+                                "hover:shadow-md active:transform active:scale-95",
+                                btn.className
+                            )}
+                        >
+                            {/* <div className="w-5 h-5 relative">
                             <Image
                                 src={btn.Icon}
                                 alt={btn.name}
@@ -181,21 +185,21 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                                 // sizes="20px"
                             />
                         </div> */}
-                        <Icon className="w-5 h-5" />
-                        <span>{btn.name}</span>
-                    </button>
-                )
+                            <Icon className="w-5 h-5" />
+                            <span>{btn.name}</span>
+                        </button>
+                    )
                 })}
             </div>
 
-       
+
 
             {/* Payment Methods */}
             <div className="space-y-3 ">
                 <h3 className="text-sm font-medium text-gray-700">Accepted Payment Methods</h3>
                 <div className="flex flex-wrap gap-2">
                     {PaymentMethodsOptions.map((method) => (
-                        <div 
+                        <div
                             key={method.name}
                             className="p-2 bg-gray-50 rounded-lg transition-transform hover:scale-105"
                             title={method.name}

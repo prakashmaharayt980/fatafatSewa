@@ -56,7 +56,9 @@ interface EmiCalculatorInter {
 
 interface CartContextType {
   items: Array<ProductDetails>;
+  compareItems:Array<ProductDetails>;
   addToCart: (product: ProductDetails, quantity?: number, openDrawer?: boolean) => void;
+  addToCompare: (product: ProductDetails) => void;
   buyNow: (product: ProductDetails) => void;
   updateQuantity: (id: number, change: number) => void;
   removeFromCart: (id: number) => void;
@@ -65,6 +67,7 @@ interface CartContextType {
   toggleDrawer: () => void;
   calculateSubtotal: () => number;
   setItems: (items: ProductDetails[]) => void;
+  setCompareItems: (items: ProductDetails[]) => void;
   processedToCheckout: () => void;
   finalCheckout: boolean;
   setFinalCheckout: Dispatch<SetStateAction<boolean>>;
@@ -88,7 +91,9 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType>({
   items: [],
+  compareItems:[],
   addToCart: () => {},
+  addToCompare: () => {},
   buyNow: () => {},
   updateQuantity: () => {},
   removeFromCart: () => {},
@@ -97,6 +102,7 @@ const CartContext = createContext<CartContextType>({
   toggleDrawer: () => {},
   calculateSubtotal: () => 0,
   setItems: () => {},
+  setCompareItems: () => {},
   processedToCheckout: () => {},
   finalCheckout: false,
   setOrderSuccess: () => {},
@@ -175,6 +181,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const [items, setItems] = useState<Array<ProductDetails>>([]);
+  const [compareItems, setCompareItems] = useState<Array<ProductDetails>>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [finalCheckout, setFinalCheckout] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
@@ -265,12 +272,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (product: ProductDetails, quantity: number = 1, openDrawer: boolean = false) => {
     if (!product?.id || !product?.name || !product?.price) {
-      console.error('Invalid product data:', product);
+
       throw new Error('Product must have id, name, and price');
     }
 
     if (quantity <= 0) {
-      console.warn('Invalid quantity:', quantity);
+
       return;
     }
 
@@ -293,6 +300,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (openDrawer) {
       setIsDrawerOpen(true);
     }
+  };
+  const addToCompare = (product: ProductDetails) => {
+    if (!product?.id || !product?.name || !product?.price) {
+      throw new Error('Product must have id, name, and price');
+    }
+    setCompareItems((prev) => {
+      const existing = prev.find((i) => i.id === product.id);
+      if (existing) return ;
+
+      return [...prev, { ...product, }];
+    });
+
+
   };
 
   const buyNow = (product: ProductDetails) => {
@@ -351,6 +371,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         items,
         addToCart,
+        compareItems,
+        setCompareItems,
+        addToCompare,
         buyNow,
         updateQuantity,
         removeFromCart,
