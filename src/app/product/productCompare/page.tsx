@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { RotateCcw, Check, Star, ShoppingCart, ShoppingBasket, Search, ArrowLeftRight, Scale } from 'lucide-react';
+import { RotateCcw, Star,ShoppingBasket, Search, Scale } from 'lucide-react';
 import Image from 'next/image';
 import { useContextCart } from '@/app/checkout/CartContext';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -9,7 +9,7 @@ import { ProductDetails } from '@/app/types/CategoryTypes';
 import IconRenderer from '@/app/CommonVue/CustomIconImg';
 
 export default function ProductCompare() {
-    const { compareItems, addToCompare, setCompareItems } = useContextCart() || {};
+    const { compareItems, addToCompare, setCompareItems,addToCart } = useContextCart() || {};
     const [searchQuery, setSearchQuery] = useState('');
     const [selectItems, setSelectItems] = useState<ProductDetails[]>([]);
     const [compareProductList, setCompareProductList] = useState<{
@@ -139,27 +139,19 @@ export default function ProductCompare() {
                         onClick={() => setCompareProductList(prev => ({ ...prev, searchSide: side }))}
                         className="mt-4 px-4 py-2 flex items-center gap-2 text-[var(--colour-fsP2)] rounded-full text-sm font-medium hover:text-[var(--colour-fsP1)] transition-all shadow-lg hover:shadow-xl"
                     >
-                        <RotateCcw className="w-5 h-5" />
+                        <ShoppingBasket className="w-5 h-5" />
                         Select Product
                     </button>
                 </div>
             );
         }
 
-        const features = product.highlights
-            ? product.highlights.split(',').map((f) => f.trim()).filter(Boolean)
-            : [];
+
 
         return (
             <div className="flex-1 relative">
                 <div className="flex flex-col justify-center items-center space-y-2 p-4 transition-all duration-300">
-                    <button
-                        onClick={() => setCompareProductList(prev => ({ ...prev, searchSide: side }))}
-                        className="px-4 py-2 flex items-center gap-3 text-[var(--colour-fsP2)] rounded-full text-sm font-medium hover:text-[var(--colour-fsP1)] transition-all shadow-lg hover:shadow-xl z-10"
-                    >
-                        <RotateCcw className="w-5 h-5" />
-                        Change
-                    </button>
+        
 
                     <div className="relative mb-1 rounded-2xl overflow-hidden w-56 h-56 bg-gradient-to-br from-gray-100 to-gray-200 aspect-square">
                         <Image
@@ -226,10 +218,20 @@ export default function ProductCompare() {
                             </div>
                         </div>
 
-                        <button className="w-full max-w-sm  mt-2 py-2 bg-[var(--colour-fsP1)] text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                   <div className='flex flex-row  gap-4'>
+                         <button 
+                         onClick={()=>addToCart(product)}
+                         className="w-full max-w-sm  cursor-pointer mt-2 py-2 bg-[var(--colour-fsP1)] text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
                             <ShoppingBasket className="w-5 h-5" />
                             Add to Cart
                         </button>
+                         <button 
+                            onClick={() => setCompareProductList(prev => ({ ...prev, searchSide: side }))}
+                         className="w-full max-w-sm cursor-pointer mt-2 py-2 bg-[var(--colour-fsP2)] text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                           <RotateCcw className="w-5 h-5" />
+                        Change
+                        </button>
+                   </div>
                     </div>
                 </div>
             </div>
@@ -276,6 +278,7 @@ export default function ProductCompare() {
                         <ProductCard product={compareProductList.leftProduct} side="left" />
                         <div className="flex items-center justify-center lg:my-auto">
                             <div className="bg-[var(--colour-fsP2)] flex flex-row gap-3 items-center text-white font-bold text-base px-6 py-3 rounded-full shadow-lg">
+                                
                                 <Scale className='w-6 h-6 '/>
                             
                             </div>

@@ -6,93 +6,15 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-
 } from "@/components/ui/dialog";
-import { AlertCircle, CheckCircle, Eye, EyeOff, Facebook, Mail, User, Phone, Home, Lock, Key, GoalIcon } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { AlertCircle, CheckCircle, Eye, EyeOff, Facebook, Mail, User, Phone, Home, Lock, Key, IdCardLanyard } from 'lucide-react';
 import Image from 'next/image';
-
 import { useState } from 'react';
 import { CompanyLogo, PaymentMethodsOptions } from "../CommonVue/Payment";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useContextCart } from "../checkout/CartContext";
-
-const MaterialInput = ({
-  id,
-  type = 'text',
-  label,
-  value,
-  onChange,
-  icon: Icon,
-  showPasswordToggle = false,
-  error = false,
-  helperText = '',
-  required = false
-}) => {
-  const [focusedField, setFocusedField] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const isFocused = focusedField === id;
-  const hasValue = value && value.length > 0;
-  const isFloating = isFocused || hasValue;
-
-  return (
-    <div className="relative">
-      <div className={`relative border rounded-lg transition-all duration-200 bg-white ${error
-        ? 'border-red-500'
-        : isFocused
-          ? 'border-blue-500'
-          : 'border-gray-200 hover:border-gray-300'
-        }`}>
-        {Icon && (
-          <Icon className={`absolute left-3 top-3 w-4 h-4 transition-colors duration-200 ${error
-            ? 'text-red-500'
-            : isFocused
-              ? 'text-blue-500'
-              : 'text-gray-400'
-            }`} />
-        )}
-        <input
-          id={id}
-          type={showPasswordToggle && showPassword ? 'text' : type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setFocusedField(id)}
-          onBlur={() => setFocusedField('')}
-          required={required}
-          className={`w-full h-11 bg-transparent rounded-lg transition-all duration-200 border-0 focus:outline-none text-sm
-            ${Icon ? 'pl-10' : 'pl-4'} ${showPasswordToggle ? 'pr-10' : 'pr-4'} 
-            ${isFloating ? 'pt-5 pb-2' : 'pt-3 pb-3'}`}
-        />
-        <label
-          htmlFor={id}
-          className={`absolute left-4 transition-all duration-200 pointer-events-none bg-white px-1
-            ${Icon ? 'ml-6' : ''}
-            ${error ? 'text-red-500' : isFocused ? 'text-blue-500' : 'text-gray-500'}
-            ${isFloating
-              ? 'top-1 text-xs font-medium'
-              : 'top-3 text-sm'
-            }`}
-        >
-          {label} {required && <span className="text-red-500">*</span>}
-        </label>
-        {showPasswordToggle && (
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className={`absolute right-3 top-3.5 transition-colors duration-200 ${error ? 'text-red-500' : 'text-gray-400 hover:text-gray-500'
-              }`}
-          >
-            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        )}
-      </div>
-      {helperText && (
-        <p className={`text-xs mt-1.5 ml-4 ${error ? 'text-red-500' : 'text-gray-500'}`}>
-          {helperText}
-        </p>
-      )}
-    </div>
-  );
-};
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
   const { loginDailog, loginNeed } = useContextCart();
@@ -103,11 +25,25 @@ export default function LoginPage() {
     forgot: { email: '' },
     verify: { otpCode: '', newPassword: '', confirmNewPassword: '' },
   });
+  const [showPassword, setShowPassword] = useState({
+    loginPassword: false,
+    registerPassword: false,
+    registerConfirmPassword: false,
+    verifyNewPassword: false,
+    verifyConfirmNewPassword: false,
+  });
 
   const handleInputChange = (section, field, value) => {
     setFormData((prev) => ({
       ...prev,
       [section]: { ...prev[section], [field]: value },
+    }));
+  };
+
+  const toggleShowPassword = (field) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
     }));
   };
 
@@ -122,12 +58,13 @@ export default function LoginPage() {
         icon: Lock,
         showPasswordToggle: true,
         required: true,
+        passwordField: 'loginPassword',
         extra: (
-          <div className="flex items-center justify-end mt-1.5">
+          <div className="flex justify-end mt-2">
             <button
               type="button"
               onClick={() => setActiveSection('forgot')}
-              className="text-xs text-blue-500 hover:underline"
+              className="text-xs text-blue-500 cursor-pointer  hover:underline transition-colors duration-150"
             >
               Forgot password?
             </button>
@@ -146,6 +83,7 @@ export default function LoginPage() {
         icon: Lock,
         showPasswordToggle: true,
         required: true,
+        passwordField: 'registerPassword',
       },
       {
         id: 'confirmPassword',
@@ -155,9 +93,10 @@ export default function LoginPage() {
         icon: Lock,
         showPasswordToggle: true,
         required: true,
+        passwordField: 'registerConfirmPassword',
       },
       { id: 'phoneNumber', label: 'Phone Number', type: 'tel', placeholder: '(123) 456-7890', icon: Phone },
-      { id: 'address', label: 'Address', type: 'text', placeholder: '123 Main St, City, State, ZIP', icon: Home },
+      { id: 'address', label: 'Address', type: 'text', placeholder: '123 Main St, City', icon: Home },
     ],
     forgot: [
       {
@@ -167,7 +106,7 @@ export default function LoginPage() {
         placeholder: 'you@example.com',
         icon: Mail,
         required: true,
-        helperText: "We'll send you a verification code to reset your password",
+        helperText: "We'll send you a verification code",
       },
     ],
     verify: [
@@ -178,7 +117,7 @@ export default function LoginPage() {
         placeholder: '123456',
         icon: Key,
         required: true,
-        helperText: 'Enter the verification code sent to your email',
+        helperText: 'Enter the code sent to your email',
       },
       {
         id: 'newPassword',
@@ -188,6 +127,7 @@ export default function LoginPage() {
         icon: Lock,
         showPasswordToggle: true,
         required: true,
+        passwordField: 'verifyNewPassword',
       },
       {
         id: 'confirmNewPassword',
@@ -197,6 +137,7 @@ export default function LoginPage() {
         icon: Lock,
         showPasswordToggle: true,
         required: true,
+        passwordField: 'verifyConfirmNewPassword',
       },
     ],
   };
@@ -204,47 +145,59 @@ export default function LoginPage() {
   const sections = {
     login: {
       render: () => (
-        <div className="flex flex-col justify-end space-y-3 h-full">
-          <form className="flex flex-col space-y-3 ">
-
-
-
+        <div className="flex flex-col space-y-4">
+          <form className="flex flex-col space-y-4">
             {sectionFields.login.map((field) => (
-              <div key={field.id}>
-                <MaterialInput
-                  id={field.id}
-                  type={field.type}
-                  label={field.label}
-                  value={formData.login[field.id]}
-                  onChange={(value) => handleInputChange('login', field.id, value)}
-                  icon={field.icon}
-                  showPasswordToggle={field.showPasswordToggle}
-                  required={field.required}
-
-                />
+              <div key={field.id} className="relative">
+                <Label htmlFor={field.id} className="text-[var(--colour-fsP2)]  my-2" >{field.label}</Label>
+                <div className="relative">
+                  <Input
+                    id={field.id}
+                    type={field.showPasswordToggle && showPassword[field.passwordField] ? 'text' : field.type}
+                    placeholder={field.placeholder}
+                    value={formData.login[field.id]}
+                    onChange={(e) => handleInputChange('login', field.id, e.target.value)}
+                    required={field.required}
+                    className="pl-10 pr-10 h-10 bg-white border-blue-200  border-2 focus:border-0 focus:ring-1 focus:ring-[var(--colour-fsP2)]   text-sm rounded-lg transition-colors duration-150"
+                  />
+                  {field.icon && (
+                    <field.icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--colour-fsP2)]" />
+                  )}
+                  {field.showPasswordToggle && (
+                    <button
+                      type="button"
+                      onClick={() => toggleShowPassword(field.passwordField)}
+                      className="absolute cursor-pointer right-3 top-1/2 transform -translate-y-1/2 text-[var(--colour-fsP2)] hover:text-[var(--colour-fsP1)]"
+                    >
+                      {showPassword[field.passwordField] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  )}
+                </div>
                 {field.extra}
               </div>
             ))}
             <Button
               type="submit"
-              className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-all"
+              className="w-full cursor-pointer h-10 bg-[var(--colour-fsP2)] hover:bg-[var(--colour-fsP1)] text-white text-sm font-medium rounded-lg transition-all duration-150"
             >
-              Sign in
+              <IdCardLanyard className="w-5 h-5" />
+              Sign In
             </Button>
           </form>
-          <div className="flex flex-row justify-between gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Button
               variant="outline"
-              className="flex-1 h-11 flex items-center justify-center gap-2 border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition-all"
+              className="flex-1 h-10 border-blue-200 hover:bg-blue-50 text-gray-600 cursor-pointer text-sm font-medium rounded-lg transition-all duration-150"
             >
-              <GoalIcon size={16} />
+              {/* <Image fill src="/google-icon.svg" alt="Google" className="w-4 h-4 mr-2" /> */}
+              <Facebook className="w-4 h-4 mr-2 text-[var(--colour-fsP1)]" />
               Sign in with Google
             </Button>
             <Button
               variant="outline"
-              className="flex-1 h-11 flex items-center justify-center gap-2 border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg transition-all"
+              className="flex-1 h-10 border-blue-200 hover:bg-blue-50 text-gray-600 cursor-pointer text-sm font-medium rounded-lg transition-all duration-150"
             >
-              <Facebook size={16} color="#1877F2" />
+              <Facebook className="w-4 h-4 mr-2 text-[var(--colour-fsP1)]" />
               Sign in with Facebook
             </Button>
           </div>
@@ -252,9 +205,9 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setActiveSection('register')}
-              className="text-xs text-blue-500 hover:underline"
+              className="text-xs text-[var(--colour-fsP2)] hover:text-[var(--colour-fsP1)]/80 cursor-pointer hover:underline transition-colors duration-150"
             >
-              Don&lsquo;t have an account? Register
+              Don’t have an account? Register
             </button>
           </div>
         </div>
@@ -264,39 +217,48 @@ export default function LoginPage() {
       render: () => (
         <div className="space-y-4">
           <form className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {sectionFields.register.map((field, index) => (
-                <div key={field.id} className={index < 2 ? '' : index < 4 ? 'col-span-1' : 'col-span-2'}>
-                  <MaterialInput
-                    id={field.id}
-                    type={field.type}
-                    label={field.label}
-                    value={formData.register[field.id]}
-                    onChange={(value) => handleInputChange('register', field.id, value)}
-                    icon={field.icon}
-                    showPasswordToggle={field.showPasswordToggle}
-                    required={field.required}
-
-                  />
+                <div key={field.id} className={index < 4 ? 'col-span-1' : 'col-span-1 sm:col-span-2'}>
+                  <Label htmlFor={field.id} className="text-[var(--colour-fsP2)]  my-2" >{field.label}</Label>
+                  <div className="relative">
+                    <Input
+                      id={field.id}
+                      type={field.showPasswordToggle && showPassword[field.passwordField] ? 'text' : field.type}
+                      placeholder={field.placeholder}
+                      value={formData.register[field.id]}
+                      onChange={(e) => handleInputChange('register', field.id, e.target.value)}
+                      required={field.required}
+                      className="pl-10 pr-10 h-10 bg-white border-blue-200  border-2 focus:border-0 focus:ring-1 focus:ring-[var(--colour-fsP2)]   text-sm rounded-lg transition-colors duration-150"
+                    />
+                    {field.icon && (
+                      <field.icon className="absolute left-3 top-1/2 cursor-pointer transform -translate-y-1/2 w-4 h-4 text-[var(--colour-fsP2)]" />
+                    )}
+                    {field.showPasswordToggle && (
+                      <button
+                        type="button"
+                        onClick={() => toggleShowPassword(field.passwordField)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--colour-fsP2)] cursor-pointer hover:text-[var(--colour-fsP1)]"
+                      >
+                        {showPassword[field.passwordField] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
-            {/* <div className="text-xs text-red-500 bg-red-50 p-2 rounded-lg flex items-start">
-              <AlertCircle className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0" />
-              <span>Please fill in all required fields</span>
-            </div> */}
             <Button
               type="submit"
-              className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-all"
+              className="w-full cursor-pointer h-10 bg-[var(--colour-fsP2)] hover:bg-[var(--colour-fsP1)] text-white text-sm font-medium rounded-lg transition-all duration-150"
             >
-              Create account
+              Create Account
             </Button>
           </form>
           <div className="text-center">
             <button
               type="button"
               onClick={() => setActiveSection('login')}
-              className="text-xs text-blue-500 hover:underline"
+              className="text-xs text-[var(--colour-fsP2)] hover:text-[var(--colour-fsP1)]/80 cursor-pointer hover:underline transition-colors duration-150"
             >
               Already have an account? Login
             </button>
@@ -310,24 +272,30 @@ export default function LoginPage() {
           <form className="space-y-4">
             {sectionFields.forgot.map((field) => (
               <div key={field.id}>
-                <MaterialInput
-                  id={field.id}
-                  type={field.type}
-                  label={field.label}
-                  value={formData.forgot[field.id]}
-                  onChange={(value) => handleInputChange('forgot', field.id, value)}
-                  icon={field.icon}
-                  required={field.required}
+                <Label htmlFor={field.id} className="text-[var(--colour-fsP2)]  my-2" >{field.label}</Label>
+                <div className="relative">
+                  <Input
+                    id={field.id}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    value={formData.forgot[field.id]}
+                    onChange={(e) => handleInputChange('forgot', field.id, e.target.value)}
+                    required={field.required}
+                    className="pl-10 pr-10 h-10 bg-white border-blue-200  border-2 focus:border-0 focus:ring-1 focus:ring-[var(--colour-fsP2)]   text-sm rounded-lg transition-colors duration-150"
 
-                  helperText={field.helperText}
-                />
+                  />
+                  {field.icon && (
+                    <field.icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--colour-fsP2)]" />
+                  )}
+                </div>
+                {field.helperText && (
+                  <p className="mt-1 text-xs text-gray-600">{field.helperText}</p>
+                )}
               </div>
             ))}
             <Button
-              // type="submit"
-              
-               onClick={() => setActiveSection('emailSent')}
-              className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-all"
+              onClick={() => setActiveSection('emailSent')}
+              className="w-full cursor-pointer h-10 bg-[var(--colour-fsP2)] hover:bg-[var(--colour-fsP1)] text-white text-sm font-medium rounded-lg transition-all duration-150"
             >
               Send Verification Code
             </Button>
@@ -336,14 +304,14 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setActiveSection('login')}
-              className="text-gray-600 hover:text-blue-500"
+              className="text-gray-600 hover:text-teal-600 hover:underline transition-colors duration-150"
             >
               Back to login
             </button>
             <button
               type="button"
               onClick={() => setActiveSection('register')}
-              className="text-blue-500 hover:underline"
+              className="text-blue-600 hover:text-blue-700 hover:underline transition-colors duration-150"
             >
               Register
             </button>
@@ -357,28 +325,42 @@ export default function LoginPage() {
           <form className="space-y-4">
             {sectionFields.verify.map((field) => (
               <div key={field.id}>
-                <MaterialInput
-                  id={field.id}
-                  type={field.type}
-                  label={field.label}
-                  value={formData.verify[field.id]}
-                  onChange={(value) => handleInputChange('verify', field.id, value)}
-                  icon={field.icon}
-                  showPasswordToggle={field.showPasswordToggle}
-                  required={field.required}
-
-                  helperText={field.helperText}
-                />
+                <Label htmlFor={field.id} className="text-[var(--colour-fsP2)]  my-2" >{field.label}</Label>
+                <div className="relative">
+                  <Input
+                    id={field.id}
+                    type={field.showPasswordToggle && showPassword[field.passwordField] ? 'text' : field.type}
+                    placeholder={field.placeholder}
+                    value={formData.verify[field.id]}
+                    onChange={(e) => handleInputChange('verify', field.id, e.target.value)}
+                    required={field.required}
+                          className="pl-10 pr-10 h-10 bg-white border-blue-200  border-2 focus:border-0 focus:ring-1 focus:ring-[var(--colour-fsP2)]   text-sm rounded-lg transition-colors duration-150"
+                  />
+                  {field.icon && (
+                    <field.icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--colour-fsP2)]" />
+                  )}
+                  {field.showPasswordToggle && (
+                    <button
+                      type="button"
+                      onClick={() => toggleShowPassword(field.passwordField)}
+                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--colour-fsP2)] cursor-pointer hover:text-[var(--colour-fsP1)]"
+                    >
+                      {showPassword[field.passwordField] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  )}
+                </div>
+                {field.helperText && (
+                  <p className="mt-1 text-xs text-gray-600">{field.helperText}</p>
+                )}
               </div>
             ))}
-            <div className="text-xs text-red-500 bg-red-50 p-2 rounded-lg flex items-start">
-              <AlertCircle className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0" />
-              <span>Verification failed. Please try again.</span>
+            <div className="text-xs text-red-600 bg-red-50 p-2 rounded-lg flex items-center">
+              <AlertCircle className="h-4 w-4 mr-1.5" />
+              Verification failed. Please try again.
             </div>
             <Button
-              // type="submit"
-                       onClick={() => setActiveSection('login')}
-              className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-all"
+              onClick={() => setActiveSection('login')}
+              className="w-full cursor-pointer h-10 bg-[var(--colour-fsP2)] hover:bg-[var(--colour-fsP1)] text-white text-sm font-medium rounded-lg transition-all duration-150"
             >
               Reset Password
             </Button>
@@ -387,13 +369,13 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setActiveSection('forgot')}
-              className="text-gray-600 hover:text-blue-500"
+              className="text-gray-600 hover:text-teal-600 hover:underline transition-colors duration-150"
             >
               Try another email
             </button>
             <button
               type="button"
-              className="text-blue-500 hover:underline"
+              className="text-blue-600 hover:text-blue-700 hover:underline transition-colors duration-150"
             >
               Resend code
             </button>
@@ -404,32 +386,32 @@ export default function LoginPage() {
     emailSent: {
       render: () => (
         <div className="space-y-4 text-center">
-          <div className="mx-auto flex items-center justify-center h-10 w-10 rounded-full bg-green-100">
-            <CheckCircle className="h-5 w-5 text-green-600" />
+          <div className="mx-auto flex items-center justify-center h-10 w-10 rounded-full bg-teal-50">
+            <CheckCircle className="h-8 w-8 text-teal-600" />
           </div>
           <div>
-            <h3 className="text-base font-medium text-gray-900">Check your email</h3>
-            <p className="mt-1.5 text-xs text-gray-500">
-              We&lsquo;ve sent a verification code to <strong>your email</strong>
+            <h3 className="text-base font-medium text-gray-900">Check Your Email</h3>
+            <p className="mt-1 text-xs text-gray-600">
+              We’ve sent a verification code to <strong>your email</strong>
             </p>
           </div>
           <Button
             onClick={() => setActiveSection('verify')}
-            className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-all"
+            className="w-full cursor-pointer h-10 bg-[var(--colour-fsP2)] hover:bg-[var(--colour-fsP1)] text-white text-sm font-medium rounded-lg transition-all duration-150"
           >
-            Enter verification code
+            Enter Verification Code
           </Button>
           <div className="flex justify-between text-xs">
             <button
               type="button"
               onClick={() => setActiveSection('login')}
-              className="text-gray-600 hover:text-blue-500"
+              className="text-gray-600 hover:text-yellow-600 hover:underline cursor-pointer transition-colors duration-150"
             >
               Back to login
             </button>
             <button
               type="button"
-              className="text-blue-500 hover:underline"
+              className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer transition-colors duration-150"
             >
               Resend code
             </button>
@@ -440,20 +422,20 @@ export default function LoginPage() {
     resetSuccess: {
       render: () => (
         <div className="space-y-4 text-center">
-          <div className="mx-auto flex items-center justify-center h-10 w-10 rounded-full bg-green-100">
-            <CheckCircle className="h-5 w-5 text-green-600" />
+          <div className="mx-auto flex items-center justify-center h-10 w-10 rounded-full bg-teal-50">
+            <CheckCircle className="h-5 w-5 text-teal-600" />
           </div>
           <div>
             <h3 className="text-base font-medium text-gray-900">Password Reset Successful</h3>
-            <p className="mt-1.5 text-xs text-gray-500">
-              Your password has been successfully reset. You can now login with your new password.
+            <p className="mt-1 text-xs text-gray-600">
+              Your password has been reset. You can now login.
             </p>
           </div>
           <Button
             onClick={() => setActiveSection('login')}
-            className="w-full h-11 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-all"
+            className="w-full h-10 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-all duration-150"
           >
-            Back to login
+            Back to Login
           </Button>
         </div>
       ),
@@ -462,38 +444,40 @@ export default function LoginPage() {
 
   return (
     <Dialog open={loginDailog} onOpenChange={loginNeed} aria-label="Fatafatsewa Login Dialog">
-      <DialogContent className="sm:mx-auto sm:w-full sm:max-w-lg min-h-[60vh] max-h-[93vh] bg-white px-4 sm:px-8 py-6 shadow-md sm:rounded-2xl border border-gray-200 flex flex-col gap-6 overflow-y-auto ">
+      <DialogContent className="w-[95%] max-w-[420px] sm:max-w-[480px] min-h-[50vh] max-h-[90vh] bg-gradient-to-b from-white to-teal-50 p-4 sm:p-6 rounded-2xl border border-gray-300 flex flex-col gap-4 overflow-y-auto">
         <DialogHeader className="flex flex-col items-center">
           <DialogTitle hidden>login</DialogTitle>
           <Image
             src={CompanyLogo}
             alt="Fatafatsewa Company Logo"
-            width={180}
-            height={50}
-            className="object-contain"
+            width={140}
+            height={40}
+            className="object-contain w-[120px] sm:w-[140px]"
           />
         </DialogHeader>
 
-        <hr className="border-t border-gray-300 w-full" />
+        <hr className="border-t border-teal-100" />
 
-        <div className="flex-1 w-full max-w-md mx-auto">
+        <div className="flex-1 w-full max-w-[380px] mx-auto">
           {sections[activeSection]?.render()}
         </div>
 
-        <DialogFooter>
-          <div className="mt-6">
-            <div className="flex flex-row flex-wrap gap-3 justify-center">
+        <DialogFooter style={{
+          justifyContent:'center'
+        }} >
+          <div className="mt-4 flex  justify-center">
+            <div className="flex flex-wrap gap-2 sm:justify-center">
               {PaymentMethodsOptions.map((Item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 bg-white p-2 rounded-lg hover:shadow-md hover:scale-105 transition-all duration-200"
+                  className="flex items-center p-1.5 rounded-md bg-white border border-teal-100 hover:bg-teal-50 transition-all duration-150"
                 >
                   <Image
                     src={Item.img}
                     alt={Item.name || "Payment Method Logo"}
-                    width={50}
-                    height={30}
-                    className="object-contain"
+                    width={36}
+                    height={24}
+                    className="object-contain w-[30px] sm:w-[36px]"
                   />
                 </div>
               ))}
@@ -501,8 +485,6 @@ export default function LoginPage() {
           </div>
         </DialogFooter>
       </DialogContent>
-
     </Dialog>
   );
 }
-

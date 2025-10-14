@@ -185,7 +185,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [finalCheckout, setFinalCheckout] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
-  const [IsUserLogin, setIsUserLogin] = useState<boolean>(false);
+  const [IsUserLogin, setIsUserLogin] = useState<boolean>(true);
   const [loginDailog, setloginDailog] = useState<boolean>(false);
   const [emiContextInfo, setEmiContextInfo] = useState<EmiContextInfoIF>({
     userInfo: {
