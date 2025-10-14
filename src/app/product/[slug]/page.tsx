@@ -31,7 +31,7 @@ export default function ProductDetailsPage({ params }: SlugProps) {
     slug: "",
     outCome: [],
   });
-  const { addToCart, setIsDrawerOpen } = useContextCart();
+  const { addToCart, addToCompare } = useContextCart();
   const { setEmiContextInfo } = useContextEmi();
   const slug = React.use(params).slug;
   const { ref: mainProductRef, inView: isMainVisible } = useInView({
@@ -214,7 +214,7 @@ export default function ProductDetailsPage({ params }: SlugProps) {
           <div className="flex items-center gap-2">
             <button
               className={cn(
-                "flex items-center justify-center gap-2 px-4 py-3",
+                "flex items-center cursor-pointer justify-center gap-2 px-4 py-3",
                 "rounded-lg font-medium text-sm transition-all duration-200",
                 "hover:shadow-md active:transform active:scale-95",
                 "bg-[var(--colour-fsP1)] text-white"
@@ -226,10 +226,10 @@ export default function ProductDetailsPage({ params }: SlugProps) {
             {productDetails?.emi_enabled === 1 && (
               <button
                 className={cn(
-                  "flex items-center justify-center gap-2 px-2 py-2 sm:px-4 sm:py-3",
+                  "flex items-center cursor-pointer justify-center gap-2 px-2 py-2 sm:px-4 sm:py-3",
                   "rounded-lg font-medium text-sm transition-all duration-200",
                   "hover:shadow-md active:transform active:scale-95",
-                  "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200"
+                  "bg-[var(--colour-fsP2)]   text-white border border-gray-200"
                 )}
                 onClick={() => {
                   setEmiContextInfo((prev) => ({
@@ -243,6 +243,21 @@ export default function ProductDetailsPage({ params }: SlugProps) {
                 Apply EMI
               </button>
             )}
+                        <button
+              className={cn(
+                "flex items-center cursor-pointer justify-center gap-2 px-4 py-3",
+                "rounded-lg font-medium text-sm transition-all duration-200",
+                "hover:shadow-md active:transform active:scale-95",
+                "bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"
+              )}
+              onClick={() => {
+                 addToCompare(productDetails)
+           
+                    handlerouter('/product/productCompare')
+              }}
+            >
+              Compare Product
+            </button>
           </div>
         </div>
         <div className="h-[env(safe-area-inset-bottom)]"></div>

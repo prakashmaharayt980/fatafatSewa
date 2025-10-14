@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { ArrowLeftRight, ShoppingBag, CreditCardIcon } from "lucide-react";
+import { ArrowLeftRight, ShoppingBag, CreditCardIcon, Scale } from "lucide-react";
 
 
 import Image from "next/image";
@@ -73,7 +73,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             },
             {
                 name: 'Compare',
-                Icon: ArrowLeftRight,
+                Icon: Scale,
                 action: () => {
                     addToCompare(product)
            
