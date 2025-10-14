@@ -1,77 +1,88 @@
+'use client'
 
 import Image from "next/image";
-
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useContextEmi } from "../emiContext";
+import { Input } from "@/components/ui/input";
 
 export default function BuyerPersonalInfo({ cardinfofield }) {
   const { AvailablebankProvider } = useContextEmi();
 
-
   return (
-    <div className="bg-gray-50  grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {cardinfofield.fields
-
-        .map((field, fieldIndex) => (
-          <div key={fieldIndex} className={` ${field.extenduserinfo} `}>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">
-              {field.label}
-            </Label>
-            <div className="w-full px-4 py-2 border-2 border-[var(--colour-fsP2)] rounded-lg focus:ring-2 focus:outline-none focus:ring-blue-500 flex flex-row items-center gap-3">
-              <Image
-                src={field.svgicon}
-                className="h-5 w-5 text-[var(--colour-fsP2)]/60"
-                alt={field.label}
-                height={20}
-                width={20}
-              />
-              {field.type === "select" ? (
-                <Select
-                  value={field.value}
-                  onValueChange={(value) => field.onChange({ target: { name: field.name, value } })}
-                >
-                  <SelectTrigger className="w-full max-h-6 border-none font-semibold text-gray-700 outline-none">
-                    <SelectValue placeholder={`Select ${field.label}`} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-none outline-none max-h-60 overflow-y-auto z-[1000] font-sans text-base">
-                    {field.options ? (
-                      field.options.map((option) => (
-                        <SelectItem
-                          key={option}
-                          value={option}
-                          className="cursor-pointer border-none hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-700 transition-colors duration-150"
-                        >
-                          {option}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      AvailablebankProvider.map((bank) => (
-                        <SelectItem
-                          key={bank.id}
-                          value={bank.name}
-                          className="cursor-pointer hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-700 transition-colors duration-150"
-                        >
-                          {bank.name}
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <input
-                  type="text"
-                  name={field.name}
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder={field.placeholder}
-                  maxLength={field.maxLength}
-                  className="w-full border-none text-gray-600 font-[400] outline-none"
-                />
-              )}
+    <div className="bg-gradient-to-b from-white to-blue-50 py-4 sm:py-6 px-2">
+      <div className="">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {cardinfofield.fields.map((field, fieldIndex) => (
+            <div key={fieldIndex} className={`space-y-1.5 ${field.extenduserinfo || ''}`}>
+              <Label className="block text-sm font-medium text-gray-700">
+                {field.label}
+              </Label>
+              <div className="relative">
+                {field.type === "select" ? (
+                  <Select
+                    value={field.value}
+                    onValueChange={(value) => field.onChange({ target: { name: field.name, value } })}
+                  >
+                    <SelectTrigger className="w-full h-10 pl-10 bg-white border-blue-200 text-gray-600 text-sm rounded-lg focus:border-transparent focus:ring-1 focus:ring-[var(--colour-fsP2)] transition-all duration-150">
+                      <SelectValue placeholder={`Select ${field.label}`} className="text-yellow-400" />
+                      <Image
+                        src={field.svgicon}
+                        alt={field.label}
+                        height={16}
+                        width={16}
+                        className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-600"
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-blue-100 rounded-lg shadow-lg max-h-60 overflow-y-auto z-[1000] text-sm">
+                      {field.options ? (
+                        field.options.map((option) => (
+                          <SelectItem
+                            key={option}
+                            value={option}
+                            className="cursor-pointer px-4 py-2 hover:bg-yellow-50 hover:text-blue-600 focus:bg-gray-100 focus:text-blue-600 transition-all duration-150"
+                          >
+                            {option}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        AvailablebankProvider.map((bank) => (
+                          <SelectItem
+                            key={bank.id}
+                            value={bank.name}
+                            className="cursor-pointer px-4 py-2 hover:bg-yellow-50 hover:text-blue-600 focus:bg-gray-100 focus:text-blue-600 transition-all duration-150"
+                          >
+                            {bank.name}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      name={field.name}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={field.placeholder}
+                      maxLength={field.maxLength}
+                      className="w-full h-10 pl-10 bg-white border-blue-200 text-gray-600 text-sm rounded-lg focus:border-transparent focus:ring-1 focus:ring-[var(--colour-fsP2)] placeholder-yellow-400 transition-all duration-150"
+                    />
+                    <Image
+                      src={field.svgicon}
+                      alt={field.label}
+                      height={16}
+                      width={16}
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-600"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
