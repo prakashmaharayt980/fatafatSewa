@@ -82,9 +82,9 @@ const TopBanner = () => {
     }, [isAutoPlaying, nextSlide, images.length]);
 
     return (
-        <div className="w-full bg-gradient-to-br from-gray-50 to-white overflow-hidden m-0 p-0 sm:px-4">
+        <div className="w-full bg-gradient-to-br px-2 from-gray-50 to-white overflow-hidden m-0 p-0 sm:px-4">
             {/* Main Banner Section */}
-            <div className="flex flex-col lg:flex-row gap-0 sm:gap-6 mb-2 sm:mb-8">
+            <div className="flex flex-col lg:flex-row gap-0 sm:gap-6 mb-2 sm:mb-2">
                 {/* Main Carousel - 50% width */}
                 <div className="flex-1 ">
                     <div

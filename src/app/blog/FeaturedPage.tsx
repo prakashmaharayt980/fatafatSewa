@@ -20,20 +20,20 @@ const FeaturedPage = ({ articles }: FeaturedPageProps) => {
     const handleBlogDetails = (slug: string) => {
         router.push(`/blog/blogDetails/${slug}`);
     };
-    
+
     // Take only first 5 articles
 
 
     return (
         <div className="w-full bg-white overflow-visible  my-8">
             {/* Header */}
-       <div className="relative">
-                    <h2 className="text-xl font-bold text-gray-900 font-serif heading-title relative inline-block  px-4 mb-2">
-                        Featured Articles
-                    </h2>
-                </div>
+            <div className="relative">
+                <h2 className="text-xl font-bold text-gray-900 font-serif heading-title relative inline-block  px-4 mb-2">
+                    Featured Articles
+                </h2>
+            </div>
 
-    
+
             <div className=" px-2">
                 <div className="flex overflow-x-auto scrollbar-hide gap-2 ">
                     {articles.map((article) => (
@@ -67,21 +67,21 @@ const FeaturedPage = ({ articles }: FeaturedPageProps) => {
 
                             {/* Content Container */}
                             <div className="p-2 bg-white rounded-b-lg">
-                             
-                         
+
+
 
                                 <div className="flex flex-row gap-2 items-center">
-                                
+
                                     <span className="text-xs font-medium text-gray-900">
                                         {article.author || 'Unknown Author'}
                                     </span>
-                                          <span className="text-xs text-gray-500">
+                                    <span className="text-xs text-gray-500">
                                         {formatDate(article.created_at)}
                                     </span>
-                                  
+
                                 </div>
 
-                                   <h3 className="font-bold text-gray-900 text-sm  line-clamp-2 group-hover:text-[var(--colour-fsP2)] transition-colors duration-200">
+                                <h3 className="font-bold text-gray-900 text-sm  line-clamp-2 group-hover:text-[var(--colour-fsP2)] transition-colors duration-200">
                                     {article.title}
                                 </h3>
                             </div>

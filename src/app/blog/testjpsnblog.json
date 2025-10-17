@@ -1,0 +1,42 @@
+[
+     {
+                "id": 321,
+                "name": "ACER NITRO 5 2020 GAMING LAPTOP \/ I5-10300H \/ GTX 1650 \/ 8GB RAM",
+                "slug": "acer-nitro-5-2020-gaming-laptop-i5-10300h-gtx-1650-8gb-ram",
+                "price": 106999,
+                "pre_order": 0,
+                "pre_order_price": null,
+                "quantity": 0,
+                "discounted_price": 106999,
+                "emi_enabled": 1,
+                "brand": {
+                    "id": 24,
+                    "name": "ACER",
+                    "slug": "acer-laptop-price-in-nepal",
+                    "status": "1",
+                    "brand_image": {
+                        "full": "https:\/\/fatafatsewa.com\/storage\/media\/2047\/logo.png",
+                        "thumb": "https:\/\/fatafatsewa.com\/storage\/media\/2047\/logo.png"
+                    }
+                },
+                "image": "https:\/\/fatafatsewa.com\/storage\/media\/537\/conversions\/JuW8918307-thumbnail.webp",
+                "reviews": [],
+                "highlights": "8GB DDR4 2933MHz Memory 256 GB SSD | NVIDIA GeForce GTX 1650 with 4GB GDDR6 VRAM |15.6\" LCD ComfyView In-plane Switching (IPS) Technology Full HD Backlight Technology LED 1920 x 1080 Pixels | Intel Core i5-10300H 2.50 GHz Turbo up to 4.5GHz | Battery\t4-cell Lithium-Ion (Li-Ion) 3320 mAh",
+                "attributes": [],
+                "average_rating": 0,
+                "categories": [
+                    {
+                        "id": 2,
+                        "title": "Laptop",
+                        "slug": "laptop-price-in-nepal",
+                        "image": {
+                            "full": "https:\/\/fatafatsewa.com\/storage\/media\/1600\/laptop-screen.jpg",
+                            "thumb": "https:\/\/fatafatsewa.com\/storage\/media\/1600\/laptop-screen.jpg",
+                            "preview": ""
+                        }
+                    }
+                ],
+                "variants": [],
+                "discountcampaign": null
+            }
+]

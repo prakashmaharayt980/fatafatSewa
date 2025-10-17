@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import { ChevronDown, X, Heart, Cpu } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { CategorySlug } from '@/app/types/CategoryTypes';
-import ProductCard from '../../ProductCard';
 import { cn } from '@/lib/utils';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import MobileProductFilters from './MobileProductFilters';
+import DesktopProductFilters from './DesktopProductFilter' // Fixed typo: 'DesktopProductFilter' -> 'DesktopProductFilters'
+import { Cpu, Monitor, HardDrive, MemoryStick, PcCase, Banknote } from 'lucide-react';
 
-const ProductFilters = ({ categoryslug }) => {
-  console.log('data', categoryslug)
+// Custom hook for shared logic
+const useProductFilters = (categoryslug) => {
   const [filters, setFilters] = useState({
     processorType: '',
     brand: '',
     laptopRamSize: '',
+    screenSize: '',
+    storageCapacity: '',
+    priceRange: [0, 2000],
     laptops: true
   });
 
@@ -20,318 +23,153 @@ const ProductFilters = ({ categoryslug }) => {
     processorType: false,
     brand: false,
     laptopRamSize: false,
+    screenSize: false,
+    storageCapacity: false,
+    priceRange: false,
     sort: false
   });
 
-  const sortOptions = [
-    'Recommended',
-    'Price: High to Low',
-    'Price: Low to High',
-    'New Arrivals',
-    'Best Rated'
+  const filterConfigs = [
+    {
+      name: 'processorType',
+      label: 'Processor',
+      options: ['Core i5', 'Core i7', 'Core i9', 'Ryzen 5', 'Ryzen 7'],
+      icon: Cpu
+    },
+    {
+      name: 'brand',
+      label: 'Brand',
+      options: ['HP', 'Dell', 'Apple', 'Lenovo', 'ASUS', 'Acer'],
+      icon: PcCase
+    },
+    {
+      name: 'laptopRamSize',
+      label: 'RAM',
+      options: ['8GB', '16GB', '32GB', '64GB'],
+      icon: MemoryStick
+    },
+    {
+      name: 'screenSize',
+      label: 'Screen Size',
+      options: ['13"', '14"', '15"', '16"', '17"'],
+      icon: Monitor
+    },
+    {
+      name: 'storageCapacity',
+      label: 'Storage',
+      options: ['256GB', '512GB', '1TB', '2TB'],
+      icon: HardDrive
+    },
+    {
+      name: 'priceRange',
+      label: 'Price Range',
+      options: [
+        { label: 'All ($0 - $2000)', value: [0, 2000] },
+        { label: '$0 - $500', value: [0, 500] },
+        { label: '$500 - $1000', value: [500, 1000] },
+        { label: '$1000 - $1500', value: [1000, 1500] },
+        { label: '$1500 - $2000', value: [1500, 2000] }
+      ],
+      isPrice: true,
+      icon: Banknote
+    },
+    {
+      name: 'sort',
+      label: 'Sort By',
+      options: ['Recommended', 'Price: High to Low', 'Price: Low to High', 'New Arrivals', 'Best Rated'],
+      alignRight: true
+    }
   ];
-
-  const processorTypes = ['Core i5', 'Core i7', 'Core i9', 'Ryzen 5', 'Ryzen 7'];
-  const brands = ['HP', 'Dell', 'Apple', 'Lenovo', 'ASUS', 'Acer'];
-  const ramSizes = ['8GB', '16GB', '32GB', '64GB'];
 
   const toggleDropdown = (filterName) => {
     setDropdownOpen(prev => ({
-      ...prev,
-      [filterName]: !prev[filterName]
+      processorType: filterName === 'processorType' ? !prev.processorType : false,
+      brand: filterName === 'brand' ? !prev.brand : false,
+      laptopRamSize: filterName === 'laptopRamSize' ? !prev.laptopRamSize : false,
+      screenSize: filterName === 'screenSize' ? !prev.screenSize : false,
+      storageCapacity: filterName === 'storageCapacity' ? !prev.storageCapacity : false,
+      priceRange: filterName === 'priceRange' ? !prev.priceRange : false,
+      sort: filterName === 'sort' ? !prev.sort : false
     }));
   };
 
-  const selectFilter = (filterType, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }));
-    setDropdownOpen(prev => ({ ...prev, [filterType]: false }));
+  const selectFilter = (filterType, value, e) => {
+    e.stopPropagation();
+    if (filterType === 'sort') {
+      setSortBy(value);
+    } else if (filterType === 'priceRange') {
+      setFilters(prev => ({ ...prev, priceRange: value }));
+    } else {
+      setFilters(prev => ({ ...prev, [filterType]: value }));
+    }
+    toggleDropdown(filterType);
   };
 
-  const removeFilter = (filterType) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: filterType === 'laptops' ? false : ''
-    }));
+  const getPriceLabel = (range) => {
+    const option = filterConfigs
+      .find(config => config.name === 'priceRange')
+      .options.find(o => typeof o !== 'string' && o.value && o.value[0] === range[0] && o.value[1] === range[1]);
+    return option ? option.label : `$${range[0]} - $${range[1]}`;
   };
 
- 
+  return { filters, sortBy, currentPage, setCurrentPage, dropdownOpen, filterConfigs, toggleDropdown, selectFilter, getPriceLabel };
+};
+
+const ProductFilters = ({ categoryslug }) => {
+  console.log('data', categoryslug);
+  const { filters, sortBy, currentPage, setCurrentPage, dropdownOpen, filterConfigs, toggleDropdown, selectFilter, getPriceLabel } = useProductFilters(categoryslug);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (categoryslug === null) {
-    <p>loading</p>
+    return <p className="text-center text-gray-500 text-lg font-medium">Loading...</p>;
   }
 
-  const totalPages =categoryslug.meta.total
-
-   const generatePaginationItems = () => {
-    const items = [];
-    const showPages = 3;
-    let startPage = Math.max(1, currentPage - Math.floor(showPages / 2));
-    const endPage = Math.min(totalPages, startPage + showPages - 1);
-
-    if (endPage - startPage < showPages - 1) {
-      startPage = Math.max(1, endPage - showPages + 1);
-    }
-
-    if (startPage > 1) {
-      items.push(
-        <PaginationItem key="start-ellipsis">
-          <PaginationEllipsis />
-        </PaginationItem>
-      );
-    }
-
-    for (let page = startPage; page <= endPage; page++) {
-      items.push(
-        <PaginationItem key={page}>
-          <PaginationLink
-            href="#"
-            isActive={currentPage === page}
-            onClick={(e) => {
-              e.preventDefault();
-              setCurrentPage(page);
-            }}
-            className={`border border-gray-300 transition-colors ${currentPage === page ? 'bg-[var(--colour-fsP2)] text-white' : 'text-black hover:bg-gray-100'}`}
-          >
-            {page}
-          </PaginationLink>
-        </PaginationItem>
-      );
-    }
-
-    if (endPage < totalPages) {
-      items.push(
-        <PaginationItem key="end-ellipsis" >
-          <PaginationEllipsis />
-        </PaginationItem>
-      );
-    }
-
-    return items;
-  };
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-7xl mx-auto">
-
-        {/* Header */}
-        <div className="mb-6">
-
-
-          {/* Filters Row */}
-          <div className="flex flex-wrap items-center gap-3 mb-4 border-t border-gray-300 pt-4">
-
-            {/* Processor Type Filter */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('processorType')}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 hover:border-blue-300 hover:bg-blue-50/30 transition-colors"
-              >
-                <Cpu size={16} className="text-blue-500" />
-                <span className="text-sm">Processor Type</span>
-                <ChevronDown size={16} className={`transition-transform ${dropdownOpen.processorType ? 'rotate-180' : ''}`} />
-              </button>
-
-              {dropdownOpen.processorType && (
-                <div className="absolute top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                  {processorTypes.map(type => (
-                    <button
-                      key={type}
-                      onClick={() => selectFilter('processorType', type)}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 first:rounded-t-lg last:rounded-b-lg"
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Brand Filter */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('brand')}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 hover:border-blue-300 hover:bg-blue-50/30 transition-colors"
-              >
-                <span className="text-sm">Brand</span>
-                <ChevronDown size={16} className={`transition-transform ${dropdownOpen.brand ? 'rotate-180' : ''}`} />
-              </button>
-
-              {dropdownOpen.brand && (
-                <div className="absolute top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                  {brands.map(brand => (
-                    <button
-                      key={brand}
-                      onClick={() => selectFilter('brand', brand)}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 first:rounded-t-lg last:rounded-b-lg"
-                    >
-                      {brand}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Laptop Ram Size Filter */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('laptopRamSize')}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 hover:border-blue-300 hover:bg-blue-50/30 transition-colors"
-              >
-                <span className="text-sm">Laptop Ram Size</span>
-                <ChevronDown size={16} className={`transition-transform ${dropdownOpen.laptopRamSize ? 'rotate-180' : ''}`} />
-              </button>
-
-              {dropdownOpen.laptopRamSize && (
-                <div className="absolute top-full mt-1 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                  {ramSizes.map(size => (
-                    <button
-                      key={size}
-                      onClick={() => selectFilter('laptopRamSize', size)}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 first:rounded-t-lg last:rounded-b-lg"
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Sort By */}
-            <div className="relative ml-auto">
-              <button
-                onClick={() => toggleDropdown('sort')}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 hover:border-gray-300 transition-colors"
-              >
-                <span className="text-sm">Sort By: {sortBy}</span>
-                <ChevronDown size={16} className={`transition-transform ${dropdownOpen.sort ? 'rotate-180' : ''}`} />
-              </button>
-
-              {dropdownOpen.sort && (
-                <div className="absolute top-full mt-1 right-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                  {sortOptions.map(option => (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        setSortBy(option);
-                        setDropdownOpen(prev => ({ ...prev, sort: false }));
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm first:rounded-t-lg last:rounded-b-lg transition-colors ${sortBy === option
-                          ? 'bg-blue-50 text-blue-700'
-                          : 'text-gray-700 hover:bg-gray-50'
-                        }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Active Filters */}
-          <div className="flex flex-wrap items-center gap-2">
-            {filters.processorType && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100/60 text-blue-700 rounded-full text-sm border border-blue-200/50">
-                Processor Type: {filters.processorType}
-                <button
-                  onClick={() => removeFilter('processorType')}
-                  className="hover:bg-blue-200/50 rounded-full p-0.5"
-                >
-                  <X size={14} />
-                </button>
-              </span>
-            )}
-
-            {filters.brand && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100/60 text-yellow-700 rounded-full text-sm border border-yellow-200/50">
-                Brand: {filters.brand}
-                <button
-                  onClick={() => removeFilter('brand')}
-                  className="hover:bg-yellow-200/50 rounded-full p-0.5"
-                >
-                  <X size={14} />
-                </button>
-              </span>
-            )}
-
-            {filters.laptopRamSize && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100/60 text-blue-700 rounded-full text-sm border border-blue-200/50">
-                RAM: {filters.laptopRamSize}
-                <button
-                  onClick={() => removeFilter('laptopRamSize')}
-                  className="hover:bg-blue-200/50 rounded-full p-0.5"
-                >
-                  <X size={14} />
-                </button>
-              </span>
-            )}
-
-            {filters.laptops && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm border border-gray-200">
-                Laptops
-                <button
-                  onClick={() => removeFilter('laptops')}
-                  className="hover:bg-gray-200 rounded-full p-0.5"
-                >
-                  <X size={14} />
-                </button>
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 w-full">
-          {categoryslug.data && categoryslug.data.map((product, index) => (
-            <div
-              key={`${product.slug}-${index}`}
-              className={cn(
-                'flex-shrink-0',
-
-
-              )}
-            >
-              <ProductCard product={product} index={index} />
-            </div>
-          ))}
-        </div>
-
-            {totalPages > 1 && (
-              <div className="mt-8 pt-6 border-t-2 border-gray-300">
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentPage(prev => Math.max(prev - 1, 1));
-                        }}
-                        className={`border border-gray-300 transition-colors ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'text-[var(--colour-fsP1)] hover:text-[var(--colour-fsP2)]'}`}
-                      >
-                        ← Previous
-                      </PaginationPrevious>
-                    </PaginationItem>
-                    {generatePaginationItems()}
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentPage(prev => Math.min(prev + 1, totalPages));
-                        }}
-                        className={`border border-gray-300 transition-colors ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'text-[var(--colour-fsP1)] hover:text-[var(--colour-fsP2)]'}`}
-                      >
-                        Next →
-                      </PaginationNext>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            )}
-      </div>
+    <div className="min-h-screen bg-gray-50 font-sans ">
+      {isMobile ? (
+        <MobileProductFilters
+          categoryslug={categoryslug}
+          filters={filters}
+          sortBy={sortBy}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          dropdownOpen={dropdownOpen}
+          filterConfigs={filterConfigs}
+          toggleDropdown={toggleDropdown}
+          selectFilter={selectFilter}
+          getPriceLabel={getPriceLabel}
+        />
+      ) : (
+        <DesktopProductFilters
+          categoryslug={categoryslug}
+          filters={filters}
+          sortBy={sortBy}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          dropdownOpen={dropdownOpen}
+          filterConfigs={filterConfigs}
+          toggleDropdown={toggleDropdown}
+          selectFilter={selectFilter}
+          getPriceLabel={getPriceLabel}
+        />
+      )}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
