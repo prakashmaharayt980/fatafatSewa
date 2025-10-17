@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'; // Assuming cn is a utility like clsx or cva
 import img1 from '../../../public/imgfile/ASUS-AD-JULY.webp'
 
 
-const TwoImageBanner = () => {
+const TopBanner = () => {
   
 
   return (
@@ -44,4 +44,4 @@ const TwoImageBanner = () => {
   );
 };
 
-export default TwoImageBanner;
+export default TopBanner;

@@ -48,7 +48,7 @@ const MobileProductFilters = ({ categoryslug, filters, sortBy, currentPage, setC
     <div className="p-1.5 sm:p-2">
       <div className="">
         {/* Mobile Filter Drawer */}
-        <div className="flex items-center  justify-start mb-3">
+        <div className=" items-center hidden justify-start mb-3">
           <Sheet>
             <SheetTrigger asChild>
               <button className="flex items-center gap-1 px-1.5 py-1 min-h-[2rem] bg-white border border-blue-100 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 shadow-sm transition-all duration-300 hover:scale-105 sm:px-2 sm:py-1.5">

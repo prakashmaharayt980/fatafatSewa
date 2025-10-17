@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Star, ChevronRight } from "lucide-react";
+import { Star, ChevronRight, ShoppingBasket, CreditCard, Scale } from "lucide-react";
 import RemoteServices from "@/app/api/remoteservice";
 import { useInView } from "react-intersection-observer";
 import Link from "next/link";
@@ -189,79 +189,87 @@ export default function ProductDetailsPage({ params }: SlugProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       {/* Bottom Premium Bar */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t border-gray-300 transform transition-all duration-300 ${
-          !isMainVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-white shadow">
-              <Image
-                src={selectedImage}
-                alt={productDetails?.name || ""}
-                fill
-                className="object-contain p-1"
-              />
-            </div>
-            <div className="max-w-[200px] hidden sm:block">
-              <h3 className="text-sm font-medium truncate">{productDetails?.name}</h3>
-              <p className="text-blue-600 font-semibold">
-                NPR {productDetails?.discounted_price || productDetails?.price}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              className={cn(
-                "flex items-center cursor-pointer justify-center gap-2 px-4 py-3",
-                "rounded-lg font-medium text-sm transition-all duration-200",
-                "hover:shadow-md active:transform active:scale-95",
-                "bg-[var(--colour-fsP1)] text-white"
-              )}
-              onClick={() => addToCart(productDetails, 1, true)}
-            >
-              Add to Cart
-            </button>
-            {productDetails?.emi_enabled === 1 && (
-              <button
-                className={cn(
-                  "flex items-center cursor-pointer justify-center gap-2 px-2 py-2 sm:px-4 sm:py-3",
-                  "rounded-lg font-medium text-sm transition-all duration-200",
-                  "hover:shadow-md active:transform active:scale-95",
-                  "bg-[var(--colour-fsP2)]   text-white border border-gray-200"
-                )}
-                onClick={() => {
-                  setEmiContextInfo((prev) => ({
-                    ...prev,
-                    product: productDetails,
-                  }));
-                  localStorage.setItem("recent emi", JSON.stringify(productDetails));
-                  handlerouter("/emi/applyemi");
-                }}
-              >
-                Apply EMI
-              </button>
-            )}
-                        <button
-              className={cn(
-                "flex items-center cursor-pointer justify-center gap-2 px-4 py-3",
-                "rounded-lg font-medium text-sm transition-all duration-200",
-                "hover:shadow-md active:transform active:scale-95",
-                "bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"
-              )}
-              onClick={() => {
-                 addToCompare(productDetails)
-           
-                    handlerouter('/product/productCompare')
-              }}
-            >
-              Compare Product
-            </button>
-          </div>
-        </div>
-        <div className="h-[env(safe-area-inset-bottom)]"></div>
+     
+
+<div
+  className={`fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t border-gray-300 transform transition-all duration-300 ${
+    !isMainVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+  }`}
+>
+  <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 flex items-center justify-between">
+    <div className="flex items-center gap-2 sm:gap-4">
+      <div className="w-10 sm:w-12 h-10 sm:h-12 relative rounded-lg overflow-hidden bg-white shadow">
+        <Image
+          src={selectedImage}
+          alt={productDetails?.name || ""}
+          fill
+          className="object-contain p-1"
+        />
       </div>
+      <div className="max-w-[150px] sm:max-w-[200px] ">
+        <h3 className=" text-xs sm:text-sm font-medium truncate">{productDetails?.name}</h3>
+        <p className="text-blue-600 font-semibold text-xs sm:text-sm">
+          NPR {productDetails?.discounted_price || productDetails?.price}
+        </p>
+      </div>
+    </div>
+    <div className="flex items-center gap-1 sm:gap-2">
+      <button
+        className={cn(
+          "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
+          "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
+          "hover:shadow-md active:transform active:scale-95",
+          "bg-[var(--colour-fsP1)] text-white"
+        )}
+        onClick={() => addToCart(productDetails, 1, true)}
+      >
+        <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5" />
+        <span className="hidden sm:inline">Add to Cart</span>
+      </button>
+      {
+      // productDetails?.emi_enabled === 1 
+     true 
+      && (
+        <button
+          className={cn(
+            "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
+            "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
+            "hover:shadow-md active:transform active:scale-95",
+            "bg-[var(--colour-fsP2)] text-white border border-gray-200"
+          )}
+          onClick={() => {
+            setEmiContextInfo((prev) => ({
+              ...prev,
+              product: productDetails,
+            }));
+            localStorage.setItem("recent emi", JSON.stringify(productDetails));
+            handlerouter("/emi/applyemi");
+          }}
+        >
+          <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="hidden sm:inline">Apply EMI</span>
+        </button>
+      )}
+      <button
+        className={cn(
+          "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
+          "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
+          "hover:shadow-md active:transform active:scale-95",
+          "sm:bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"
+        )}
+        onClick={() => {
+          addToCompare(productDetails);
+          handlerouter('/product/productCompare');
+        }}
+      >
+        <Scale className="w-4 h-4 sm:w-5 sm:h-5" />
+        <span className="hidden sm:inline">Compare Product</span>
+      </button>
+    </div>
+  </div>
+  <div className="h-[env(safe-area-inset-bottom)]"></div>
+</div>
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-1 lg:px-2 py-2 sm:py-2">
         {/* Breadcrumb */}

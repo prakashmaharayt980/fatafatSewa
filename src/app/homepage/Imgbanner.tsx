@@ -114,6 +114,8 @@ const Imgbanner = () => {
                                             fill
                                             className="w-full h-full object-fill transition-transform duration-700"
                                             onLoad={() => setImageLoading(false)}
+                                            priority
+                                            // quality={100}
                                         />
                                     </div>
                                 ))}
@@ -150,6 +152,8 @@ const Imgbanner = () => {
                                 fill
                                 className="w-full h-full  object-fill transition-transform duration-500 group-hover:scale-105"
                                 onClick={() => goToSlide(1)}
+                                priority
+                                // quality={100}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             <div className="absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -168,6 +172,7 @@ const Imgbanner = () => {
                                     fill
                                     className="w-full h-full  object-fill transition-transform duration-500 group-hover:scale-105"
                                     onClick={() => goToSlide(2)}
+                                    priority
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                 <div className="absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">

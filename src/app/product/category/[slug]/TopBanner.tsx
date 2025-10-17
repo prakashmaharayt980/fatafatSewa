@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Shield, CreditCard, Truck, Tag, ShieldCheck } from 'lucide-react';
+
 import Image from 'next/image';
 
 export const ImagesListBanner = [
