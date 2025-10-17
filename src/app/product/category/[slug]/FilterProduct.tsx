@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { CategorySlug } from '@/app/types/CategoryTypes';
-import { cn } from '@/lib/utils';
+
 import MobileProductFilters from './MobileProductFilters';
-import DesktopProductFilters from './DesktopProductFilter' // Fixed typo: 'DesktopProductFilter' -> 'DesktopProductFilters'
+import DesktopProductFilters from './DesktopProductFilter'
 import { Cpu, Monitor, HardDrive, MemoryStick, PcCase, Banknote } from 'lucide-react';
 
 // Custom hook for shared logic
@@ -18,7 +18,7 @@ const useProductFilters = (categoryslug) => {
   });
 
   const [sortBy, setSortBy] = useState('Recommended');
-  const [currentPage, setCurrentPage] = useState(categoryslug.meta.current_page | 1);
+  const [currentPage, setCurrentPage] = useState(categoryslug?.meta?.current_page || 1);
   const [dropdownOpen, setDropdownOpen] = useState({
     processorType: false,
     brand: false,
@@ -81,7 +81,7 @@ const useProductFilters = (categoryslug) => {
     }
   ];
 
-  const toggleDropdown = (filterName) => {
+  const toggleDropdown = (filterName: string) => {
     setDropdownOpen(prev => ({
       processorType: filterName === 'processorType' ? !prev.processorType : false,
       brand: filterName === 'brand' ? !prev.brand : false,
@@ -93,7 +93,7 @@ const useProductFilters = (categoryslug) => {
     }));
   };
 
-  const selectFilter = (filterType, value, e) => {
+  const selectFilter = (filterType: string, value: any, e: React.MouseEvent) => {
     e.stopPropagation();
     if (filterType === 'sort') {
       setSortBy(value);
@@ -105,17 +105,17 @@ const useProductFilters = (categoryslug) => {
     toggleDropdown(filterType);
   };
 
-  const getPriceLabel = (range) => {
+  const getPriceLabel = (range: number[]) => {
     const option = filterConfigs
       .find(config => config.name === 'priceRange')
-      .options.find(o => typeof o !== 'string' && o.value && o.value[0] === range[0] && o.value[1] === range[1]);
+      ?.options.find((o): o is { label: string; value: number[] } => typeof o !== 'string' && o.value && o.value[0] === range[0] && o.value[1] === range[1]);
     return option ? option.label : `$${range[0]} - $${range[1]}`;
   };
 
   return { filters, sortBy, currentPage, setCurrentPage, dropdownOpen, filterConfigs, toggleDropdown, selectFilter, getPriceLabel };
 };
 
-const ProductFilters = ({ categoryslug }) => {
+const ProductFilters = ({ categoryslug  }) => {
   console.log('data', categoryslug);
   const { filters, sortBy, currentPage, setCurrentPage, dropdownOpen, filterConfigs, toggleDropdown, selectFilter, getPriceLabel } = useProductFilters(categoryslug);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -133,7 +133,7 @@ const ProductFilters = ({ categoryslug }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans ">
+    <div className="min-h-screen bg-gray-50 font-sans">
       {isMobile ? (
         <MobileProductFilters
           categoryslug={categoryslug}
