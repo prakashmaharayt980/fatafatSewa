@@ -18,12 +18,13 @@ type TableCellData = {
 
 interface ParsedContentProps {
   description: string;
+  className?: string;
 }
 
-export default function ParsedContent({ description }: ParsedContentProps) {
+export default function ParsedContent({ description, className = '' }: ParsedContentProps) {
   const parsedContent = useMemo(() => {
     if (!description.trim()) {
-      return <p className="text-gray-500 text-base italic">No description available.</p>;
+      return <p className={`text-gray-500 text-base italic ${className}`}>No description available.</p>;
     }
 
     const options: HTMLReactParserOptions = {
@@ -84,7 +85,7 @@ export default function ParsedContent({ description }: ParsedContentProps) {
 
         if (element.name === 'h2') {
           return (
-            <h2 className="text-xl font-semibold text-gray-900 mt-6 mb-4">
+            <h2 className={`text-xl font-semibold text-gray-900 mt-6 mb-4 ${className}`}>
               {domToReact(element.children, options) || 'Untitled Section'}
             </h2>
           );
@@ -92,7 +93,7 @@ export default function ParsedContent({ description }: ParsedContentProps) {
 
         if (element.name === 'ul') {
           return (
-            <ul className="list-disc pl-6 space-y-2 my-6 text-gray-700 text-base">
+            <ul className={`list-disc pl-6 space-y-2 my-6 text-gray-700 text-base ${className}`}>
               {domToReact(element.children, options)}
             </ul>
           );
@@ -100,7 +101,7 @@ export default function ParsedContent({ description }: ParsedContentProps) {
 
         if (element.attribs?.['data-list'] === 'bullet') {
           return (
-            <li className="text-gray-700 text-base leading-relaxed">
+            <li className={`text-gray-700 text-base leading-relaxed ${className}`}>
               {domToReact(element.children, options)}
             </li>
           );
@@ -111,7 +112,7 @@ export default function ParsedContent({ description }: ParsedContentProps) {
     };
 
     return parse(DOMPurify.sanitize(description), options);
-  }, [description]);
+  }, [description, className]);
 
-  return <div>{parsedContent}</div>;
+  return <div className={className}>{parsedContent}</div>;
 }

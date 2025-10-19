@@ -92,7 +92,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         : 0;
 
     return (
-        <div className="w-full max-w-2xl mx-auto space-y-6 p-6 bg-white ">
+        <div className="w-full max-w-2xl mx-auto space-y-6 sm:p-6 bg-white ">
             {/* Product Title and Metadata */}
             <div className="space-y-3">
                 <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight">
@@ -146,7 +146,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                                     key={index}
                                     onClick={() => handleColourSelect(variant.attributes.Color)}
                                     className={cn(
-                                        "px-4 py-2 rounded-full cursor-pointer text-sm font-medium transition-all duration-200",
+                                        "p-2 sm:px-4 sm:py-2 rounded-full cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200",
                                         "ring-1 ring-gray-200",
                                         selectedColor === variant.attributes.Color
                                             ? "bg-gray-900 text-white ring-gray-900"
@@ -162,7 +162,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
 
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-3 gap-3">
                 {AcctionButtons.map((btn, idx) => {
                     const Icon = btn.Icon
                     return (
@@ -170,8 +170,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                             key={`action-btn-${idx}`}
                             onClick={btn.action}
                             className={cn(
-                                "flex items-center justify-center gap-2 px-4 py-3 cursor-pointer",
-                                "rounded-lg font-medium text-sm transition-all duration-200",
+                                "flex items-center justify-center gap-2 p-2 sm:px-4 sm:py-3 cursor-pointer",
+                                "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
                                 "hover:shadow-md active:transform active:scale-95",
                                 btn.className
                             )}
@@ -185,7 +185,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                                 // sizes="20px"
                             />
                         </div> */}
-                            <Icon className="w-5 h-5" />
+                            <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                             <span>{btn.name}</span>
                         </button>
                     )

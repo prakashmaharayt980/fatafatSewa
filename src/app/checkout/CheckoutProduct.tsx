@@ -158,7 +158,7 @@ export default function CheckoutProduct({
               <span className="text-gray-600">Tax (13%)</span>
               <span className="font-medium text-gray-900">Rs {tax.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between items-center bg-blue-50 rounded-lg  text-sm">
+            <div className="flex justify-between items-center sm:hidden bg-blue-50 rounded-lg  text-sm">
               <span className="font-bold text-gray-900">Total Payable</span>
               <span className="font-bold text-[var(--colour-fsP2)] ">Rs {totalPayable.toFixed(2)}</span>
             </div>

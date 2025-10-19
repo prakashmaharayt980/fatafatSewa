@@ -193,7 +193,7 @@ export default function ChatBot() {
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'fixed z-[9999] w-12 h-12 bg-[var(--colour-fsP2)] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group',
-          'bottom-4 right-4',
+          'bottom-16 right-4',
           'sm:bottom-4 sm:right-4',
           isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100 hover:scale-110'
         )}

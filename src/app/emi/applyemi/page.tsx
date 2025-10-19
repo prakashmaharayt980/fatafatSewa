@@ -4,22 +4,32 @@ import React, { useMemo, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import * as Yup from 'yup';
+import {
+  personalDetailsSchema,
+  creditCardSchema,
+  bankDetailsSchema,
+  emiConditionsSchema,
+  emiConditionsCreditSchema,
+} from './validationSchemas';
 import creditcardicon from '../../../../public/svgfile/creditcardicon.svg';
 import downpaymenticon from '../../../../public/svgfile/payementiconcash.svg';
 import addcreditcard from '../../../../public/svgfile/creditcardplus.svg';
 import { useContextEmi } from '../emiContext';
-import CreditCardComponent from './CreditCardform';
+import CreditCardComponent from './CreditCardform'
 import BuyerPersonalInfo from './BuyerPersonalInfo';
-import RenderReview from './ReviewApplyEmiDoc';
+import RenderReview from './ReviewApplyEmiDoc'
 import ProgressBar from './ProgressBar';
 import EmiProductDetails from './EmiProductDetails';
 import DocumentUpload from './DocumentUpload';
+import { ArrowBigLeft } from 'lucide-react';
 
 const ApplyEmiProcess = () => {
   const { emiContextInfo, setEmiContextInfo, AvailablebankProvider, emiCalculation } = useContextEmi();
   const [NoCreditCard, setNoCreditCard] = useState(false);
   const [currentstep, setcurrentstep] = useState(0);
   const [previews, setPreviews] = useState({});
+  const [errors, setErrors] = useState({});
   const router = useRouter();
   const product = emiContextInfo.product;
   const emiCalc = emiContextInfo.emiCalculation;
@@ -51,7 +61,32 @@ const ApplyEmiProcess = () => {
     };
   }, [emiContextInfo.files]);
 
-  const handleInputChange = (e, section) => {
+  const getValidationSchema = (sectionKey, isCreditCard = false) => {
+    if (sectionKey === 'userInfo') return personalDetailsSchema();
+    if (sectionKey === 'granterPersonalDetails') return personalDetailsSchema(true);
+    if (sectionKey === 'bankinfo' && isCreditCard) return creditCardSchema;
+    if (sectionKey === 'bankinfo') return bankDetailsSchema;
+    if (sectionKey === 'emiCalculation' && isCreditCard)
+      return emiConditionsCreditSchema(product?.price || 0);
+    if (sectionKey === 'emiCalculation') return emiConditionsSchema(product?.price || 0);
+    return Yup.object();
+  };
+
+  const validateFormSection = async (section, data) => {
+    try {
+      const schema = getValidationSchema(section.sectionKey, section.title === 'Credit Card Details');
+      await schema.validate(data, { abortEarly: false });
+      return {};
+    } catch (validationError) {
+      const errors = {};
+      validationError.inner.forEach((error) => {
+        errors[error.path] = error.message;
+      });
+      return errors;
+    }
+  };
+
+  const handleInputChange = async (e, section) => {
     const { name, value } = e.target;
     setEmiContextInfo((prev) => ({
       ...prev,
@@ -60,6 +95,14 @@ const ApplyEmiProcess = () => {
         [name]: value,
       },
     }));
+
+    const schema = getValidationSchema(section);
+    try {
+      await schema.validateAt(name, { [name]: value });
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, [name]: error.message }));
+    }
   };
 
   const handleFileDelete = (docType, isGranter = false) => {
@@ -84,7 +127,7 @@ const ApplyEmiProcess = () => {
     return value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim();
   };
 
-  const handleCardNumberChange = (e) => {
+  const handleCardNumberChange = async (e) => {
     const formatted = formatCardNumber(e.target.value);
     setEmiContextInfo((prev) => ({
       ...prev,
@@ -93,9 +136,15 @@ const ApplyEmiProcess = () => {
         creditCardNumber: formatted,
       },
     }));
+    try {
+      await creditCardSchema.validateAt('creditCardNumber', { creditCardNumber: formatted });
+      setErrors((prev) => ({ ...prev, creditCardNumber: undefined }));
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, creditCardNumber: error.message }));
+    }
   };
 
-  const handleExpiryChange = (e) => {
+  const handleExpiryChange = async (e) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2, 4);
     setEmiContextInfo((prev) => ({
@@ -105,9 +154,15 @@ const ApplyEmiProcess = () => {
         expiryDate: value,
       },
     }));
+    try {
+      await creditCardSchema.validateAt('expiryDate', { expiryDate: value });
+      setErrors((prev) => ({ ...prev, expiryDate: undefined }));
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, expiryDate: error.message }));
+    }
   };
 
-  const handleBankSelect = (section, name, value) => {
+  const handleBankSelect = async (section, name, value) => {
     setEmiContextInfo((prev) => ({
       ...prev,
       [section]: {
@@ -116,6 +171,13 @@ const ApplyEmiProcess = () => {
       },
       interestRate: AvailablebankProvider.find((b) => b.name === value)?.rate || 10,
     }));
+    const schema = getValidationSchema(section);
+    try {
+      await schema.validateAt(name, { [name]: value });
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, [name]: error.message }));
+    }
   };
 
   const handleFileChange = (e, docType, isGranter = false) => {
@@ -151,12 +213,28 @@ const ApplyEmiProcess = () => {
     }
   };
 
-  const handleContinue = () => {
-    setcurrentstep((prev) => Math.min(prev + 1, 4));
+  const handleContinue = async () => {
+    if (currentstep === 0) {
+      setcurrentstep(1);
+      return;
+    }
+    const currentSection = formSections[selectedOption]?.find((section) => section.step === currentstep);
+    if (currentSection) {
+      const data =
+        currentSection.sectionKey === 'emiCalculation'
+          ? { ...emiContextInfo.emiCalculation, bankname: emiContextInfo.bankinfo.bankname }
+          : emiContextInfo[currentSection.sectionKey];
+      const sectionErrors = await validateFormSection(currentSection, data);
+      setErrors(sectionErrors);
+      if (Object.keys(sectionErrors).length === 0) {
+        setcurrentstep((prev) => Math.min(prev + 1, 4));
+      }
+    }
   };
 
   const handleBack = () => {
     setcurrentstep((prev) => Math.max(prev - 1, 0));
+    setErrors({});
   };
 
   const handleOptionSelect = (option) => {
@@ -172,21 +250,16 @@ const ApplyEmiProcess = () => {
   };
 
   const tumerOptions = useMemo(() => {
-    const tumer = AvailablebankProvider.find(bank => bank.name === emiContextInfo.bankinfo.bankname)?.tenureOptions || [];
+    const tumer = AvailablebankProvider.find((bank) => bank.name === emiContextInfo.bankinfo.bankname)?.tenureOptions || [];
     return tumer;
   }, [emiContextInfo.bankinfo.bankname, AvailablebankProvider]);
 
   const emiData = useMemo(() => {
-    if (!product) return { downPayment: 0, financeAmount: 0 }; // Fallback for null product
-    return emiCalculation(
-      product.price || 0,
-      emiCalc.duration,
-      emiCalc.downPayment,
-      emiContextInfo.bankinfo.bankname
-    );
+    if (!product) return { downPayment: 0, financeAmount: 0 };
+    return emiCalculation(product.price || 0, emiCalc.duration, emiCalc.downPayment, emiContextInfo.bankinfo.bankname);
   }, [product, emiCalc.duration, emiCalc.downPayment, emiContextInfo.bankinfo.bankname, emiCalculation]);
 
-  const emiConditionFields = [
+  const EmiConditionFields = [
     {
       label: 'Down Payment Amount',
       name: 'downPayment',
@@ -195,7 +268,8 @@ const ApplyEmiProcess = () => {
       svgicon: '/svgfile/moneycashicon.png',
       extenduserinfo: '',
       placeholder: 'Enter down payment amount',
-      maxvalue: product ? product.price : 0, // Safe access
+      maxvalue: product ? product.price : 0,
+      type: 'number',
     },
     {
       label: 'Bank',
@@ -225,6 +299,41 @@ const ApplyEmiProcess = () => {
       onChange: () => {},
       svgicon: '/svgfile/moneycashicon.png',
       extenduserinfo: '',
+      disabled: true,
+    },
+  ];
+
+  const EmiConditionFieldCredit = [
+    {
+      label: 'Down Payment Amount',
+      name: 'downPayment',
+      value: emiData.downPayment,
+      onChange: (e) => handleInputChange(e, 'emiCalculation'),
+      svgicon: '/svgfile/moneycashicon.png',
+      extenduserinfo: '',
+      placeholder: 'Enter down payment amount',
+      maxvalue: product ? product.price : 0,
+      type: 'number',
+    },
+    {
+      label: 'Duration (months)',
+      name: 'duration',
+      value: emiCalc.duration,
+      onChange: (e) => handleInputChange(e, 'emiCalculation'),
+      placeholder: 'Select Duration',
+      type: 'select',
+      options: tumerOptions,
+      svgicon: '/svgfile/monthicon.png',
+      extenduserinfo: '',
+    },
+    {
+      label: 'Finance Amount',
+      name: 'financeAmount',
+      value: emiData.financeAmount,
+      onChange: () => {},
+      svgicon: '/svgfile/moneycashicon.png',
+      extenduserinfo: '',
+      disabled: true,
     },
   ];
 
@@ -247,6 +356,7 @@ const ApplyEmiProcess = () => {
       placeholder: 'Enter email',
       svgicon: '/svgfile/emailsvg.svg',
       extenduserinfo: '',
+      type: 'email',
     },
     {
       label: 'Gender',
@@ -284,6 +394,7 @@ const ApplyEmiProcess = () => {
       placeholder: 'Enter phone number',
       svgicon: '/svgfile/phoneIcon.png',
       extenduserinfo: '',
+      type: 'tel',
     },
     {
       label: 'National ID Number',
@@ -353,6 +464,7 @@ const ApplyEmiProcess = () => {
       placeholder: 'Card Limit',
       svgicon: '/svgfile/creditcardicon.svg',
       extenduserinfo: '',
+      type: 'number',
     },
   ];
 
@@ -392,6 +504,7 @@ const ApplyEmiProcess = () => {
       placeholder: 'Enter salary amount',
       svgicon: '/svgfile/moneycashicon.png',
       extenduserinfo: '',
+      type: 'number',
     },
   ];
 
@@ -413,6 +526,7 @@ const ApplyEmiProcess = () => {
       placeholder: 'Enter Phone Number',
       svgicon: '/svgfile/phoneIcon.png',
       extenduserinfo: '',
+      type: 'tel',
     },
     {
       label: 'Gender',
@@ -483,7 +597,7 @@ const ApplyEmiProcess = () => {
         title: 'EMI Conditions',
         sectionKey: 'emiCalculation',
         step: 3,
-        fields: emiConditionFields,
+        fields: EmiConditionFieldCredit,
         additionalContent: <></>,
       },
     ],
@@ -495,19 +609,6 @@ const ApplyEmiProcess = () => {
         fields: personalDetailsInfolist,
         additionalContent: (
           <div className="mt-6">
-            <div className="mb-6 p-4 bg-blue-100 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Down Payment Amount</h3>
-              <div className="flex flex-row gap-3 items-center">
-                <Image
-                  src="/svgfile/pichatpayment.svg"
-                  className="h-14 w-14 text-[var(--colour-fsP2)]/60"
-                  alt="upload document"
-                  height={80}
-                  width={80}
-                />
-                <p className="text-2xl font-bold text-blue-600">Rs {emiData.downPayment}</p>
-              </div>
-            </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Required Documents</h3>
             <DocumentUpload
               docTypes={['ppphoto', 'front', 'back']}
@@ -543,7 +644,7 @@ const ApplyEmiProcess = () => {
         title: 'EMI Conditions',
         sectionKey: 'emiCalculation',
         step: 3,
-        fields: emiConditionFields,
+        fields: EmiConditionFields,
         additionalContent: <></>,
       },
     ],
@@ -590,7 +691,7 @@ const ApplyEmiProcess = () => {
         title: 'EMI Conditions',
         sectionKey: 'emiCalculation',
         step: 3,
-        fields: emiConditionFields,
+        fields: EmiConditionFieldCredit,
         additionalContent: <></>,
       },
     ],
@@ -598,6 +699,9 @@ const ApplyEmiProcess = () => {
 
   const selectedOption = emiContextInfo.hasCreditCard === 'yes' ? 'creditCard' : emiContextInfo.hasCreditCard === 'make' ? 'makeCard' : 'downPayment';
   const currentFormSection = currentstep > 0 && currentstep < 4 ? formSections[selectedOption]?.find((section) => section.step === currentstep) : null;
+
+  // Check if the current form section is valid
+  const isFormValid = currentFormSection ? Object.keys(errors).length === 0 : true;
 
   // Render fallback UI if product is null
   if (!product) {
@@ -631,7 +735,7 @@ const ApplyEmiProcess = () => {
             <div className="bg-white rounded-lg shadow-sm p-4 md:p-8 min-h-[400px] mb-4 flex flex-col items-center justify-center">
               {!NoCreditCard ? (
                 <>
-                  <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4 text-center">Do you have a Credit Card?</h2>
+                  <h2 className="text-xl font-semibold text-[var(--colour-fsP2)] mb-4 text-center">Do you have a Credit Card?</h2>
                   <div className="flex flex-col md:flex-row gap-4 justify-center w-full max-w-2xl">
                     <Button
                       onClick={() => handleOptionSelect('creditCard')}
@@ -656,12 +760,13 @@ const ApplyEmiProcess = () => {
               ) : (
                 <div className="w-full">
                   <div className="flex flex-col sm:flex-row items-center justify-center mb-8 gap-3">
-                    <h2 className="text-xl md:text-2xl font-semibold text-gray-800">Choose an Option</h2>
+                    <h2 className="text-xl font-semibold text-[var(--colour-fsP2)]">Choose an Option</h2>
                     <button
                       onClick={() => setNoCreditCard(false)}
-                      className="flex items-center justify-center font-medium cursor-pointer"
+                      className="flex items-center border bg-blue-50 border-gray-200 px-2 py-2 rounded justify-center font-medium cursor-pointer"
                     >
-                      <span className="text-gray-800">Back</span>
+                      <ArrowBigLeft className="w-4 h-4 sm:w-6 sm:h-6 text-[var(--colour-fsP2)]" />
+                      <span className="text-gray-600">Back</span>
                     </button>
                   </div>
                   <div className="flex flex-col md:flex-row gap-4 justify-center w-full max-w-2xl mx-auto">
@@ -702,14 +807,14 @@ const ApplyEmiProcess = () => {
                 <div className="space-y-6 text-base font-sans">
                   {(() => {
                     if (currentFormSection.sectionKey === 'bankinfo' && currentFormSection.title === 'Credit Card Details') {
-                      return <CreditCardComponent cardinfofield={currentFormSection} />;
+                      return <CreditCardComponent cardinfofield={currentFormSection} errors={errors} />;
                     } else if (
                       currentFormSection.sectionKey === 'userInfo' ||
                       currentFormSection.sectionKey === 'granterPersonalDetails' ||
                       currentFormSection.sectionKey === 'emiCalculation' ||
                       currentFormSection.sectionKey === 'bankinfo'
                     ) {
-                      return <BuyerPersonalInfo cardinfofield={currentFormSection} />;
+                      return <BuyerPersonalInfo cardinfofield={currentFormSection} errors={errors} />;
                     }
                     return null;
                   })()}
@@ -726,6 +831,7 @@ const ApplyEmiProcess = () => {
                       type="button"
                       onClick={handleContinue}
                       className="px-6 bg-blue-900 cursor-pointer text-white hover:bg-[var(--colour-fsP1)]"
+                      disabled={!isFormValid}
                     >
                       Continue
                     </Button>

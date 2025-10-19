@@ -119,12 +119,12 @@ const DeliverySection = () => {
               <div className="border-none">
                 <button
                   onClick={() => toggleSection('customer')}
-                  className="w-full py-2 flex items-center justify-between hover:bg-yellow-50 transition-all duration-150 rounded-lg"
+                  className="w-full py-2 flex items-center justify-between  cursor-pointer transition-all duration-150 rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                        sectionStatus.customer ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-[var(--colour-fsP1)]'
+                        sectionStatus.customer ? 'bg-green-100 text-green-600' : ' text-[var(--colour-fsP1)]'
                       }`}
                     >
                       <Phone className="w-4 h-4" />
@@ -205,12 +205,12 @@ const DeliverySection = () => {
           </div>
 
           <div className="border-t border-blue-100 pt-3">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-row gap-3 items-center">
+            <div className="flex sm:items-center flex-col sm:flex-row justify-start sm:justify-between">
+              <div className="sm:flex hidden flex-row gap-3 items-center">
                 <div className="text-base font-medium text-gray-700">Total:</div>
                 <div className="text-base font-bold text-[var(--colour-fsP2)]">Rs. {subtotal.toFixed(2)}</div>
               </div>
-              <div className="flex gap-2 sm:gap-3">
+              <div className="flex gap-2 justify-end mt-3 sm:mt-0 sm:gap-3">
                 <Button
                   variant="outline"
                   className="px-3 py-1.5 text-sm border-blue-200 cursor-pointer text-blue-600  hover:border-blue-300 hover:text-blue-700 transition-all duration-150 focus:ring-1 focus:ring-blue-600"

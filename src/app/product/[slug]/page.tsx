@@ -43,7 +43,7 @@ export default function ProductDetailsPage({ params }: SlugProps) {
   // Lazy loading for related products
   const { ref: relatedProductsRef, inView: isRelatedVisible } = useInView({
     threshold: 0,
-    triggerOnce: true, // Fetch only once when section enters viewport
+    triggerOnce: true,
   });
 
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function ProductDetailsPage({ params }: SlugProps) {
     router.push(path);
   };
 
-  // Fetch product details (not lazy-loaded as it's critical)
+  // Fetch product details
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -175,11 +175,10 @@ export default function ProductDetailsPage({ params }: SlugProps) {
         <Star
           key={i}
           size={size}
-          className={`transition-all duration-200 ${
-            i < rating
+          className={`transition-all duration-200 ${i < rating
               ? "text-yellow-400 fill-yellow-400 drop-shadow-sm"
               : "text-gray-300 hover:text-yellow-200"
-          }`}
+            }`}
           aria-hidden="true"
         />
       ))}
@@ -188,92 +187,85 @@ export default function ProductDetailsPage({ params }: SlugProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      {/* Bottom Premium Bar */}
-     
-
-<div
-  className={`fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t border-gray-300 transform transition-all duration-300 ${
-    !isMainVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-  }`}
->
-  <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 flex items-center justify-between">
-    <div className="flex items-center gap-2 sm:gap-4">
-      <div className="w-10 sm:w-12 h-10 sm:h-12 relative rounded-lg overflow-hidden bg-white shadow">
-        <Image
-          src={selectedImage}
-          alt={productDetails?.name || ""}
-          fill
-          className="object-contain p-1"
-        />
-      </div>
-      <div className="max-w-[150px] sm:max-w-[200px] ">
-        <h3 className=" text-xs sm:text-sm font-medium truncate">{productDetails?.name}</h3>
-        <p className="text-blue-600 font-semibold text-xs sm:text-sm">
-          NPR {productDetails?.discounted_price || productDetails?.price}
-        </p>
-      </div>
-    </div>
-    <div className="flex items-center gap-1 sm:gap-2">
-      <button
-        className={cn(
-          "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
-          "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
-          "hover:shadow-md active:transform active:scale-95",
-          "bg-[var(--colour-fsP1)] text-white"
-        )}
-        onClick={() => addToCart(productDetails, 1, true)}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg border-t border-gray-300 transform transition-all duration-300 ${!isMainVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+          }`}
       >
-        <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5" />
-        <span className="hidden sm:inline">Add to Cart</span>
-      </button>
-      {
-      // productDetails?.emi_enabled === 1 
-     true 
-      && (
-        <button
-          className={cn(
-            "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
-            "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
-            "hover:shadow-md active:transform active:scale-95",
-            "bg-[var(--colour-fsP2)] text-white border border-gray-200"
-          )}
-          onClick={() => {
-            setEmiContextInfo((prev) => ({
-              ...prev,
-              product: productDetails,
-            }));
-            localStorage.setItem("recent emi", JSON.stringify(productDetails));
-            handlerouter("/emi/applyemi");
-          }}
-        >
-          <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="hidden sm:inline">Apply EMI</span>
-        </button>
-      )}
-      <button
-        className={cn(
-          "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
-          "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
-          "hover:shadow-md active:transform active:scale-95",
-          "sm:bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"
-        )}
-        onClick={() => {
-          addToCompare(productDetails);
-          handlerouter('/product/productCompare');
-        }}
-      >
-        <Scale className="w-4 h-4 sm:w-5 sm:h-5" />
-        <span className="hidden sm:inline">Compare Product</span>
-      </button>
-    </div>
-  </div>
-  <div className="h-[env(safe-area-inset-bottom)]"></div>
-</div>
-
+        <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="w-10 sm:w-12 h-10 sm:h-12 relative rounded-lg overflow-hidden bg-white shadow">
+              <Image
+                src={selectedImage}
+                alt={productDetails?.name || ""}
+                fill
+                className="object-contain p-1"
+              />
+            </div>
+            <div className="max-w-[150px] sm:max-w-[200px] ">
+              <h3 className=" text-xs sm:text-sm font-medium truncate">{productDetails?.name}</h3>
+              <p className="text-blue-600 font-semibold text-xs sm:text-sm">
+                NPR {productDetails?.discounted_price || productDetails?.price}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button
+              className={cn(
+                "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
+                "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
+                "hover:shadow-md active:transform active:scale-95",
+                "bg-[var(--colour-fsP1)] text-white"
+              )}
+              onClick={() => addToCart(productDetails, 1, true)}
+            >
+              <ShoppingBasket className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Add to Cart</span>
+            </button>
+            {
+              true && (
+                <button
+                  className={cn(
+                    "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
+                    "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
+                    "hover:shadow-md active:transform active:scale-95",
+                    "bg-[var(--colour-fsP2)] text-white border border-gray-200"
+                  )}
+                  onClick={() => {
+                    setEmiContextInfo((prev) => ({
+                      ...prev,
+                      product: productDetails,
+                    }));
+                    localStorage.setItem("recent emi", JSON.stringify(productDetails));
+                    handlerouter("/emi/applyemi");
+                  }}
+                >
+                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">Apply EMI</span>
+                </button>
+              )}
+            <button
+              className={cn(
+                "flex items-center cursor-pointer justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3",
+                "rounded-lg font-medium text-xs sm:text-sm transition-all duration-200",
+                "hover:shadow-md active:transform active:scale-95",
+                "sm:bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"
+              )}
+              onClick={() => {
+                addToCompare(productDetails);
+                handlerouter('/product/productCompare');
+              }}
+            >
+              <Scale className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Compare Product</span>
+            </button>
+          </div>
+        </div>
+        <div className="h-[env(safe-area-inset-bottom)]"></div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-1 lg:px-2 py-2 sm:py-2">
         {/* Breadcrumb */}
-        <div className="max-w-7xl mx-auto my-3 shadow-lg p-3 rounded-2xl overflow-hidden">
+        <div className="max-w-7xl mx-auto my-3 sm:shadow-lg p-1 sm:p-3 rounded-2xl overflow-hidden">
           <nav className="flex items-center space-x-2 text-sm mt-2 mb-6 sm:mb-8 animate-slide-up">
             <Link
               href="/"

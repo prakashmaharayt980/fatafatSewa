@@ -29,12 +29,12 @@ export default function EmiProductDetails({ emiData, product }) {
             <div className="flex justify-between">
               <span className="text-gray-600">Monthly EMI from</span>
               <span className="font-medium text-[var(--colour-fsP2)]">
-                Rs. {(emiData.paymentpermonth.toFixed(2) === 0 ? product.price / emiData.tenure : emiData.paymentpermonth.toFixed(2))}
+                Rs. {product.price/12}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Tenure</span>
-              <span className="font-medium text-[var(--colour-fsP2)]">{emiData.tenure === 0 ? '12-36 months' : `${emiData.tenure} months`}</span>
+              <span className="font-medium text-[var(--colour-fsP2)]">12 months</span>
             </div>
           </div>
           <div className="mt-4 text-xs text-gray-500 space-y-1.5">

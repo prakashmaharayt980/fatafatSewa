@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useContextEmi } from "../emiContext";
 import { Input } from "@/components/ui/input";
 
-export default function BuyerPersonalInfo({ cardinfofield }) {
+export default function BuyerPersonalInfo({ cardinfofield, errors }) {
   const { AvailablebankProvider } = useContextEmi();
 
   return (
@@ -24,7 +24,7 @@ export default function BuyerPersonalInfo({ cardinfofield }) {
                     value={field.value}
                     onValueChange={(value) => field.onChange({ target: { name: field.name, value } })}
                   >
-                    <SelectTrigger className="w-full h-10 pl-10 bg-white border-blue-200 text-gray-600 text-sm rounded-lg focus:border-transparent focus:ring-1 focus:ring-[var(--colour-fsP2)] transition-all duration-150">
+                    <SelectTrigger className={`w-full h-10 pl-10 bg-white border-blue-200 text-gray-600 text-sm rounded-lg focus:border-transparent focus:ring-1 focus:ring-[var(--colour-fsP2)] transition-all duration-150 ${errors[field.name] ? 'border-red-500' : ''}`}>
                       <SelectValue placeholder={`Select ${field.label}`} className="text-yellow-400" />
                       <Image
                         src={field.svgicon}
@@ -61,13 +61,15 @@ export default function BuyerPersonalInfo({ cardinfofield }) {
                 ) : (
                   <div className="relative">
                     <Input
-                      type="text"
+                      type={field.type || "text"}
                       name={field.name}
                       value={field.value}
                       onChange={field.onChange}
                       placeholder={field.placeholder}
                       maxLength={field.maxLength}
-                      className="w-full h-10 pl-10 bg-white border-blue-200 text-gray-600 text-sm rounded-lg focus:border-transparent focus:ring-1 focus:ring-[var(--colour-fsP2)] placeholder-yellow-400 transition-all duration-150"
+                      max={field.maxvalue}
+                      disabled={field.disabled}
+                      className={`w-full h-10 pl-10 bg-white border-blue-200 text-gray-600 text-sm rounded-lg focus:border-transparent focus:ring-1 focus:ring-[var(--colour-fsP2)] transition-all duration-150 ${errors[field.name] ? 'border-red-500' : ''}`}
                     />
                     <Image
                       src={field.svgicon}
@@ -77,6 +79,9 @@ export default function BuyerPersonalInfo({ cardinfofield }) {
                       className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-600"
                     />
                   </div>
+                )}
+                {errors[field.name] && (
+                  <p className="text-red-500 text-xs mt-1">{errors[field.name]}</p>
                 )}
               </div>
             </div>
